@@ -632,6 +632,61 @@
     @media(max-width:480px){
       .service:first-child:before{font-size:84px;right:22px;top:18px}
     }
+    /* Positioning statement band: rich navy panel with tracked call proof */
+    .positioning,body[data-route="home"] .positioning{background:var(--paper);padding:96px 0;overflow:visible}
+    body[data-route="home"] .positioning:after{display:none;content:none}
+    .positioning-panel{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:56px;align-items:center;background:radial-gradient(620px 360px at 92% -12%,rgba(255,188,71,.26),transparent 62%),radial-gradient(540px 340px at -10% 112%,rgba(255,112,92,.22),transparent 62%),radial-gradient(420px 260px at 52% 118%,rgba(255,188,71,.09),transparent 62%),#10233f;color:#fff;border-radius:30px;padding:64px;box-shadow:0 28px 60px rgba(16,35,63,.18)}
+    .positioning-panel:before{content:"";position:absolute;right:-92px;top:-92px;width:300px;height:300px;border:1px solid rgba(255,255,255,.09);border-radius:50%;box-shadow:0 0 0 34px rgba(255,255,255,.028),0 0 0 68px rgba(255,255,255,.02),0 0 0 102px rgba(255,255,255,.014);pointer-events:none}
+    .positioning-panel:after{content:"";position:absolute;left:-70px;bottom:-110px;width:240px;height:240px;border:1px solid rgba(255,255,255,.07);border-radius:50%;box-shadow:0 0 0 28px rgba(255,255,255,.02);pointer-events:none}
+    .positioning-copy{position:relative;z-index:2;min-width:0}
+    .positioning .quote{color:#fff;font-size:clamp(32px,4.2vw,50px);line-height:1.12;letter-spacing:-.032em;font-weight:700;max-width:560px}
+    .positioning .quote-highlight{color:#ffbc47}
+    .positioning .quote small{color:rgba(255,255,255,.78);font-size:15.5px;line-height:1.7;font-weight:500;margin-top:26px;max-width:520px}
+    .call-log-card{position:relative;z-index:2;background:#fff;color:#10233f;border-radius:20px;padding:22px 22px 16px;box-shadow:0 24px 50px rgba(0,0,0,.28);transform:rotate(1deg);min-width:0}
+    .call-log-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px solid #e3e9ec}
+    .call-log-title{display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.2}
+    .call-log-title strong{font-weight:700}
+    .call-log-live-dot{width:9px;height:9px;border-radius:50%;background:#ff705c;box-shadow:0 0 0 5px rgba(255,112,92,.16);flex:0 0 auto}
+    .call-log-count{font-size:11px;font-weight:600;color:#52606f;background:#f3f6f6;border-radius:999px;padding:5px 10px;white-space:nowrap}
+    .call-row{display:flex;align-items:center;gap:13px;padding:15px 0;border-bottom:1px solid #edf1f2;min-width:0}
+    .call-icon{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#10233f;display:flex;align-items:center;justify-content:center}
+    .call-main{flex:1 1 auto;min-width:0}
+    .call-main strong{display:block;font-size:13.5px;line-height:1.3;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .call-main span{display:block;font-size:11.5px;line-height:1.4;color:#52606f;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .call-meta{flex:0 0 auto;text-align:right}
+    .call-meta strong{display:block;font-size:14px;line-height:1.2;font-weight:700}
+    .rec-badge{display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:9px;font-weight:700;letter-spacing:.06em;color:#c93a2e;background:#fff1ef;border-radius:999px;padding:3px 7px;line-height:1}
+    .rec-badge i{width:6px;height:6px;border-radius:50%;background:#ff705c;display:block}
+    .call-wave{display:flex;align-items:center;gap:12px;margin-top:14px;background:#f3f6f6;border-radius:999px;padding:9px 13px}
+    .call-wave-label{font-size:10.5px;font-weight:700;color:#c93a2e;white-space:nowrap}
+    .wave-bars{display:flex;align-items:center;gap:3px;flex:1 1 auto;justify-content:center;min-width:0;overflow:hidden}
+    .wave-bars i{display:block;width:3px;border-radius:999px;background:#10233f;opacity:.72}
+    .call-wave-time{font-size:11px;font-weight:700;color:#10233f}
+    @media(max-width:960px){
+      .positioning-panel{grid-template-columns:1fr;gap:38px;padding:52px 42px}
+      .positioning .quote{max-width:640px}
+      .call-log-card{transform:none;max-width:560px;width:100%}
+    }
+    @media(max-width:900px){
+      .positioning,body[data-route="home"] .positioning{padding:72px 0}
+    }
+    @media(max-width:560px){
+      .positioning,body[data-route="home"] .positioning{padding:56px 0}
+      .positioning-panel{padding:36px 22px 24px;border-radius:24px;gap:32px}
+      .positioning .quote{font-size:31px;line-height:1.14}
+      .positioning .quote small{font-size:14.5px;margin-top:20px}
+      .call-log-card{padding:18px 16px 13px;border-radius:18px}
+      .call-row{gap:10px;padding:13px 0}
+      .call-icon{width:34px;height:34px;flex-basis:34px}
+      .call-main strong{font-size:12.5px;white-space:normal}
+      .call-main span{font-size:10.5px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+      .rec-badge{font-size:8px;padding:3px 5px}
+      .call-wave{gap:8px;padding:8px 10px}
+      .call-wave-label{font-size:9.5px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .call-log-card{transform:none}
+    }
   </style>
 </head>
 <body data-route="home">
@@ -706,7 +761,7 @@
     </div>
   </section>
 
-  <section class="positioning"><div class="wrap"><p class="quote">“If the phone’s not ringing, you’ll know, and so will we.”<small>Every website call is tracked and recorded. No hiding behind rankings, traffic, or a thick report when the result you need is more estimates, more booked jobs, and more revenue.</small></p></div></section>
+  <section class="positioning"><div class="wrap"><div class="positioning-panel"><div class="positioning-copy"><p class="quote">“If the phone’s not ringing, <span class="quote-highlight">you’ll know, and so will we.</span>”<small>Every website call is tracked and recorded. No hiding behind rankings, traffic, or a thick report when the result you need is more estimates, more booked jobs, and more revenue.</small></p></div><div class="call-log-card" role="img" aria-label="Tracked call log showing incoming calls with durations, each marked as recorded"><div class="call-log-head"><div class="call-log-title"><span class="call-log-live-dot" aria-hidden="true"></span><strong>Tracked calls</strong></div><span class="call-log-count">This week</span></div><div class="call-row"><div class="call-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 3.2c.3-.3.8-.4 1.2-.2l1.5 1c.4.3.6.8.4 1.3L8.6 7.6c.7 1.3 1.5 2.4 2.8 3.4l2.2-1.1c.4-.2 1-.1 1.3.3l1.1 1.6c.3.4.2.9-.1 1.2l-1.2 1.1c-.4.3-.9.5-1.4.3-2.9-1-5.5-3.4-7-6.1-.8-1.5-1.2-3-.9-3.6l1.2-1.5Z" fill="#ffbc47"/><path d="M15.5 3.8c2.8.6 4.6 2.4 5.2 5.2M15.8 6.6c1.5.4 2.4 1.3 2.8 2.8" stroke="#ffbc47" stroke-width="1.7" stroke-linecap="round"/></svg></div><div class="call-main"><strong>Incoming call</strong><span>Augusta, GA · Today, 9:42 AM</span></div><div class="call-meta"><strong>3:48</strong><span class="rec-badge"><i aria-hidden="true"></i>RECORDED</span></div></div><div class="call-row"><div class="call-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 3.2c.3-.3.8-.4 1.2-.2l1.5 1c.4.3.6.8.4 1.3L8.6 7.6c.7 1.3 1.5 2.4 2.8 3.4l2.2-1.1c.4-.2 1-.1 1.3.3l1.1 1.6c.3.4.2.9-.1 1.2l-1.2 1.1c-.4.3-.9.5-1.4.3-2.9-1-5.5-3.4-7-6.1-.8-1.5-1.2-3-.9-3.6l1.2-1.5Z" fill="#ffbc47"/><path d="M15.5 3.8c2.8.6 4.6 2.4 5.2 5.2M15.8 6.6c1.5.4 2.4 1.3 2.8 2.8" stroke="#ffbc47" stroke-width="1.7" stroke-linecap="round"/></svg></div><div class="call-main"><strong>Incoming call</strong><span>Evans, GA · Today, 9:16 AM</span></div><div class="call-meta"><strong>2:31</strong><span class="rec-badge"><i aria-hidden="true"></i>RECORDED</span></div></div><div class="call-row"><div class="call-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 3.2c.3-.3.8-.4 1.2-.2l1.5 1c.4.3.6.8.4 1.3L8.6 7.6c.7 1.3 1.5 2.4 2.8 3.4l2.2-1.1c.4-.2 1-.1 1.3.3l1.1 1.6c.3.4.2.9-.1 1.2l-1.2 1.1c-.4.3-.9.5-1.4.3-2.9-1-5.5-3.4-7-6.1-.8-1.5-1.2-3-.9-3.6l1.2-1.5Z" fill="#ffbc47"/><path d="M15.5 3.8c2.8.6 4.6 2.4 5.2 5.2M15.8 6.6c1.5.4 2.4 1.3 2.8 2.8" stroke="#ffbc47" stroke-width="1.7" stroke-linecap="round"/></svg></div><div class="call-main"><strong>Incoming call</strong><span>Grovetown, GA · Yesterday, 4:05 PM</span></div><div class="call-meta"><strong>5:12</strong><span class="rec-badge"><i aria-hidden="true"></i>RECORDED</span></div></div><div class="call-wave" aria-hidden="true"><span class="call-wave-label">● Recording</span><span class="wave-bars"><i style="height:8px"></i><i style="height:14px"></i><i style="height:20px"></i><i style="height:11px"></i><i style="height:17px"></i><i style="height:9px"></i><i style="height:15px"></i><i style="height:19px"></i><i style="height:10px"></i><i style="height:13px"></i></span><span class="call-wave-time">03:48</span></div></div></div></div></section>
 
   <section class="roi" id="roi">
     <div class="wrap roi-grid">
