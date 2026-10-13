@@ -959,5 +959,47 @@
   jobValue.addEventListener('input',updateRoi);
   jobsMonth.addEventListener('input',updateRoi);
 </script>
+<script>
+(function() {
+  function trackEvent(name, params) {
+    if (typeof gtag === 'function') {
+      gtag('event', name, params || {});
+    }
+  }
+  function cleanText(el) {
+    var t = (el.innerText || el.textContent || '').trim().replace(/\s+/g, ' ');
+    return t.substring(0, 80);
+  }
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a');
+    var btn = e.target.closest('button');
+    var el = link || btn;
+    if (!el) return;
+    var text = cleanText(el);
+    var href = link ? link.getAttribute('href') : '';
+    var page = window.location.pathname;
+    var category = 'other';
+    if (href && href.indexOf('cal.com') !== -1) category = 'booking';
+    else if (href && href.indexOf('/website-audit') !== -1) category = 'audit_cta';
+    else if (href && href.indexOf('/contact') !== -1) category = 'contact_cta';
+    else if (link && el.closest('nav')) category = 'nav';
+    else if (href && href.charAt(0) === '#') category = 'anchor';
+    trackEvent('click', {
+      click_category: category,
+      click_text: text,
+      link_url: href || '(button)',
+      page_path: page
+    });
+  }, true);
+  document.addEventListener('submit', function(e) {
+    var form = e.target;
+    var formName = form.getAttribute('name') || form.getAttribute('id') || 'unknown_form';
+    trackEvent('form_submit', {
+      form_name: formName,
+      page_path: window.location.pathname
+    });
+  }, true);
+})();
+</script>
 </body>
 </html>
