@@ -741,6 +741,65 @@
     @media(max-width:480px){
       .service:first-child:before{font-size:84px;right:22px;top:18px}
     }
+    /* Web design CTA band: navy panel, blueprint texture, leaking phone mockup */
+    .cta-band-navy{background:var(--paper);color:var(--paper)}
+    .cta-panel{position:relative;overflow:hidden;background:var(--navy);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:64px;display:grid;grid-template-columns:1.12fr .88fr;gap:60px;align-items:center}
+    .cta-panel:before{content:"";position:absolute;inset:0;background:radial-gradient(430px 300px at 90% -12%,color-mix(in srgb,var(--gold) 27%,transparent),transparent 65%),radial-gradient(400px 320px at -10% 115%,color-mix(in srgb,var(--coral) 23%,transparent),transparent 65%);pointer-events:none}
+    .cta-panel:after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:46px 46px;pointer-events:none}
+    .cta-panel>*{position:relative;z-index:1}
+    .cta-copy h2{color:var(--white);max-width:580px}
+    .cta-hl{color:var(--gold)}
+    .cta-copy .btn{margin-top:38px}
+    .cta-panel .btn-primary{box-shadow:5px 5px 0 var(--coral)}
+    .cta-visual{position:relative;display:flex;justify-content:center;padding:14px 10px}
+    .cta-phone{position:relative;width:226px;aspect-ratio:9/17.4;background:#081831;border:3px solid color-mix(in srgb,var(--paper) 26%,transparent);border-radius:34px;padding:11px;transform:rotate(-2.5deg);box-shadow:0 30px 60px rgba(2,10,22,.45);flex:0 0 auto}
+    .cta-phone-screen{position:relative;height:100%;background:var(--surface);border-radius:24px;overflow:hidden;padding:17px 14px}
+    .cta-site-bar{display:flex;align-items:center;gap:7px;margin-bottom:13px}
+    .cta-site-bar i{width:11px;height:11px;border-radius:50%;background:var(--coral);flex:0 0 auto}
+    .cta-site-bar span{display:block;height:7px;width:64px;border-radius:var(--radius-pill);background:var(--ink)}
+    .cta-site-bar span.short{width:36px;background:var(--sky-2)}
+    .cta-site-hero{background:var(--navy);border-radius:12px;padding:15px 13px}
+    .cta-site-hero b{display:block;height:11px;width:88%;border-radius:var(--radius-pill);background:var(--paper)}
+    .cta-site-hero b.mid{width:62%;margin-top:8px}
+    .cta-site-hero em{display:block;height:20px;width:74px;border-radius:var(--radius-pill);background:var(--cta-yellow);margin-top:13px}
+    .cta-site-lines{display:grid;gap:8px;margin-top:15px}
+    .cta-site-lines span{display:block;height:7px;border-radius:var(--radius-pill);background:var(--sky-2)}
+    .cta-site-lines span.short{width:58%}
+    .cta-site-cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+    .cta-site-cards i{display:block;height:46px;border-radius:10px;background:var(--soft);border:1px solid var(--line)}
+    .cta-crack{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .cta-crack path{fill:none;stroke:var(--coral);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;opacity:.8}
+    .cta-drip{position:absolute;width:9px;height:9px;border-radius:2px 50% 50% 50%;background:#8ec9e8;transform:rotate(45deg);opacity:0;pointer-events:none}
+    .cta-drip.drip-a{left:136px;top:238px}
+    .cta-drip.drip-b{left:154px;top:282px}
+    .cta-puddle{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:96px;height:13px;border-radius:50%;background:rgba(142,201,232,.32);pointer-events:none}
+    .cta-leak-chip{position:absolute;left:-6px;bottom:30px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:0 18px 38px rgba(2,10,22,.35);display:flex;align-items:center;gap:13px}
+    .cta-leak-bars{display:flex;align-items:flex-end;gap:5px;height:22px}
+    .cta-leak-bars i{display:block;width:8px;border-radius:3px 3px 0 0;background:var(--ink)}
+    .cta-leak-bars i:nth-child(1){height:21px}
+    .cta-leak-bars i:nth-child(2){height:13px;opacity:.55}
+    .cta-leak-bars i:nth-child(3){height:6px;background:var(--coral);opacity:1}
+    .cta-leak-lines{display:grid;gap:6px}
+    .cta-leak-lines span{display:block;height:6px;width:58px;border-radius:var(--radius-pill);background:var(--sky-2)}
+    .cta-leak-lines span.short{width:38px}
+    .motion-ok .cta-phone{animation:cta-phone-drift 5s ease-in-out infinite alternate}
+    .motion-ok .cta-drip{animation:cta-drip-fall 3.4s ease-in infinite}
+    .motion-ok .cta-drip.drip-b{animation-delay:1.6s}
+    @keyframes cta-phone-drift{to{transform:translateY(-7px) rotate(-1.7deg)}}
+    @keyframes cta-drip-fall{0%{transform:translateY(0) rotate(45deg);opacity:0}22%{opacity:.95}78%{opacity:.95}100%{transform:translateY(30px) rotate(45deg);opacity:0}}
+    @media(max-width:900px){
+      .cta-panel{grid-template-columns:1fr;gap:46px;padding:54px 42px}
+      .cta-copy h2{max-width:640px}
+    }
+    @media(max-width:480px){
+      .cta-panel{padding:42px 24px;gap:40px}
+      .cta-phone{width:204px}
+      .cta-leak-chip{left:0;bottom:20px;padding:11px 13px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .cta-phone,.cta-drip{animation:none}
+      .cta-drip{opacity:.9}
+    }
     </style>
 </head>
 <body>
@@ -789,7 +848,7 @@
       </div>
     </div>
   </section>
-  <section class="cta-band"><div class="wrap cta-row"><h2>See where your roofing website is losing you estimates.</h2><a class="btn btn-primary" href="https://csramarketing.com/website-audit/" target="_blank" rel="noopener noreferrer">Review my website</a></div></section>
+  <section class="cta-band cta-band-navy"><div class="wrap"><div class="cta-panel"><div class="cta-copy"><h2>See where your roofing website is <span class="cta-hl">losing you estimates</span>.</h2><a class="btn btn-primary" href="https://csramarketing.com/website-audit/" target="_blank" rel="noopener noreferrer">Review my website</a></div><div class="cta-visual" aria-hidden="true"><div class="cta-phone"><div class="cta-phone-screen"><div class="cta-site-bar"><i></i><span></span><span class="short"></span></div><div class="cta-site-hero"><b></b><b class="mid"></b><em></em></div><div class="cta-site-lines"><span></span><span></span><span class="short"></span></div><div class="cta-site-cards"><i></i><i></i></div><svg class="cta-crack" viewBox="0 0 200 400" preserveAspectRatio="none" focusable="false"><path d="M148 108 L136 142 L154 166 L132 204 L146 236 L126 276"/><path d="M146 236 L170 256 L164 284"/><path d="M132 204 L110 220 L114 246"/></svg><span class="cta-drip drip-a"></span><span class="cta-drip drip-b"></span><span class="cta-puddle"></span></div></div><div class="cta-leak-chip"><div class="cta-leak-bars"><i></i><i></i><i></i></div><div class="cta-leak-lines"><span></span><span class="short"></span></div></div></div></div></div></section>
 </main>
 
 <footer>
