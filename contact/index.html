@@ -149,10 +149,29 @@
     .area-list{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:10px}
     .area-list li{border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-pill);padding:8px 16px;font-weight:600;font-size:14px}
     .area-list li:last-child{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-    .cta-band{padding:108px 0;background:var(--gold);color:#10233f}
+    .cta-band{padding:108px 0;background:var(--paper)}
     .cta-band h2{font-size:clamp(32px,5vw,54px);line-height:1.1;letter-spacing:-.03em;margin:0;font-weight:800}
-    .cta-row{display:flex;justify-content:space-between;align-items:center;gap:50px}
-    .cta-row h2{max-width:750px}
+    .cta-panel{position:relative;overflow:hidden;background:radial-gradient(560px 320px at 88% -10%,rgba(255,188,71,.30),transparent 60%),radial-gradient(520px 320px at -6% 112%,rgba(255,112,92,.24),transparent 60%),var(--navy);color:var(--white);border-radius:var(--radius-lg);padding:64px;box-shadow:var(--shadow)}
+    .cta-row{display:grid;grid-template-columns:1.12fr .88fr;align-items:center;gap:56px;position:relative}
+    .cta-row h2{max-width:640px}
+    .cta-hl{color:#facc15}
+    .cta-panel .btn-primary{box-shadow:5px 5px 0 rgba(0,0,0,.35)}
+    .cta-actions{margin-top:36px}
+    .cal-card{background:var(--paper);color:var(--ink);border-radius:var(--radius-md);padding:24px;box-shadow:0 24px 50px rgba(0,0,0,.28);max-width:330px;width:100%;justify-self:end}
+    .cal-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+    .cal-month{font-weight:700;font-size:15px}
+    .cal-badge{background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:5px 10px;border-radius:var(--radius-pill)}
+    .cal-week,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+    .cal-week span{font-size:10px;font-weight:700;color:var(--muted);padding:3px 0}
+    .cal-grid span{font-size:12px;font-weight:500;padding:6px 0;border-radius:9px;color:var(--ink)}
+    .cal-grid span.is-dim{color:#b6c0c9}
+    .cal-grid span.is-picked{background:#facc15;color:var(--ink);font-weight:800;box-shadow:0 4px 10px rgba(250,204,21,.45)}
+    .cal-slot{display:flex;align-items:center;gap:12px;background:var(--soft);border-radius:14px;padding:13px 15px;margin-top:18px}
+    .cal-slot-dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex-shrink:0}
+    .cal-slot-text{display:flex;flex-direction:column;line-height:1.35}
+    .cal-slot-text strong{font-size:13px}
+    .cal-slot-text span{font-size:12px;color:var(--muted)}
+    .cal-slot-tag{margin-left:auto;font-size:11px;font-weight:700;background:#facc15;color:var(--ink);padding:5px 10px;border-radius:var(--radius-pill);white-space:nowrap}
     p,li{line-height:1.75}
     .motion-ok .page-hero-grid>div,.motion-ok .page-hero-grid>.hero-side{animation:page-hero-in .72s cubic-bezier(.2,.7,.2,1) both}
     .motion-ok .page-hero-grid>.hero-side{animation-delay:.12s}
@@ -259,6 +278,16 @@
       .motion-ok .reveal,.motion-ok .page-hero-grid>div,.motion-ok .page-hero-grid>.hero-side,.motion-ok .page-visual{opacity:1;transform:none;transition:none;animation:none}
       .orbit-dot{animation:none}
     }
+    @media(max-width:900px){
+      .cta-row{grid-template-columns:1fr;gap:38px}
+      .cta-panel{padding:46px 30px}
+      .cal-card{justify-self:start;max-width:340px}
+    }
+    @media(max-width:480px){
+      .cta-panel{padding:38px 22px;border-radius:24px}
+      .cal-card{padding:20px;max-width:100%}
+      .cta-actions .btn{width:100%}
+    }
   </style>
 </head>
 <body data-route="contact">
@@ -326,7 +355,7 @@
       </div>
     </div>
   </section>
-  <section class="cta-band"><div class="wrap cta-row"><h2>Not sure where to start? Get the free audit first.</h2><a class="btn btn-primary" href="https://csramarketing.com/website-audit/" target="_blank" rel="noopener noreferrer">Get my free roofing audit</a></div></section>
+  <section class="cta-band"><div class="wrap"><div class="cta-panel"><div class="cta-row"><div><h2>Not sure where to start? Get the <span class="cta-hl">free audit first</span>.</h2><div class="cta-actions"><a class="btn btn-primary" href="https://csramarketing.com/website-audit/" target="_blank" rel="noopener noreferrer">Get my free roofing audit</a></div></div><div class="cal-card" aria-hidden="true"><div class="cal-card-top"><span class="cal-month">October 2026</span><span class="cal-badge">Free review</span></div><div class="cal-week"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div><div class="cal-grid"><span></span><span></span><span></span><span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span class="is-picked">16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span></div><div class="cal-slot"><span class="cal-slot-dot"></span><div class="cal-slot-text"><strong>Free 30 minute review</strong><span>Fri, Oct 16 at 10:30 AM</span></div><span class="cal-slot-tag">Your slot</span></div></div></div></div></div></section>
 </main>
 <footer>
   <div class="wrap">
