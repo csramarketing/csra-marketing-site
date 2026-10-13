@@ -54,7 +54,6 @@
         "contactPoint": {
           "@type": "ContactPoint",
           "contactType": "sales",
-          "email": "kemar.csramarketing@gmail.com",
           "areaServed": ["Augusta", "Evans", "Martinez", "Grovetown", "North Augusta", "Aiken"],
           "availableLanguage": "English"
         },
@@ -288,6 +287,40 @@
       .cal-card{padding:20px;max-width:100%}
       .cta-actions .btn{width:100%}
     }
+    /* Lead qualification form */
+    .lead-form{display:grid;gap:22px;width:100%}
+    .lead-form .field{display:grid;gap:8px}
+    .lead-form label,.lead-form legend{font-size:14px;font-weight:600;color:var(--navy);line-height:1.4}
+    .lead-form fieldset{border:0;padding:0;margin:0;min-width:0}
+    .lead-form legend{padding:0;margin-bottom:12px}
+    .lead-form .req{color:var(--coral)}
+    .lead-form .input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px 16px;min-height:52px;transition:border-color .2s ease,box-shadow .2s ease}
+    .lead-form .input::placeholder{color:#93a1ae}
+    .lead-form .input:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,112,92,.18)}
+    .lead-form .textarea{resize:vertical;min-height:110px}
+    .select-wrap{position:relative}
+    .select-wrap:after{content:"";position:absolute;right:18px;top:50%;width:9px;height:9px;border-right:2px solid var(--navy);border-bottom:2px solid var(--navy);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+    .lead-form .select{appearance:none;-webkit-appearance:none;padding-right:46px;cursor:pointer}
+    .lead-form .select:invalid{color:#93a1ae}
+    .pill-group{display:flex;flex-wrap:wrap;gap:10px}
+    .pill{position:relative;display:inline-flex;align-items:center;min-height:48px;padding:11px 18px;border:1.5px solid var(--line);border-radius:var(--radius-pill);background:var(--paper);font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;transition:border-color .2s ease,background-color .2s ease,color .2s ease,box-shadow .2s ease;-webkit-tap-highlight-color:transparent}
+    .pill input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+    .pill:has(input:checked){background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 8px 18px rgba(16,35,63,.22)}
+    .pill:has(input:focus-visible){outline:3px solid var(--gold);outline-offset:3px}
+    .pill:hover{border-color:var(--navy)}
+    .field.is-invalid .input{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,112,92,.15)}
+    .lead-form .field-error{margin:2px 0 0;font-size:13px;font-weight:600;color:#d84a36;line-height:1.45}
+    .lead-form .form-error{margin:0;background:rgba(255,112,92,.12);border:1px solid var(--coral);border-radius:12px;padding:14px 16px;font-size:14px;font-weight:600;color:#b33725;line-height:1.5}
+    .hp-wrap{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .btn-submit{width:100%;background:var(--cta-yellow);color:var(--cta-ink);box-shadow:5px 5px 0 var(--ink);font-size:17px}
+    .btn-submit:disabled{opacity:.65;cursor:wait;transform:none}
+    .form-success{display:grid;gap:14px;width:100%;justify-items:start;text-align:left}
+    .form-success[hidden]{display:none}
+    .success-badge{width:56px;height:56px;border-radius:50%;background:rgba(255,112,92,.14);color:var(--coral);display:grid;place-items:center}
+    .form-success .success-text{font-size:22px;font-weight:700;color:var(--navy);line-height:1.35;margin:0}
+    .form-success .success-sub{margin:0;color:var(--muted)}
+    .success-cta{margin-top:4px}
+    @media(max-width:480px){.success-cta{width:100%}}
   </style>
 </head>
 <body data-route="contact">
@@ -337,7 +370,92 @@
         <article class="contact-card reveal-target">
           <h2>Send us a message</h2>
           <p>Prefer email? Send us a note about your roofing company and what you want your website and SEO to do. We read every message ourselves and reply within one business day.</p>
-          <a class="email-link" href="mailto:kemar.csramarketing@gmail.com">kemar.csramarketing@gmail.com</a>
+          <form class="lead-form" id="leadForm" novalidate>
+            <div class="field">
+              <label for="lf-name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input class="input" id="lf-name" name="name" type="text" autocomplete="name" placeholder="Your name">
+              <p class="field-error" hidden>Please enter your name.</p>
+            </div>
+            <div class="field">
+              <label for="lf-business">Business name <span class="req" aria-hidden="true">*</span></label>
+              <input class="input" id="lf-business" name="business" type="text" autocomplete="organization" placeholder="Your company name">
+              <p class="field-error" hidden>Please enter your business name.</p>
+            </div>
+            <div class="field">
+              <label for="lf-email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input class="input" id="lf-email" name="email" type="email" autocomplete="email" placeholder="you@company.com">
+              <p class="field-error" hidden>Please enter a valid email address.</p>
+            </div>
+            <div class="field">
+              <label for="lf-phone">Phone <span class="req" aria-hidden="true">*</span></label>
+              <input class="input" id="lf-phone" name="phone" type="tel" autocomplete="tel" placeholder="(706) 555-0123">
+              <p class="field-error" hidden>Please enter a valid phone number.</p>
+            </div>
+            <div class="field">
+              <label for="lf-website">Website URL</label>
+              <input class="input" id="lf-website" name="website" type="url" autocomplete="url" placeholder="https://">
+            </div>
+            <div class="field">
+              <label for="lf-locations">How many locations? <span class="req" aria-hidden="true">*</span></label>
+              <div class="select-wrap">
+                <select class="input select" id="lf-locations" name="locations">
+                  <option value="" selected disabled>Select one</option>
+                  <option value="1">1</option>
+                  <option value="2-5">2-5</option>
+                  <option value="6+">6+</option>
+                </select>
+              </div>
+              <p class="field-error" hidden>Please select how many locations you have.</p>
+            </div>
+            <fieldset class="field field-group">
+              <legend>What are your goals?</legend>
+              <div class="pill-group" data-group="goals">
+                <label class="pill"><input type="checkbox" name="goals" value="More estimate calls">More estimate calls</label>
+                <label class="pill"><input type="checkbox" name="goals" value="Better Google rankings">Better Google rankings</label>
+                <label class="pill"><input type="checkbox" name="goals" value="A website I'm proud of">A website I'm proud of</label>
+                <label class="pill"><input type="checkbox" name="goals" value="More online reviews">More online reviews</label>
+              </div>
+            </fieldset>
+            <fieldset class="field field-group">
+              <legend>Which services interest you?</legend>
+              <div class="pill-group" data-group="services">
+                <label class="pill"><input type="checkbox" name="services" value="New website">New website</label>
+                <label class="pill"><input type="checkbox" name="services" value="Local SEO">Local SEO</label>
+                <label class="pill"><input type="checkbox" name="services" value="Not sure yet">Not sure yet</label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="lf-budget">Monthly marketing budget <span class="req" aria-hidden="true">*</span></label>
+              <div class="select-wrap">
+                <select class="input select" id="lf-budget" name="budget">
+                  <option value="" selected disabled>Select one</option>
+                  <option value="Under $500">Under $500</option>
+                  <option value="$500-$1,500">$500-$1,500</option>
+                  <option value="$1,500-$3,000">$1,500-$3,000</option>
+                  <option value="$3,000+">$3,000+</option>
+                </select>
+              </div>
+              <p class="field-error" hidden>Please select your monthly marketing budget.</p>
+            </div>
+            <div class="field">
+              <label for="lf-message">Anything else you want us to know?</label>
+              <textarea class="input textarea" id="lf-message" name="message" rows="4" placeholder="Tell us a little about where your business is headed"></textarea>
+            </div>
+            <div class="hp-wrap" aria-hidden="true">
+              <label for="lf-company-website">Company website</label>
+              <input id="lf-company-website" name="company_website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <p class="form-error" id="formError" hidden>Something went wrong sending your message. Please try again.</p>
+            <button class="btn btn-submit" id="leadSubmit" type="submit">Send message</button>
+          </form>
+          <div class="form-success" id="formSuccess" hidden>
+            <div class="success-badge" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <p class="success-text" id="successText"></p>
+            <p class="success-sub">Want a faster answer? Grab a time on the calendar:</p>
+            <a class="btn btn-primary success-cta" href="https://cal.com/csramarketing/30min" target="_blank" rel="noopener noreferrer">Book a free 30 minute review</a>
+          </div>
         </article>
         <article class="contact-card coral reveal-target">
           <h2>Where we work</h2>
@@ -431,6 +549,92 @@
   function updateNavDepth(){siteNav.classList.toggle('is-scrolled',window.scrollY>12);}
   window.addEventListener('scroll',updateNavDepth,{passive:true});
   updateNavDepth();
+
+  var leadForm=document.getElementById('leadForm');
+  if(leadForm){
+    var leadSubmit=document.getElementById('leadSubmit');
+    var formError=document.getElementById('formError');
+    var formSuccess=document.getElementById('formSuccess');
+    var successText=document.getElementById('successText');
+    var FORM_ENDPOINT='https://script.google.com/macros/s/AKfycbysr6X3ptdaN_uT89cpaWqrd6aSyb7rGXApp83niLlWsBHjRieWpmJMX9sO9rA6xkiKnQ/exec';
+
+    function setFieldError(field,hasError){
+      if(!field)return;
+      field.classList.toggle('is-invalid',!!hasError);
+      var err=field.querySelector('.field-error');
+      if(err)err.hidden=!hasError;
+    }
+    function validateField(id,rule){
+      var input=document.getElementById(id);
+      var value=(input.value||'').trim();
+      var ok=true;
+      if(rule==='required')ok=value.length>0;
+      if(rule==='email')ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      if(rule==='phone')ok=value.replace(/\D/g,'').length>=7;
+      if(rule==='select')ok=value.length>0;
+      setFieldError(input.closest('.field'),!ok);
+      return ok;
+    }
+    var requiredChecks=[['lf-name','required'],['lf-business','required'],['lf-email','email'],['lf-phone','phone'],['lf-locations','select'],['lf-budget','select']];
+    requiredChecks.forEach(function(pair){
+      var input=document.getElementById(pair[0]);
+      input.addEventListener('input',function(){setFieldError(input.closest('.field'),false);});
+      input.addEventListener('change',function(){setFieldError(input.closest('.field'),false);});
+    });
+
+    leadForm.addEventListener('submit',function(event){
+      event.preventDefault();
+      formError.hidden=true;
+      var firstInvalid=null;
+      requiredChecks.forEach(function(pair){
+        var valid=validateField(pair[0],pair[1]);
+        if(!valid&&!firstInvalid)firstInvalid=document.getElementById(pair[0]);
+      });
+      if(firstInvalid){firstInvalid.focus();return;}
+
+      var nameValue=document.getElementById('lf-name').value.trim();
+      var firstName=nameValue.split(/\s+/)[0]||nameValue;
+
+      function checkedValues(groupName){
+        var boxes=leadForm.querySelectorAll('input[name="'+groupName+'"]:checked');
+        var values=[];
+        boxes.forEach(function(box){values.push(box.value);});
+        return values.join(', ');
+      }
+
+      var payload=new URLSearchParams();
+      payload.append('name',nameValue);
+      payload.append('business',document.getElementById('lf-business').value.trim());
+      payload.append('email',document.getElementById('lf-email').value.trim());
+      payload.append('phone',document.getElementById('lf-phone').value.trim());
+      payload.append('website',document.getElementById('lf-website').value.trim());
+      payload.append('locations',document.getElementById('lf-locations').value);
+      payload.append('goals',checkedValues('goals'));
+      payload.append('services',checkedValues('services'));
+      payload.append('budget',document.getElementById('lf-budget').value);
+      payload.append('message',document.getElementById('lf-message').value.trim());
+      payload.append('company_website',document.getElementById('lf-company-website').value);
+
+      leadSubmit.disabled=true;
+      leadSubmit.textContent='Sending...';
+
+      fetch(FORM_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body:payload.toString()
+      }).then(function(response){
+        if(!response.ok)throw new Error('send failed');
+        successText.textContent="Thanks, "+firstName+"! We'll reply within one business day.";
+        leadForm.hidden=true;
+        formSuccess.hidden=false;
+        formSuccess.scrollIntoView({behavior:'smooth',block:'center'});
+      }).catch(function(){
+        formError.hidden=false;
+        leadSubmit.disabled=false;
+        leadSubmit.textContent='Send message';
+      });
+    });
+  }
 </script>
 </body>
 </html>
