@@ -777,7 +777,10 @@
   document.addEventListener('click', function(e) {
     var link = e.target.closest('a');
     var btn = e.target.closest('button');
-    var el = link ? link.getAttribute('href') : '';
+    var el = link || btn;
+    if (!el) return;
+    var text = cleanText(el);
+    var href = link ? link.getAttribute('href') : '';
     var page = window.location.pathname;
     var category = 'other';
     if (href && href.indexOf('cal.com') !== -1) category = 'booking';
