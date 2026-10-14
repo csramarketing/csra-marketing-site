@@ -382,9 +382,9 @@
     .motion-ok .service,.motion-ok .note,.motion-ok .fit-panel,.motion-ok .page-visual{transition:transform .38s cubic-bezier(.2,.75,.2,1),box-shadow .38s ease}
     .motion-ok .service:hover,.motion-ok .note:hover,.motion-ok .fit-panel:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(16,35,63,.1)}
     .motion-ok .page-visual:hover{transform:translateY(-4px) rotate(-.35deg)}
-    .motion-ok .visual-seo .rank-card{animation:rank-breathe 3.6s ease-in-out infinite}
-    .motion-ok .visual-seo .rank-card:nth-child(3){animation-delay:.3s}
-    .motion-ok .visual-seo .rank-card:nth-child(4){animation-delay:.6s}
+    .motion-ok .visual-seo .maps-row{animation:rank-breathe 3.6s ease-in-out infinite}
+    .motion-ok .visual-seo .maps-row:nth-child(2){animation-delay:.3s}
+    .motion-ok .visual-seo .maps-row:nth-child(3){animation-delay:.6s}
     .motion-ok .mock-phone{animation:phone-float 4s ease-in-out infinite alternate}
     .motion-ok .calendar-placeholder span:nth-child(11),.motion-ok .calendar-placeholder span:nth-child(18),.motion-ok .calendar-placeholder span:nth-child(23){animation:calendar-pulse 2.8s ease-in-out infinite}
     .motion-ok .calendar-placeholder span:nth-child(18){animation-delay:.35s}.motion-ok .calendar-placeholder span:nth-child(23){animation-delay:.7s}
@@ -732,7 +732,7 @@
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}.btn,.site-nav,.service,.note,.fit-panel,.page-visual{transition:none}.btn:hover,.btn:active,.service:hover,.note:hover,.fit-panel:hover,.page-visual:hover{transform:none}
       .motion-ok .reveal,.motion-ok .hero-grid>div,.motion-ok .hero-art,.motion-ok .art-note,.motion-ok .site-page.is-active .page-hero-grid>div,.motion-ok .site-page.is-active .page-hero-grid>.hero-side,.motion-ok .site-page.is-active .page-visual{opacity:1;transform:none;transition:none;animation:none}
-      .funnel-track:after,.orbit-dot,.visual-seo .rank-card,.mock-phone,.calendar-placeholder span,.audit-dial,.signal-card,.signal-step i{animation:none}
+      .funnel-track:after,.orbit-dot,.visual-seo .maps-row,.mock-phone,.calendar-placeholder span,.audit-dial,.signal-card,.signal-step i{animation:none}
     }
     /* Header logo: reliable tap target on iPhone / mobile Safari.
        The anchor tightly wraps the image (inline-flex, no line-height gap),
@@ -867,16 +867,29 @@
     .page-hero-grid{align-items:start}
     .hero-side{gap:24px}
     .page-visual.visual-seo{box-shadow:0 26px 55px rgba(16,35,63,.2),inset 0 1px 0 rgba(255,255,255,.09)}
-    .visual-seo{padding:30px}
-    .visual-seo .search-bar{height:42px;font-size:12px;padding:0 16px;margin-bottom:18px;box-shadow:0 6px 16px rgba(3,10,22,.28)}
-    .visual-seo .rank-card{grid-template-columns:32px 1fr 48px;padding:14px 0}
-    .visual-seo .rank-card strong{font-size:18px}
-    .visual-seo .rank-card div span{height:6px}
-    .visual-seo .rank-card small{padding:5px 4px}
+    .visual-seo{padding:24px}
+    .visual-seo .maps-search{height:40px;background:var(--surface);color:var(--ink);display:flex;align-items:center;gap:10px;padding:0 16px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;margin-bottom:12px;box-shadow:0 6px 16px rgba(3,10,22,.28)}
+    .visual-seo .maps-search svg{width:17px;height:17px;flex:0 0 auto;fill:#5f6b76}
+    .visual-seo .maps-map{border-radius:16px;overflow:hidden;line-height:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+    .visual-seo .maps-map svg{width:100%;height:118px;display:block}
+    .visual-seo .maps-list{display:grid;gap:7px;margin-top:12px}
+    .visual-seo .maps-row{display:flex;align-items:center;gap:12px;background:color-mix(in srgb,var(--paper) 6%,transparent);border:1px solid color-mix(in srgb,var(--paper) 9%,transparent);border-radius:14px;padding:10px 12px}
+    .visual-seo .maps-row.is-top{background:color-mix(in srgb,var(--paper) 11%,transparent);border-color:var(--coral)}
+    .visual-seo .maps-row-main{min-width:0;flex:1}
+    .visual-seo .maps-name{display:block;font-size:13px;font-weight:700;color:var(--paper);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .visual-seo .maps-rating{display:flex;align-items:center;gap:6px;margin-top:3px;font-size:11px;font-weight:600;color:color-mix(in srgb,var(--paper) 82%,transparent);line-height:1.2}
+    .visual-seo .maps-stars{display:inline-flex;gap:1px}
+    .visual-seo .maps-stars svg{width:11px;height:11px;fill:var(--gold)}
+    .visual-seo .maps-stars svg.dim{opacity:.35}
+    .visual-seo .maps-count{font-weight:500;color:color-mix(in srgb,var(--paper) 60%,transparent)}
+    .visual-seo .maps-meta{display:block;font-size:11px;color:color-mix(in srgb,var(--paper) 62%,transparent);margin-top:3px;line-height:1.35}
+    .visual-seo .maps-call{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;background:var(--gold);color:#10233f;font-size:11px;font-weight:700;border-radius:var(--radius-pill);padding:8px 12px;box-shadow:0 4px 10px rgba(3,10,22,.25)}
+    .visual-seo .maps-call svg{width:12px;height:12px;fill:#10233f}
     .page-aside{border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:0 14px 34px rgba(16,35,63,.07)}
     .page-aside strong:before{content:"";display:block;width:26px;height:5px;background:var(--coral);border-radius:var(--radius-pill);margin-bottom:13px}
     @media(max-width:480px){
-      .visual-seo{padding:24px}
+      .visual-seo{padding:20px}
+      .visual-seo .maps-map svg{height:104px}
     }
   </style>
 </head>
@@ -900,7 +913,7 @@
   <header class="page-hero">
     <div class="wrap page-hero-grid">
       <div><div class="eyebrow">Local SEO measured in calls</div><h1>Be the roofer they find first.</h1><p>Top of Google Maps in your service area. First roofer they see, first number they dial. Every call tracked.</p></div>
-      <div class="hero-side"><div class="page-visual visual-seo" aria-hidden="true"><div class="search-bar">roof repair near Augusta</div><div class="rank-card"><strong>01</strong><div><span></span><span></span></div><small>LOCAL</small></div><div class="rank-card"><strong>02</strong><div><span></span><span></span></div><small>TRUST</small></div><div class="rank-card"><strong>03</strong><div><span></span><span></span></div><small>CALL</small></div></div><aside class="page-aside"><strong>Rankings are a signal. Calls are the result.</strong><p>Every website call is tracked and recorded. If the phone's not ringing, you'll know, and so will we. No hiding behind traffic charts.</p></aside></div>
+      <div class="hero-side"><div class="page-visual visual-seo" aria-hidden="true"><div class="maps-search"><svg viewBox="0 0 24 24" focusable="false"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg><span>roofer near me</span></div><div class="maps-map"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="400" height="150" fill="#e8eded"/><rect x="10" y="10" width="50" height="26" fill="#d6dfe1"/><rect x="86" y="10" width="82" height="26" fill="#dee6e8"/><rect x="194" y="10" width="92" height="26" fill="#d6dfe1"/><rect x="314" y="10" width="76" height="26" fill="#cfe0cd"/><rect x="10" y="58" width="50" height="32" fill="#dee6e8"/><rect x="86" y="58" width="82" height="32" fill="#d0dadc"/><rect x="92" y="64" width="30" height="9" fill="#bfcbce"/><rect x="128" y="76" width="34" height="9" fill="#bfcbce"/><rect x="194" y="58" width="92" height="32" fill="#dee6e8"/><rect x="314" y="58" width="76" height="32" fill="#d6dfe1"/><rect x="10" y="112" width="158" height="28" fill="#d6dfe1"/><rect x="194" y="112" width="92" height="28" fill="#dee6e8"/><rect x="314" y="112" width="76" height="28" fill="#d0dadc"/><path d="M73 -5 V155 M181 -5 V155 M300 -5 V155" stroke="#ffffff" stroke-width="13" fill="none"/><path d="M-5 47 H405 M-5 101 H405" stroke="#ffffff" stroke-width="13" fill="none"/><path d="M-8 14 L168 155" stroke="#f7f9f9" stroke-width="9" fill="none"/><circle cx="205" cy="74" r="6" fill="#7d9dbd" stroke="#ffffff" stroke-width="2.5"/><g transform="translate(94,60) scale(1.05)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#93a3ad"/><circle cx="12" cy="9" r="2.6" fill="#ffffff"/></g><g transform="translate(322,66) scale(1.05)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#93a3ad"/><circle cx="12" cy="9" r="2.6" fill="#ffffff"/></g><ellipse cx="255" cy="64" rx="11" ry="3" fill="rgba(16,35,63,.16)"/><g transform="translate(238,30) scale(1.45)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#ff705c"/><circle cx="12" cy="9" r="2.6" fill="#ffffff"/></g></svg></div><div class="maps-list"><div class="maps-row is-top"><div class="maps-row-main"><span class="maps-name">Your Business Here</span><span class="maps-rating">4.9 <span class="maps-stars"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span> <span class="maps-count">(127)</span></span><span class="maps-meta">Roofing contractor · 0.8 mi</span></div><span class="maps-call"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call</span></div><div class="maps-row"><div class="maps-row-main"><span class="maps-name">Acme Roofing</span><span class="maps-rating">4.7 <span class="maps-stars"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg class="dim" viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span> <span class="maps-count">(86)</span></span><span class="maps-meta">Roofing contractor · 1.2 mi</span></div><span class="maps-call"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call</span></div><div class="maps-row"><div class="maps-row-main"><span class="maps-name">Another Roofing Co.</span><span class="maps-rating">4.5 <span class="maps-stars"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg class="dim" viewBox="0 0 24 24" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span> <span class="maps-count">(58)</span></span><span class="maps-meta">Roofing contractor · 2.4 mi</span></div><span class="maps-call"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call</span></div></div></div><aside class="page-aside"><strong>Rankings are a signal. Calls are the result.</strong><p>Every website call is tracked and recorded. If the phone's not ringing, you'll know, and so will we. No hiding behind traffic charts.</p></aside></div>
     </div>
   </header>
   <section class="page-section systems-intro">
