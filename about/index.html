@@ -132,23 +132,31 @@
     .section-head{display:flex;justify-content:space-between;align-items:end;gap:80px;margin-bottom:78px}
     .section-head h2{font-size:clamp(34px,5vw,60px);line-height:1.1;letter-spacing:-.03em;margin:0;font-weight:800}
     .section-head p{max-width:480px;color:var(--muted);margin:0}
-    .page-hero{background:var(--paper);padding:120px 0 110px;border-bottom:12px solid var(--gold)}
-    .page-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:104px;align-items:end}
+    .page-hero{background:var(--paper);padding:52px 0 84px;border-bottom:12px solid var(--gold)}
+    .page-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:start}
     .page-hero p{color:var(--muted);font-size:18px;max-width:640px;margin:30px 0 0;line-height:1.75}
     .page-hero .hero-tagline{color:var(--ink);font-size:clamp(18px,2.1vw,22px);font-weight:600;line-height:1.45;max-width:640px;margin:22px 0 0}
     .page-hero .hero-tagline span{color:var(--coral);font-weight:700}
+    .page-hero .hero-subhead{color:var(--muted);font-size:18px;line-height:1.65;max-width:560px;margin:24px 0 0}
+    .hero-actions{margin-top:28px}
+    .hero-bullets{list-style:none;padding:0;margin:30px 0 0;display:grid;gap:12px}
+    .hero-bullets li{position:relative;padding-left:30px;color:var(--ink);font-weight:600;font-size:16px;line-height:1.5}
+    .hero-bullets li:before{content:"✓";position:absolute;left:0;top:0;color:var(--coral);font-weight:800;font-size:17px;line-height:1.5}
+    .hero-trust{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .hero-stars{color:#e9a13b;font-size:16px;letter-spacing:2px;line-height:1;white-space:nowrap}
+    .hero-trust-text{color:var(--muted);font-size:13.5px;line-height:1.45}
     .page-aside{border-top:0;background:var(--soft);padding:30px;border-radius:var(--radius-md)}
     .page-aside strong{display:block;font-size:21px;line-height:1.25;margin-bottom:14px}
     .page-aside p{font-size:14px;margin:0}
-    .hero-side{display:grid;gap:32px}
-    .page-visual{position:relative;min-height:245px;background:var(--ink);color:var(--paper);overflow:hidden;box-shadow:var(--shadow);isolation:isolate;border-radius:var(--radius-lg)}
+    .hero-side{display:grid;gap:32px;align-content:start}
+    .page-visual{position:relative;min-height:380px;background:var(--ink);color:var(--paper);overflow:hidden;box-shadow:var(--shadow);isolation:isolate;border-radius:var(--radius-lg)}
     .page-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,color-mix(in srgb,var(--coral) 12%,transparent),transparent 45%,color-mix(in srgb,var(--gold) 12%,transparent));z-index:-1}
-    .visual-about{display:grid;place-items:center;min-height:270px}
-    .local-orbit{width:174px;height:174px;border:1px solid color-mix(in srgb,var(--paper) 22%,transparent);border-radius:50%;display:grid;place-items:center;position:relative}
-    .local-orbit:before,.local-orbit:after{content:"";position:absolute;border:1px solid color-mix(in srgb,var(--paper) 18%,transparent);border-radius:50%}.local-orbit:before{inset:25px}.local-orbit:after{inset:52px;background:var(--coral);border:8px solid var(--ink)}
-    .local-orbit strong{position:absolute;z-index:2;font-size:11px;color:#10233f;top:50%;left:50%;transform:translate(-50%,-50%)}
-    .orbit-dot{position:absolute;width:11px;height:11px;background:var(--gold);border:3px solid var(--ink);border-radius:50%;left:50%;top:-6px;transform-origin:0 93px;animation:orbit 22s linear infinite}
-    .orbit-place{position:absolute;font-size:9px;font-weight:800;line-height:1;white-space:nowrap;color:color-mix(in srgb,var(--paper) 72%,transparent);transform:translate(-50%,-50%)}.orbit-place.one{top:-7px;left:50%}.orbit-place.two{top:22%;left:100%}.orbit-place.three{top:78%;left:100%}.orbit-place.four{top:calc(100% + 7px);left:50%}.orbit-place.five{top:78%;left:0}.orbit-place.six{top:22%;left:0}
+    .visual-about{display:grid;place-items:center;min-height:380px;padding:44px 24px}
+    .local-orbit{width:232px;height:232px;border:1px solid color-mix(in srgb,var(--paper) 22%,transparent);border-radius:50%;display:grid;place-items:center;position:relative}
+    .local-orbit:before,.local-orbit:after{content:"";position:absolute;border:1px solid color-mix(in srgb,var(--paper) 18%,transparent);border-radius:50%}.local-orbit:before{inset:33px}.local-orbit:after{inset:69px;background:var(--coral);border:8px solid var(--ink)}
+    .local-orbit strong{position:absolute;z-index:2;font-size:12px;color:#10233f;top:50%;left:50%;transform:translate(-50%,-50%)}
+    .orbit-dot{position:absolute;width:11px;height:11px;background:var(--gold);border:3px solid var(--ink);border-radius:50%;left:50%;top:-6px;transform-origin:0 122px;animation:orbit 22s linear infinite}
+    .orbit-place{position:absolute;font-size:11px;font-weight:800;line-height:1;white-space:nowrap;color:color-mix(in srgb,var(--paper) 72%,transparent);transform:translate(-50%,-50%)}.orbit-place.one{top:-9px;left:50%}.orbit-place.two{top:22%;left:100%}.orbit-place.three{top:78%;left:100%}.orbit-place.four{top:calc(100% + 9px);left:50%}.orbit-place.five{top:78%;left:0}.orbit-place.six{top:22%;left:0}
     .page-section{padding:124px 0}
     .page-section.alt{background:var(--surface)}
     .editorial-grid{display:grid;grid-template-columns:.72fr 1.28fr;gap:112px;align-items:start}
@@ -244,13 +252,18 @@
       .page-hero-grid,.editorial-grid{gap:24px}
       .eyebrow{font-size:12px;line-height:1.4;margin-bottom:10px}
       .hero-side{gap:14px}
-      .page-visual{min-height:210px}
-      .visual-about{min-height:184px;max-width:none}
-      .local-orbit{width:132px;height:132px}
-      .local-orbit:before{inset:20px}
-      .local-orbit:after{inset:40px;border-width:7px}
+      .page-visual{min-height:264px}
+      .visual-about{min-height:264px;max-width:none;padding:36px 16px}
+      .local-orbit{width:168px;height:168px}
+      .local-orbit:before{inset:24px}
+      .local-orbit:after{inset:50px;border-width:7px}
       .local-orbit strong{font-size:10px}
-      .orbit-dot{animation-duration:41s;transform-origin:0 72px}
+      .orbit-dot{animation-duration:41s;transform-origin:0 90px}
+      .page-hero .hero-subhead{font-size:15.5px;line-height:1.6;margin-top:16px}
+      .hero-actions{margin-top:22px}
+      .hero-bullets{margin-top:24px;gap:10px}
+      .hero-bullets li{font-size:15px}
+      .hero-trust{margin-top:22px}
       .orbit-place{font-size:10px;line-height:1.1}
       .orbit-place.one{top:-18px;left:50%}
       .orbit-place.two{top:20%;left:calc(100% + 38px)}
@@ -316,7 +329,7 @@
 <main>
   <header class="page-hero">
     <div class="wrap page-hero-grid">
-      <div><div class="eyebrow">Straight answers for local roofers</div><h1>You run the roofing company. Your marketing should prove it's working.</h1><p class="hero-tagline">CSRA: the <span>Contractor Search &amp; Revenue Agency</span>. Based in Augusta, built for roofers nationwide.</p><p>We only work with roofers. You'll see tracked calls, booked jobs, and what each lead cost, in plain English.</p></div>
+      <div class="hero-copy"><div class="eyebrow">Straight answers for local roofers</div><h1>Your marketing should earn its keep.</h1><p class="hero-subhead">Every call tracked and every dollar tied back to revenue. If your marketing is not paying for itself, you will know.</p><div class="hero-actions"><a class="btn btn-primary" href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book a 15-minute review</a></div><ul class="hero-bullets"><li>Every call tracked and tied to revenue</li><li>Straight reporting, no vanity metrics</li><li>Built only for roofing companies</li></ul><div class="hero-trust"><span class="hero-stars" aria-hidden="true">★★★★★</span><span class="hero-trust-text">Built for roofing companies in your service area</span></div></div>
       <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit"><div class="orbit-dot"></div><strong>CSRA</strong><span class="orbit-place one">EVANS</span><span class="orbit-place two">MARTINEZ</span><span class="orbit-place three">NORTH AUGUSTA</span><span class="orbit-place four">AIKEN</span><span class="orbit-place five">GROVETOWN</span><span class="orbit-place six">AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
     </div>
   </header>
