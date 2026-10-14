@@ -350,14 +350,45 @@
     .faq-item p { margin: 0; color: var(--navy-soft); font-size: 0.96rem; }
     .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start; }
 
-    /* Final CTA */
-    .cta {
+    /* Booking section */
+    .booking {
       margin: 60px 0 0; background: var(--navy); color: #fff;
-      border-radius: 22px; padding: 48px 34px; text-align: center;
+      border-radius: 22px; padding: 56px 48px;
     }
-    .cta h2 { font-size: clamp(1.65rem, 3.6vw, 2.35rem); margin: 0 0 12px; font-weight: 700; line-height: 1.25; }
-    .cta p { color: #cfdaea; max-width: 640px; margin: 0 auto 26px; font-size: 1.03rem; }
-    .cta .fine { margin: 16px auto 0; font-size: 0.88rem; color: #9fb0c6; }
+    .booking-grid {
+      display: grid; grid-template-columns: 1fr 1.05fr; gap: 52px; align-items: center;
+    }
+    .booking h2 {
+      font-size: clamp(1.9rem, 3.8vw, 2.6rem); margin: 0 0 16px; font-weight: 800; line-height: 1.18;
+    }
+    .booking .sub { color: #cfdaea; margin: 0; font-size: 1.05rem; max-width: 460px; }
+    .booking-badges {
+      list-style: none; margin: 30px 0 0; padding: 24px 0 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex; flex-wrap: wrap; gap: 12px 28px;
+    }
+    .booking-badges li {
+      font-size: 0.98rem; font-weight: 600; color: #fff;
+      padding-left: 28px; position: relative; white-space: nowrap;
+    }
+    .booking-badges li::before {
+      content: "✓"; color: var(--yellow-solid); font-weight: 700;
+      position: absolute; left: 4px; top: 0;
+    }
+    .book-card {
+      background: #fff; color: var(--navy); border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(3, 12, 26, 0.45);
+      padding: 30px 30px 26px;
+    }
+    .book-card h3 { margin: 0 0 8px; font-size: 1.28rem; font-weight: 700; line-height: 1.3; }
+    .book-card .card-sub { margin: 0 0 20px; font-size: 0.95rem; color: var(--muted); }
+    .cal-embed { width: 100%; }
+    .cal-embed iframe {
+      display: block; width: 100%; height: 760px; min-height: 760px;
+      border: 0; border-radius: 10px; background: #fff;
+    }
+    .book-card .fallback { margin: 16px 0 0; font-size: 0.88rem; color: var(--muted); text-align: center; }
+    .book-card .fallback a { color: var(--navy); font-weight: 600; }
 
     /* Footer */
     footer.site { margin-top: 56px; border-top: 1px solid var(--line); padding: 30px 0 38px; }
@@ -372,6 +403,8 @@
 
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+      .booking-grid { grid-template-columns: 1fr; gap: 36px; }
+      .booking .sub { max-width: none; }
       .get-grid, .why-grid, .steps { grid-template-columns: 1fr 1fr; }
       .faq-grid { grid-template-columns: 1fr; }
     }
@@ -385,7 +418,10 @@
       .hero-cta-row .fine { width: 100%; text-align: center; }
       .band { padding: 26px 22px; }
       .band .btn { width: 100%; }
-      .cta { padding: 38px 22px; }
+      .booking { padding: 38px 22px; }
+      .book-card { padding: 22px 16px 18px; }
+      .cal-embed iframe { height: 720px; min-height: 720px; }
+      .booking-badges { gap: 10px 20px; }
       .score-row { flex-direction: column; align-items: flex-start; }
     }
   </style>
@@ -663,12 +699,27 @@
       </div>
     </section>
 
-    <!-- Final CTA -->
-    <section class="cta" aria-labelledby="cta-heading">
-      <h2 id="cta-heading">Find out exactly what your website is costing you</h2>
-      <p>Book your audit and we will show you where the calls are leaking, which fixes matter most, and what to do first. You keep the findings either way.</p>
-      <a class="btn" href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book My Website Audit</a>
-      <p class="fine">15 minute call. No pressure, no obligation, no confusing technical report.</p>
+    <!-- Booking -->
+    <section class="booking" id="book" aria-labelledby="booking-heading">
+      <div class="booking-grid">
+        <div>
+          <h2 id="booking-heading">Find the next fix that can help you win more work.</h2>
+          <p class="sub">Book a 15 minute review. You'll see where calls may be getting lost, what should be tracked, and which changes have the clearest path to more estimate requests.</p>
+          <ul class="booking-badges">
+            <li>15 minutes</li>
+            <li>No hard sell</li>
+            <li>Clear next steps</li>
+          </ul>
+        </div>
+        <div class="book-card">
+          <h3>Choose a time that works for you</h3>
+          <p class="card-sub">Pick an available 15 minute time below. Once you book, the meeting is added to the calendar automatically.</p>
+          <div class="cal-embed">
+            <iframe src="https://cal.com/csramarketing/15min?embed=true" title="Book a 15 minute review with CSRA Marketing" loading="lazy" scrolling="no"></iframe>
+          </div>
+          <p class="fallback">Calendar not loading? <a href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Open the booking page</a></p>
+        </div>
+      </div>
     </section>
 
   </main>
