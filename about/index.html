@@ -135,6 +135,8 @@
     .page-hero{background:var(--paper);padding:120px 0 110px;border-bottom:12px solid var(--gold)}
     .page-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:104px;align-items:end}
     .page-hero p{color:var(--muted);font-size:18px;max-width:640px;margin:30px 0 0;line-height:1.75}
+    .page-hero .hero-tagline{color:var(--ink);font-size:clamp(18px,2.1vw,22px);font-weight:600;line-height:1.45;max-width:640px;margin:22px 0 0}
+    .page-hero .hero-tagline span{color:var(--coral);font-weight:700}
     .page-aside{border-top:0;background:var(--soft);padding:30px;border-radius:var(--radius-md)}
     .page-aside strong{display:block;font-size:21px;line-height:1.25;margin-bottom:14px}
     .page-aside p{font-size:14px;margin:0}
@@ -237,6 +239,7 @@
       .section-head{margin-bottom:40px}.section-head p{margin-top:18px}
       .section-head h2,.editorial-intro h2,.cta-band h2{font-size:clamp(30px,8.8vw,38px);line-height:1.1}
       .page-hero{padding:38px 0 42px}.page-hero h1{font-size:clamp(32px,9.2vw,36px);line-height:1.06}.page-hero p{font-size:15px;line-height:1.55;margin-top:14px}
+      .page-hero .hero-tagline{font-size:17px;line-height:1.45;margin-top:16px}
       .page-hero-grid,.editorial-grid{gap:24px}
       .eyebrow{font-size:12px;line-height:1.4;margin-bottom:10px}
       .hero-side{gap:14px}
@@ -312,15 +315,15 @@
 <main>
   <header class="page-hero">
     <div class="wrap page-hero-grid">
-      <div><div class="eyebrow">Straight answers for local roofers</div><h1>You run the roofing company. Your marketing should prove it's working.</h1><p>We only work with roofers in the CSRA. You'll see tracked calls, booked jobs, and what each lead cost, in plain English.</p></div>
-      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit"><div class="orbit-dot"></div><strong>CSRA</strong><span class="orbit-place one">EVANS</span><span class="orbit-place two">MARTINEZ</span><span class="orbit-place three">NORTH AUGUSTA</span><span class="orbit-place four">AIKEN</span><span class="orbit-place five">GROVETOWN</span><span class="orbit-place six">AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city.</p></aside></div>
+      <div><div class="eyebrow">Straight answers for local roofers</div><h1>You run the roofing company. Your marketing should prove it's working.</h1><p class="hero-tagline">CSRA: the <span>Contractor Search &amp; Revenue Agency</span>. Based in Augusta, built for roofers nationwide.</p><p>We only work with roofers. You'll see tracked calls, booked jobs, and what each lead cost, in plain English.</p></div>
+      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit"><div class="orbit-dot"></div><strong>CSRA</strong><span class="orbit-place one">EVANS</span><span class="orbit-place two">MARTINEZ</span><span class="orbit-place three">NORTH AUGUSTA</span><span class="orbit-place four">AIKEN</span><span class="orbit-place five">GROVETOWN</span><span class="orbit-place six">AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
     </div>
   </header>
   <section class="page-section alt">
     <div class="wrap editorial-grid">
-      <div class="editorial-intro"><h2>Roofing SEO and <a class="inline-link" href="https://csramarketing.com/web-design/">web design</a> you can measure in calls.</h2><p>Every recommendation comes back to earning qualified calls. Our <a class="inline-link" href="https://csramarketing.com/local-seo/">local SEO</a> work is tracked the same way, with every website call recorded so the return is visible in plain English.</p></div>
+      <div class="editorial-intro"><h2>Roofing SEO and <a class="inline-link" href="https://csramarketing.com/web-design/">web design</a> you can measure in calls.</h2><p>Every recommendation comes back to earning qualified calls. Our <a class="inline-link" href="https://csramarketing.com/local-seo/">local SEO</a> work is tracked the same way, with every website call recorded so the return is visible in plain English. We are a roofing specialist agency based in Augusta, and we serve contractors across the country with that same clear reporting in every market.</p></div>
       <div class="detail-stack">
-        <article class="detail"><h3>Start with Augusta and the CSRA</h3><p>Focus first on the roofing services and nearby areas that can put more practical, profitable work on your schedule.</p></article>
+        <article class="detail"><h3>Start with Augusta and the CSRA</h3><p>Focus first on the roofing services and nearby areas that can put more practical, profitable work on your schedule. That is our home market, and we bring the same start local focus to roofers building their presence in markets nationwide.</p></article>
         <article class="detail"><h3>Keep only what helps the sale</h3><p>A page, feature, or tactic earns its place by helping a homeowner understand your work, trust your company, or contact you.</p></article>
         <article class="detail"><h3>See proof in plain English</h3><p>Know what was done, how many estimate calls came in, what each one cost, and which calls became real jobs.</p></article>
         <article class="detail"><h3>Keep control of your roofing website</h3><p>You own your site and domain.</p></article>
@@ -331,7 +334,7 @@
     <div class="wrap">
       <div class="section-head"><h2>See if this makes sense for your roofing company.</h2><p>The right fit starts with a real sales problem, realistic expectations, and room to take on more work.</p></div>
       <div class="fit-grid">
-        <article class="fit-panel"><h3>You’re likely a good fit if…</h3><ul class="check-list"><li>You serve Augusta, Grovetown, Evans, Martinez, North Augusta, or the surrounding CSRA.</li><li>Your crews do solid work, but your website does not show it.</li><li>You want more calls for the services and areas that matter most.</li><li>You want tracked calls and cost per estimate instead of a pile of vanity reports.</li></ul></article>
+        <article class="fit-panel"><h3>You’re likely a good fit if…</h3><ul class="check-list"><li>You serve Augusta, Grovetown, Evans, Martinez, North Augusta, the surrounding CSRA, or a hometown market like it anywhere in the country.</li><li>Your crews do solid work, but your website does not show it.</li><li>You want more calls for the services and areas that matter most.</li><li>You want tracked calls and cost per estimate instead of a pile of vanity reports.</li></ul></article>
         <article class="fit-panel"><h3>You may need something else if…</h3><ul class="check-list"><li>You need guaranteed Google rankings or a guaranteed number of leads.</li><li>You want to chase work nationwide before you are strong in your local market.</li><li>You would rather chase rankings and traffic than measure calls, booked jobs, and revenue.</li><li>You are not ready to answer and follow up when new leads come in.</li></ul></article>
       </div>
     </div>
