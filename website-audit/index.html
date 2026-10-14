@@ -729,5 +729,41 @@
   }, true);
 })();
 </script>
+<script>
+(function() {
+  var monthEl = document.querySelector('[data-cal-month]');
+  var gridEl = document.querySelector('[data-cal-grid]');
+  var slotEl = document.querySelector('[data-dynamic-slot]');
+  if (!monthEl && !gridEl && !slotEl) return;
+  var d = new Date();
+  d.setDate(d.getDate() + 2);
+  if (d.getDay() === 6) d.setDate(d.getDate() + 2);
+  if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var monthsShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (slotEl) {
+    slotEl.textContent = days[d.getDay()] + ', ' + monthsShort[d.getMonth()] + ' ' + d.getDate() + ' at 10:30 AM';
+  }
+  if (monthEl) {
+    monthEl.textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  if (gridEl) {
+    var year = d.getFullYear(), month = d.getMonth();
+    var firstDay = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var html = '';
+    for (var i = 0; i < firstDay; i++) { html += '<span></span>'; }
+    for (var day = 1; day <= daysInMonth; day++) {
+      if (day === d.getDate()) {
+        html += '<span class="cal-highlight">' + day + '</span>';
+      } else {
+        html += '<span>' + day + '</span>';
+      }
+    }
+    gridEl.innerHTML = html;
+  }
+})();
+</script>
 </body>
 </html>
