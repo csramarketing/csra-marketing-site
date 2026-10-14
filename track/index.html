@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="data:," />
+    <title>Request Status | CSRA Marketing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light;
+        --navy: #10233f;
+        --navy-deep: #0b1a30;
+        --coral: #ff705c;
+        --yellow: #ffc41f;
+        --yellow-hover: #f5b800;
+        --ink: #1d2735;
+        --muted: #5d6b7d;
+        --faint: #8494a7;
+        --line: #e3e9f1;
+        --bg: #f4f7fb;
+        --card: #ffffff;
+        --track: #e8edf4;
+        --green: #1e9e62;
+        --green-bg: #e7f6ee;
+        --amber: #b97c06;
+        --amber-bg: #fdf3dd;
+        --radius: 18px;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Poppins", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Header */
+      header {
+        background: var(--navy);
+        color: #ffffff;
+        padding: 22px 20px 24px;
+      }
+      .header-inner {
+        max-width: 640px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .logo-mark {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 auto;
+        border-radius: 12px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        color: var(--navy);
+        position: relative;
+        overflow: hidden;
+      }
+      .logo-mark::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 6px;
+        height: 4px;
+        background: var(--yellow);
+      }
+      .logo-mark .dot {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--coral);
+      }
+      .wordmark {
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: 0.2px;
+      }
+      .tagline {
+        font-size: 12.5px;
+        font-weight: 400;
+        color: #b9c8dc;
+        margin-top: 3px;
+        letter-spacing: 0.3px;
+      }
+
+      /* Layout */
+      main {
+        flex: 1;
+        width: 100%;
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 34px 20px 48px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: 0 10px 30px rgba(16, 35, 63, 0.08);
+        padding: 34px 32px 36px;
+      }
+      h1 {
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 10px;
+        line-height: 1.25;
+      }
+      .lead {
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--muted);
+        margin: 0 0 24px;
+      }
+
+      /* Form */
+      label.field-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+      input[type="text"] {
+        width: 100%;
+        font-family: inherit;
+        font-size: 16px;
+        padding: 14px 16px;
+        border: 1.5px solid var(--line);
+        border-radius: 12px;
+        color: var(--ink);
+        background: #ffffff;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      input[type="text"]:focus {
+        border-color: var(--navy);
+        box-shadow: 0 0 0 3px rgba(16, 35, 63, 0.12);
+      }
+      input[type="text"]::placeholder { color: var(--faint); }
+      .btn {
+        display: inline-block;
+        width: 100%;
+        margin-top: 16px;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--navy);
+        background: var(--yellow);
+        border: none;
+        border-radius: 12px;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.15s ease, transform 0.1s ease;
+      }
+      .btn:hover { background: var(--yellow-hover); }
+      .btn:active { transform: translateY(1px); }
+      .btn:focus-visible {
+        outline: 3px solid rgba(16, 35, 63, 0.35);
+        outline-offset: 2px;
+      }
+      .btn.secondary {
+        background: #ffffff;
+        border: 1.5px solid var(--navy);
+        color: var(--navy);
+      }
+      .btn.secondary:hover { background: #eef2f8; }
+      .hint {
+        font-size: 13px;
+        color: var(--faint);
+        margin: 16px 0 0;
+        line-height: 1.55;
+        text-align: center;
+      }
+
+      /* Loading */
+      .loading { text-align: center; padding: 26px 0 10px; }
+      .spinner {
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        border: 4px solid var(--track);
+        border-top-color: var(--coral);
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .loading p {
+        font-size: 15px;
+        color: var(--muted);
+        margin: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner { animation-duration: 2.4s; }
+        .btn { transition: none; }
+      }
+
+      /* Error / not found */
+      .message { text-align: center; padding: 10px 0 4px; }
+      .message .icon-circle {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        background: var(--amber-bg);
+        color: var(--amber);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 700;
+      }
+      .message h2 {
+        font-size: 19px;
+        font-weight: 600;
+        color: var(--navy);
+        margin: 0 0 8px;
+      }
+      .message p {
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--muted);
+        margin: 0;
+      }
+      .message .btn { max-width: 280px; }
+
+      /* Status view */
+      .biz-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 4px;
+        line-height: 1.3;
+        overflow-wrap: break-word;
+      }
+      .tracking-line {
+        font-size: 13px;
+        color: var(--faint);
+        margin: 0 0 26px;
+      }
+      .tracking-line strong { color: var(--muted); font-weight: 600; }
+      .expected-line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff6d8;
+        border: 1px solid #f0dd9a;
+        border-radius: 12px;
+        padding: 13px 16px;
+        font-size: 17.5px;
+        font-weight: 600;
+        line-height: 1.4;
+        color: var(--navy);
+        margin: -10px 0 26px;
+      }
+      .expected-line strong { font-weight: 700; color: var(--navy); }
+      .section-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin: 0 0 8px;
+      }
+      .request-text {
+        font-size: 16.5px;
+        line-height: 1.55;
+        color: var(--ink);
+        margin: 0 0 6px;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+      }
+      .request-details {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--muted);
+        margin: 0 0 6px;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+      }
+      .request-page {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin: 0 0 28px;
+      }
+      .status-block {
+        background: #f7f9fc;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 28px;
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1.25;
+      }
+      .status-dot {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+        background: var(--navy);
+      }
+      .status-dot.received { background: #5d7ea6; }
+      .status-dot.progress { background: var(--coral); }
+      .status-dot.waiting { background: #e39a00; }
+      .status-dot.completed { background: var(--green); }
+      .submitted-line {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin: 10px 0 0;
+      }
+
+      /* 72 business hour progress */
+      .progress-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 9px;
+      }
+      .progress-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--navy);
+        margin: 0;
+      }
+      .progress-note {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin: 0;
+        text-align: right;
+      }
+      .progress-track {
+        height: 12px;
+        border-radius: 999px;
+        background: var(--track);
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: var(--coral);
+        width: 0%;
+      }
+      .progress-fill.done { background: var(--green); }
+      .progress-caption {
+        font-size: 12.5px;
+        color: var(--faint);
+        margin: 9px 0 30px;
+        line-height: 1.55;
+      }
+
+      /* Status steps */
+      .steps { list-style: none; margin: 0; padding: 0; }
+      .step {
+        display: flex;
+        gap: 14px;
+        padding: 13px 14px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+      }
+      .step + .step { margin-top: 4px; }
+      .step .step-marker {
+        width: 26px;
+        height: 26px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        border: 2px solid var(--line);
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--faint);
+        margin-top: 1px;
+      }
+      .step.done .step-marker {
+        border-color: var(--green);
+        background: var(--green);
+        color: #ffffff;
+      }
+      .step.current {
+        background: #f7f9fc;
+        border-color: var(--line);
+      }
+      .step.current .step-marker {
+        border-color: var(--coral);
+        background: var(--coral);
+        color: #ffffff;
+      }
+      .step-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--navy);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .step-desc {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin: 2px 0 0;
+        line-height: 1.5;
+      }
+      .here-badge {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        background: var(--navy);
+        color: #ffffff;
+        border-radius: 999px;
+        padding: 3px 9px;
+      }
+      .check-another {
+        text-align: center;
+        margin-top: 30px;
+      }
+      .check-another button {
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--navy);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        padding: 6px;
+      }
+      .check-another button:hover { color: var(--coral); }
+
+      footer {
+        text-align: center;
+        padding: 8px 20px 30px;
+        font-size: 13px;
+        color: var(--faint);
+      }
+
+      [hidden] { display: none !important; }
+
+      @media (max-width: 520px) {
+        main { padding: 24px 14px 40px; }
+        .card { padding: 26px 20px 28px; border-radius: 14px; }
+        h1 { font-size: 22px; }
+        .wordmark { font-size: 19px; }
+        .status-pill { font-size: 19px; }
+        .progress-head { flex-direction: column; gap: 2px; }
+        .progress-note { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="logo-mark" aria-hidden="true">CS<span class="dot"></span></div>
+        <div>
+          <div class="wordmark">CSRA Marketing</div>
+          <div class="tagline">Contractor Search &amp; Revenue Agency</div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="card">
+
+        <!-- Lookup form -->
+        <section id="view-form">
+          <h1>Check your request status</h1>
+          <p class="lead">Enter the tracking ID from your confirmation email.</p>
+          <form id="lookup-form" novalidate>
+            <label class="field-label" for="tracking-input">Tracking ID</label>
+            <input
+              type="text"
+              id="tracking-input"
+              name="trackingId"
+              placeholder="e.g. CR-20261014-002"
+              autocomplete="off"
+              autocapitalize="characters"
+              spellcheck="false"
+            />
+            <button type="submit" class="btn">Check status</button>
+          </form>
+          <p class="hint">Your tracking ID is in the confirmation email you received when you sent your request.</p>
+        </section>
+
+        <!-- Loading -->
+        <section id="view-loading" hidden>
+          <div class="loading">
+            <div class="spinner" role="status" aria-label="Loading"></div>
+            <p>Looking up your request...</p>
+          </div>
+        </section>
+
+        <!-- Not found -->
+        <section id="view-notfound" hidden>
+          <div class="message">
+            <div class="icon-circle" aria-hidden="true">?</div>
+            <h2>Request not found</h2>
+            <p>We couldn't find that tracking ID. Check the ID in your email and try again.</p>
+            <button type="button" class="btn" id="notfound-again">Try again</button>
+          </div>
+        </section>
+
+        <!-- Generic error -->
+        <section id="view-error" hidden>
+          <div class="message">
+            <div class="icon-circle" aria-hidden="true">!</div>
+            <h2>Something went wrong</h2>
+            <p>Something went wrong looking up your request. Please try again in a moment.</p>
+            <button type="button" class="btn" id="error-retry">Retry</button>
+          </div>
+        </section>
+
+        <!-- Status view -->
+        <section id="view-status" hidden>
+          <p class="biz-name" id="st-business"></p>
+          <p class="tracking-line">Tracking ID: <strong id="st-tracking"></strong></p>
+          <p class="expected-line" id="st-expected" hidden>Expected completion:&nbsp;<strong id="st-expected-date"></strong></p>
+
+          <p class="section-label">Your request</p>
+          <p class="request-text" id="st-change"></p>
+          <p class="request-details" id="st-details" hidden></p>
+          <p class="request-page" id="st-page" hidden></p>
+
+          <div class="status-block">
+            <p class="section-label">Current status</p>
+            <span class="status-pill"><span class="status-dot" id="st-dot"></span><span id="st-status"></span></span>
+            <p class="submitted-line" id="st-submitted"></p>
+          </div>
+
+          <div class="progress-head">
+            <p class="progress-title">72 business hour turnaround</p>
+            <p class="progress-note" id="progress-note"></p>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Time elapsed toward the 72 business hour turnaround" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <p class="progress-caption" id="progress-caption"></p>
+
+          <p class="section-label">How it works</p>
+          <ol class="steps" id="steps-list"></ol>
+
+          <div class="check-another">
+            <button type="button" id="check-another-btn">Check another request</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer>© 2026 CSRA Marketing</footer>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var API_URL = "https://script.google.com/macros/s/AKfycbwP7eDubjYH5f7Xu3DMz7Bz9PyYKsKdmApzF8UpYIXb34oUF0AHThIuxP3xrBp1wVFR/exec";
+
+        var VIEWS = ["view-form", "view-loading", "view-notfound", "view-error", "view-status"];
+        var lastId = "";
+
+        var STATUSES = [
+          { name: "Received", desc: "We've got your request.", dot: "received" },
+          { name: "In Progress", desc: "We're working on it.", dot: "progress" },
+          { name: "Waiting on Client", desc: "We need something from you before we can continue.", dot: "waiting" },
+          { name: "Completed", desc: "Done. Your change is live.", dot: "completed" }
+        ];
+
+        function el(id) { return document.getElementById(id); }
+
+        function show(viewId) {
+          VIEWS.forEach(function (v) { el(v).hidden = v !== viewId; });
+        }
+
+        function normalize(raw) {
+          return String(raw || "").trim().toUpperCase();
+        }
+
+        function formatDateET(iso) {
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return "";
+          try {
+            return new Intl.DateTimeFormat("en-US", {
+              timeZone: "America/New_York",
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+              timeZoneName: "short"
+            }).format(d);
+          } catch (e) {
+            return d.toLocaleString("en-US");
+          }
+        }
+
+        // Business day calculator: 3 business days after submission,
+        // skipping weekends and US federal holidays (America/New_York).
+        var BUSINESS_DAY_HOLIDAYS = ["2026-01-01","2026-01-19","2026-02-16","2026-05-25","2026-06-19","2026-07-03","2026-09-07","2026-10-12","2026-11-11","2026-11-26","2026-12-25","2027-01-01","2027-01-18","2027-02-15","2027-05-31","2027-06-18","2027-07-05","2027-09-06","2027-10-11","2027-11-11","2027-11-25","2027-12-24"];
+        var BDN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        var BMN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        function bdNYParts(d){try{var f=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"numeric",day:"numeric",weekday:"short"});var ps=f.formatToParts(d);var o={y:0,m:0,d:0,dow:0};var dm={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};for(var i=0;i<ps.length;i++){var p=ps[i];if(p.type==="year")o.y=parseInt(p.value,10);else if(p.type==="month")o.m=parseInt(p.value,10);else if(p.type==="day")o.d=parseInt(p.value,10);else if(p.type==="weekday")o.dow=dm[p.value];}return o;}catch(e){return{y:d.getFullYear(),m:d.getMonth()+1,d:d.getDate(),dow:d.getDay()};}}
+        function bdKey(y,m,d){return y+"-"+(m<10?"0"+m:m)+"-"+(d<10?"0"+d:d);}
+        function isBD(y,m,d){var dow=new Date(y,m-1,d).getDay();if(dow===0||dow===6)return false;return BUSINESS_DAY_HOLIDAYS.indexOf(bdKey(y,m,d))===-1;}
+        function addBD(from,n){var p=bdNYParts(from);var y=p.y,m=p.m,d=p.d,dow=p.dow,a=0;while(a<n){d++;dow=(dow+1)%7;var dim=new Date(y,m,0).getDate();if(d>dim){d=1;m++;if(m>12){m=1;y++;}}var ndow=(dow);if(!(ndow===0||ndow===6)&&BUSINESS_DAY_HOLIDAYS.indexOf(bdKey(y,m,d))===-1)a++;}return{y:y,m:m,d:d,dow:dow};}
+        function estLong(from){var p=addBD(from,3);var now=bdNYParts(new Date());var s=BDN[p.dow]+", "+BMN[p.m-1]+" "+p.d;if(p.y!==now.y)s+=", "+p.y;return s;}
+
+        function renderStatus(req) {
+          var statusName = String(req.status || "Received");
+          var idx = -1;
+          STATUSES.forEach(function (s, i) { if (s.name === statusName) idx = i; });
+          if (idx < 0) { idx = 0; statusName = STATUSES[0].name; }
+
+          el("st-business").textContent = req.businessName || "Your request";
+          el("st-tracking").textContent = req.trackingId || lastId;
+
+          var estDisplay = req.estimatedCompletionDisplay;
+          if (!estDisplay) {
+            var submittedDate = new Date(req.timestamp);
+            if (!isNaN(submittedDate.getTime())) {
+              estDisplay = estLong(submittedDate);
+            }
+          }
+          var expectedEl = el("st-expected");
+          if (estDisplay) {
+            el("st-expected-date").textContent = estDisplay;
+            expectedEl.hidden = false;
+          } else {
+            expectedEl.hidden = true;
+          }
+
+          el("st-change").textContent = req.change || "";
+
+          var detailsEl = el("st-details");
+          if (req.details) {
+            detailsEl.textContent = req.details;
+            detailsEl.hidden = false;
+          } else {
+            detailsEl.hidden = true;
+          }
+
+          var pageEl = el("st-page");
+          var pageLabel = req.pageUrl || req.page || "";
+          if (pageLabel) {
+            pageEl.textContent = "Page: " + pageLabel;
+            pageEl.hidden = false;
+          } else {
+            pageEl.hidden = true;
+          }
+
+          el("st-status").textContent = statusName;
+          el("st-dot").className = "status-dot " + STATUSES[idx].dot;
+
+          var submitted = formatDateET(req.timestamp);
+          el("st-submitted").textContent = submitted ? "Submitted " + submitted : "";
+
+          renderProgress(req.timestamp, statusName === "Completed");
+          renderSteps(idx);
+          show("view-status");
+        }
+
+        function renderProgress(timestampIso, isCompleted) {
+          var start = new Date(timestampIso).getTime();
+          var fill = el("progress-fill");
+          var bar = el("progress-bar");
+          var note = el("progress-note");
+          var caption = el("progress-caption");
+
+          if (isNaN(start)) {
+            fill.style.width = "0%";
+            bar.setAttribute("aria-valuenow", "0");
+            note.textContent = "";
+            caption.textContent = "Most requests are completed within 72 business hours of being submitted.";
+            return;
+          }
+
+          var totalMs = 72 * 60 * 60 * 1000;
+          var elapsedMs = Date.now() - start;
+          if (elapsedMs < 0) elapsedMs = 0;
+          var pct = Math.min(100, (elapsedMs / totalMs) * 100);
+          var remainingMs = totalMs - elapsedMs;
+
+          fill.style.width = pct.toFixed(1) + "%";
+          fill.classList.toggle("done", isCompleted);
+          bar.setAttribute("aria-valuenow", String(Math.round(pct)));
+
+          var elapsedHrs = elapsedMs / 3600000;
+
+          if (isCompleted) {
+            note.textContent = "Completed";
+            caption.textContent = "This request is complete. The progress bar shows the full 72 business hour window.";
+            fill.style.width = "100%";
+            bar.setAttribute("aria-valuenow", "100");
+            return;
+          }
+
+          if (remainingMs <= 0) {
+            note.textContent = "72 business hours reached";
+            caption.textContent = "Your request has reached the 72 business hour mark. If it is not marked complete yet, we are finishing it up and will be in touch shortly.";
+            return;
+          }
+
+          var remainingHrs = remainingMs / 3600000;
+          var elapsedLabel = elapsedHrs < 1
+            ? Math.max(1, Math.round(elapsedMs / 60000)) + " min in"
+            : Math.round(elapsedHrs) + " hrs in";
+          var remainingLabel = remainingHrs < 1
+            ? Math.max(1, Math.round(remainingMs / 60000)) + " min left"
+            : Math.round(remainingHrs) + " hrs left";
+
+          note.textContent = elapsedLabel + " · " + remainingLabel;
+          caption.textContent = "Most requests are completed within 72 business hours (3 business days). This bar shows how much of that window has passed since you submitted.";
+        }
+
+        function renderSteps(currentIdx) {
+          var list = el("steps-list");
+          list.innerHTML = "";
+          STATUSES.forEach(function (s, i) {
+            var li = document.createElement("li");
+            li.className = "step" + (i === currentIdx ? " current" : (i < currentIdx ? " done" : ""));
+
+            var marker = document.createElement("span");
+            marker.className = "step-marker";
+            marker.setAttribute("aria-hidden", "true");
+            marker.textContent = i < currentIdx ? "✓" : String(i + 1);
+
+            var body = document.createElement("div");
+            var name = document.createElement("p");
+            name.className = "step-name";
+            name.textContent = s.name;
+            if (i === currentIdx) {
+              var badge = document.createElement("span");
+              badge.className = "here-badge";
+              badge.textContent = "You are here";
+              name.appendChild(badge);
+            }
+            var desc = document.createElement("p");
+            desc.className = "step-desc";
+            desc.textContent = s.desc;
+
+            body.appendChild(name);
+            body.appendChild(desc);
+            li.appendChild(marker);
+            li.appendChild(body);
+            list.appendChild(li);
+          });
+        }
+
+        function lookup(id) {
+          lastId = id;
+          show("view-loading");
+          var url = API_URL + "?action=get&trackingId=" + encodeURIComponent(id);
+          fetch(url, { method: "GET" })
+            .then(function (res) {
+              if (!res.ok) { throw new Error("bad response"); }
+              return res.json();
+            })
+            .then(function (data) {
+              if (data && data.ok === true && data.request) {
+                renderStatus(data.request);
+              } else {
+                show("view-notfound");
+              }
+            })
+            .catch(function () {
+              show("view-error");
+            });
+        }
+
+        function backToForm(focusInput) {
+          show("view-form");
+          if (focusInput) {
+            var input = el("tracking-input");
+            input.focus();
+            input.select();
+          }
+        }
+
+        el("lookup-form").addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var id = normalize(el("tracking-input").value);
+          if (!id) {
+            el("tracking-input").focus();
+            return;
+          }
+          lookup(id);
+        });
+
+        el("notfound-again").addEventListener("click", function () { backToForm(true); });
+        el("error-retry").addEventListener("click", function () {
+          if (lastId) { lookup(lastId); } else { backToForm(true); }
+        });
+        el("check-another-btn").addEventListener("click", function () {
+          el("tracking-input").value = "";
+          backToForm(true);
+        });
+
+        // Auto lookup from URL hash, e.g. #CR-20261014-002
+        var hash = "";
+        try { hash = decodeURIComponent(window.location.hash.replace(/^#/, "")); } catch (e) { hash = ""; }
+        var hashId = normalize(hash);
+        if (/^[A-Z]{2}-\d{8}-\d+$/.test(hashId)) {
+          el("tracking-input").value = hashId;
+          lookup(hashId);
+        }
+      })();
+    </script>
+  </body>
+</html>
