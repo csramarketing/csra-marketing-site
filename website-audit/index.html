@@ -367,6 +367,8 @@
     footer.site nav a { font-size: 0.92rem; font-weight: 500; text-decoration: none; }
     footer.site nav a:hover { text-decoration: underline; }
     .footer-logo img { height: 36px; width: auto; display: block; }
+    .footer-copy { text-align: right; }
+    .footer-copy .footer-tagline { font-size: 0.78rem; color: var(--muted); margin-top: 3px; letter-spacing: 0.01em; }
 
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; gap: 34px; }
@@ -680,10 +682,12 @@
         <a href="https://csramarketing.com/">Home</a>
         <a href="#what-you-get">What You Get</a>
         <a href="#how-it-works">How It Works</a>
-        <a href="/contact/">Contact</a>
         <a href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book an Audit</a>
       </nav>
-      <p>© 2026 CSRA Marketing</p>
+      <div class="footer-copy">
+        <p>© 2026 CSRA Marketing</p>
+        <p class="footer-tagline">Contractor Search &amp; Revenue Agency</p>
+      </div>
     </div>
   </footer>
 
