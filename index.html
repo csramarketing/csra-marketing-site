@@ -23,12 +23,12 @@
   <meta property="og:title" content="CSRA Marketing | Websites & SEO for Roofing Companies" />
   <meta property="og:description" content="CSRA — the Contractor Search & Revenue Agency. We build websites and run local SEO for roofing companies nationwide. Based in Augusta, built for roofers." />
   <meta property="og:url" content="https://csramarketing.com/" />
-  <meta property="og:image" content="https://csramarketing.com/assets/og-preview-v2.webp" />
+  <meta property="og:image" content="https://csramarketing.com/assets/hero-phone-poster.jpg" />
   <meta property="og:image:alt" content="Animated lead generation dashboard for a roofing company" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="CSRA Marketing | Web Design & SEO for Roofers in Augusta, GA" />
   <meta name="twitter:description" content="CSRA Marketing builds websites and local SEO for Augusta roofers, tracked by calls and booked jobs, not vanity metrics. Book your website audit today." />
-  <meta name="twitter:image" content="https://csramarketing.com/assets/og-preview-v2.webp" />
+  <meta name="twitter:image" content="https://csramarketing.com/assets/hero-phone-poster.jpg" />
   <meta name="twitter:image:alt" content="Animated lead generation dashboard for a roofing company" />
   <script type="application/ld+json">
   {
@@ -38,7 +38,7 @@
     "name": "CSRA Marketing | Websites & SEO for Roofing Companies",
     "url": "https://csramarketing.com/",
     "description": "CSRA — the Contractor Search & Revenue Agency. We build websites and run local SEO for roofing companies nationwide. Based in Augusta, built for roofers.",
-    "image": "https://csramarketing.com/assets/og-preview-v2.webp",
+    "image": "https://csramarketing.com/assets/hero-phone-poster.jpg",
     "areaServed": [
       {"@type":"City","name":"Augusta","containedInPlace":{"@type":"State","name":"Georgia"}},
       {"@type":"City","name":"Grovetown","containedInPlace":{"@type":"State","name":"Georgia"}},
@@ -768,6 +768,37 @@
     }
     @media(prefers-reduced-motion:reduce){
       .call-log-card{transform:none}
+    }
+    /* Mobile hero fix: the Maps card, header clearance, and tighter rhythm.
+       Root cause of the missing visual: the mobile block above sets
+       animation:none on .hero-art, which cancels the hero-in entrance
+       animation that lifts .hero-grid>div from opacity:0, so the card
+       stayed transparent while still taking up its full layout height
+       (the huge blank gap). It is not display:none or visibility:hidden.
+       These overrides are mobile only; desktop layout and motion are
+       untouched. */
+    @media(max-width:900px){
+      html{scroll-padding-top:84px}
+      body[data-route="home"] .site-nav{background:#ffffff;backdrop-filter:none;-webkit-backdrop-filter:none}
+      body[data-route="home"] .hero-grid{display:flex;flex-direction:column;gap:0;padding:64px 0 36px}
+      body[data-route="home"] .hero-copy-block{display:contents}
+      body[data-route="home"] .eyebrow{order:1}
+      body[data-route="home"] .hero h1{order:2}
+      body[data-route="home"] .hero-copy{order:3}
+      body[data-route="home"] .hero-actions{order:4;width:100%;margin-top:0}
+      body[data-route="home"] .hero-points{order:5;margin-top:26px}
+      body[data-route="home"] .hero-trust{order:6;margin-top:22px}
+      html.motion-ok body[data-route="home"] .hero-grid .hero-art{order:7;display:block;visibility:visible;opacity:1;transform:none;height:auto;min-height:1px;width:100%;max-width:480px;margin:26px auto 0;padding:10px;position:relative;flex:0 0 auto;align-self:center}
+      html.motion-ok body[data-route="home"] .hero-grid .hero-copy-block{opacity:1}
+      body[data-route="home"] .hero-art .hero-frame{display:block;visibility:visible;opacity:1;height:auto;overflow:hidden}
+      body[data-route="home"] .hero-art .map-results{display:block;visibility:visible;opacity:1;height:auto}
+      body[data-route="home"] .hero-art .hero-notif{visibility:visible;opacity:1}
+    }
+    @media(max-width:480px){
+      body[data-route="home"] .hero-grid{padding:60px 0 32px}
+      html.motion-ok body[data-route="home"] .hero-grid .hero-art{margin-top:24px;padding:10px;max-width:100%;align-self:stretch}
+      body[data-route="home"] .hero-points{margin-top:24px}
+      body[data-route="home"] .hero-trust{margin-top:20px}
     }
   </style>
 </head>
