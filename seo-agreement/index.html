@@ -277,14 +277,15 @@
     </footer>
 
     <script>
-      // Dynamic quote params: ?client=&price=&term=&extras=
+      // Dynamic quote params: ?client=&price=&term=&extras=&billing=
       // Applied before the form script below so all fields stay wired.
       (function () {
         var params = new URLSearchParams(window.location.search);
         var priceParam = params.get("price");
         var termParam = params.get("term");
         var extrasParam = params.get("extras");
-        if (!priceParam && !termParam && !extrasParam) return;
+        var billingParam = params.get("billing");
+        if (!priceParam && !termParam && !extrasParam && !billingParam) return;
         var view = document.getElementById("agreement-view");
         if (!view) return;
         function esc(s) {
@@ -292,9 +293,11 @@
         }
         function fmt(n) { return "$" + n.toLocaleString("en-US"); }
         var html = view.innerHTML;
+        var priceVal = 0;
         if (priceParam) {
           var p = parseFloat(String(priceParam).replace(/[^0-9.]/g, ""));
           if (!isNaN(p) && p > 0) {
+            priceVal = p;
             html = html.split("$1,500 / month").join(fmt(p) + " / month");
             html = html.split("$1,500 per month").join(fmt(p) + " per month");
             html = html.split("$1,500/month").join(fmt(p) + "/month");
@@ -311,6 +314,14 @@
           html = html.replace(
             '<div class="key-facts">',
             '<div class="key-facts">\n            <span class="extra-scope">Plus: ' + esc(extrasParam) + '</span>'
+          );
+        }
+        if (billingParam === "onetime") {
+          html = html.split(" / month</span>").join(" one-time</span>");
+          html = html.split("/month,").join(" one-time,");
+          html = html.replace(
+            /<p>This agreement covers a [^<]*<\/p>/,
+            "<p>This agreement covers a one-time payment of " + (priceVal > 0 ? fmt(priceVal) : "as quoted") + ". Payment is due in full on the start date below. Work begins when payment clears.</p>"
           );
         }
         view.innerHTML = html;
