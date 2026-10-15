@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DWV0LCRRJS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DWV0LCRRJS');
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="data:," />
+    <title>Quote Calculator | CSRA Marketing (Private)</title>
+    <meta name="description" content="Internal quote calculator for CSRA Marketing." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light;
+        --navy: #10233f;
+        --navy-deep: #0b1a30;
+        --coral: #ff705c;
+        --yellow: #ffc41f;
+        --yellow-hover: #f5b800;
+        --ink: #1d2735;
+        --muted: #5d6b7d;
+        --line: #e3e9f1;
+        --bg: #f4f7fb;
+        --card: #ffffff;
+        --radius: 18px;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Poppins", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      header {
+        background: var(--navy);
+        color: #ffffff;
+        padding: 18px 20px;
+      }
+      .header-inner {
+        max-width: 720px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .wordmark { font-weight: 800; font-size: 19px; letter-spacing: 0.5px; }
+      .wordmark .pin { color: var(--coral); }
+      .private-badge {
+        font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+        background: var(--coral); color: #fff; border-radius: 999px; padding: 6px 12px;
+        white-space: nowrap;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 22px 16px 60px; }
+      h1 { font-size: 24px; margin: 6px 0 4px; color: var(--navy); }
+      .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
+      .card {
+        background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(16,35,63,0.05);
+      }
+      .card h2 {
+        font-size: 16px; color: var(--navy); margin: 0 0 12px;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .card h2 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); flex: 0 0 auto; }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+      .row:first-of-type { border-top: 0; }
+      .row label { font-size: 15px; font-weight: 500; }
+      .row .price { color: var(--muted); font-size: 13px; display: block; font-weight: 400; }
+      .check { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+      .check input[type="checkbox"] { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--navy); flex: 0 0 auto; }
+      .qty { display: flex; align-items: center; gap: 8px; }
+      .qty input {
+        width: 72px; padding: 10px; font-family: inherit; font-size: 16px; font-weight: 600;
+        border: 1.5px solid var(--line); border-radius: 10px; text-align: center; color: var(--navy);
+      }
+      .qty input:focus { outline: none; border-color: var(--navy); }
+      .biz-input {
+        width: 100%; padding: 14px; font-family: inherit; font-size: 16px;
+        border: 1.5px solid var(--line); border-radius: 12px; color: var(--navy); font-weight: 500;
+      }
+      .biz-input:focus { outline: none; border-color: var(--navy); }
+      .totals {
+        background: var(--navy); color: #fff; border-radius: var(--radius); padding: 20px 18px;
+        margin-bottom: 16px; position: sticky; top: 10px; z-index: 5;
+        box-shadow: 0 6px 24px rgba(16,35,63,0.28);
+      }
+      .totals .t-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; }
+      .totals .t-label { font-size: 13px; color: #b9c4d4; }
+      .totals .t-val { font-size: 20px; font-weight: 700; }
+      .totals .t-row.grand { border-top: 1px solid rgba(255,255,255,0.2); margin-top: 8px; padding-top: 12px; }
+      .totals .t-row.grand .t-val { font-size: 28px; color: var(--yellow); }
+      .btn {
+        display: block; width: 100%; padding: 16px; border: 0; border-radius: 14px;
+        background: var(--yellow); color: var(--navy); font-family: inherit;
+        font-size: 17px; font-weight: 700; cursor: pointer;
+      }
+      .btn:active { background: var(--yellow-hover); }
+      .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+      .links { display: none; }
+      .links.show { display: block; }
+      .link-block { margin-top: 14px; }
+      .link-block .link-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+      .link-box {
+        background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+        padding: 10px 12px; font-size: 12px; color: var(--muted); word-break: break-all;
+        max-height: 84px; overflow: hidden; margin-bottom: 8px;
+      }
+      .btn-copy {
+        display: inline-block; padding: 12px 22px; border: 0; border-radius: 10px;
+        background: var(--navy); color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+      }
+      .btn-copy.copied { background: #1d8a4c; }
+      .note { font-size: 12px; color: var(--muted); margin-top: 14px; text-align: center; }
+      footer { text-align: center; padding: 24px 16px 40px; color: var(--muted); font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="wordmark">CSRA<span class="pin"> Marketing</span></div>
+        <div class="private-badge">Private Tool</div>
+      </div>
+    </header>
+
+    <main>
+      <h1>Quote Calculator</h1>
+      <p class="sub">Build the quote on the call, then send the client their agreement link to sign in real time.</p>
+
+      <div class="card">
+        <h2><span class="dot"></span>Client</h2>
+        <input type="text" id="biz" class="biz-input" placeholder="Business name" autocomplete="off" />
+      </div>
+
+      <div class="card">
+        <h2><span class="dot"></span>Website Design</h2>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="web-on" checked />
+            <span>Website Design<span class="price">$2,500 base &middot; 9 pages &middot; 7 days &middot; 2 revision rounds</span></span>
+          </label>
+        </div>
+        <div class="row">
+          <label for="web-extra">Extra pages <span class="price">$200 each, beyond the 9 included</span></label>
+          <div class="qty"><input type="number" id="web-extra" min="0" max="50" value="0" inputmode="numeric" /></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="dot"></span>SEO</h2>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="seo-on" />
+            <span>SEO Retainer<span class="price">$1,500/mo &middot; 6-month term &middot; $9,000 total</span></span>
+          </label>
+        </div>
+        <div class="row">
+          <label for="seo-links">Extra authority links <span class="price">$200 per link, one-time</span></label>
+          <div class="qty"><input type="number" id="seo-links" min="0" max="50" value="0" inputmode="numeric" /></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="dot"></span>SEO Sprints <span style="font-weight:400;color:var(--muted);font-size:12px;">(one-time)</span></h2>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="sprint-audit" />
+            <span>SEO Audit<span class="price">$697 one-time</span></span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="sprint-gbp" />
+            <span>GBP Overhaul<span class="price">$897 one-time</span></span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="sprint-cite" />
+            <span>Citation Cleanup &amp; Build<span class="price">$597 one-time</span></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="dot"></span>Care Plan</h2>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="care-on" />
+            <span>Website Care Plan<span class="price">$65/mo &middot; 3 credits/mo included</span></span>
+          </label>
+        </div>
+        <div class="row">
+          <label for="care-credits">Extra credits <span class="price">$25 each, one-time &middot; never expire</span></label>
+          <div class="qty"><input type="number" id="care-credits" min="0" max="100" value="0" inputmode="numeric" /></div>
+        </div>
+      </div>
+
+      <div class="totals" id="totals">
+        <div class="t-row">
+          <span class="t-label">One-time total</span>
+          <span class="t-val" id="t-onetime">$0</span>
+        </div>
+        <div class="t-row">
+          <span class="t-label">Monthly recurring</span>
+          <span class="t-val" id="t-monthly">$0/mo</span>
+        </div>
+        <div class="t-row grand">
+          <span class="t-label">6-month commitment</span>
+          <span class="t-val" id="t-six">$0</span>
+        </div>
+      </div>
+
+      <button class="btn" id="gen">Generate Agreement Links</button>
+
+      <div class="card links" id="links">
+        <h2><span class="dot"></span>Agreement Links</h2>
+        <div class="link-block" id="web-link-block" style="display:none;">
+          <div class="link-title">Website Design Agreement</div>
+          <div class="link-box" id="web-link"></div>
+          <button class="btn-copy" data-copy="web-link">Copy Link</button>
+        </div>
+        <div class="link-block" id="seo-link-block" style="display:none;">
+          <div class="link-title">SEO Agreement</div>
+          <div class="link-box" id="seo-link"></div>
+          <button class="btn-copy" data-copy="seo-link">Copy Link</button>
+        </div>
+        <p class="note" id="links-note"></p>
+      </div>
+
+      <p class="note">Internal tool. Do not share this page with clients.</p>
+    </main>
+
+    <footer>&copy; 2026 CSRA Marketing &middot; Internal use only</footer>
+
+    <script>
+      (function () {
+        var P = {
+          webBase: 2500, webPage: 200, webPages: 9,
+          seoMo: 1500, seoTerm: 6, seoLink: 200,
+          sprintAudit: 697, sprintGbp: 897, sprintCite: 597,
+          careMo: 65, careCredit: 25
+        };
+        function $(id) { return document.getElementById(id); }
+        function num(id) {
+          var v = parseInt($(id).value, 10);
+          return isNaN(v) || v < 0 ? 0 : v;
+        }
+        function fmt(n) { return "$" + n.toLocaleString("en-US"); }
+
+        function calc() {
+          var webOn = $("web-on").checked;
+          var seoOn = $("seo-on").checked;
+          var careOn = $("care-on").checked;
+          var webExtra = num("web-extra");
+          var seoLinks = num("seo-links");
+          var careCredits = num("care-credits");
+
+          var webTotal = webOn ? P.webBase + webExtra * P.webPage : 0;
+          var linkTotal = seoLinks * P.seoLink;
+          var sprintTotal = ($("sprint-audit").checked ? P.sprintAudit : 0) +
+                            ($("sprint-gbp").checked ? P.sprintGbp : 0) +
+                            ($("sprint-cite").checked ? P.sprintCite : 0);
+          var creditTotal = careCredits * P.careCredit;
+
+          var oneTime = webTotal + linkTotal + sprintTotal + creditTotal;
+          var monthly = (seoOn ? P.seoMo : 0) + (careOn ? P.careMo : 0);
+          var sixMo = oneTime + monthly * P.seoTerm;
+
+          $("t-onetime").textContent = fmt(oneTime);
+          $("t-monthly").textContent = fmt(monthly) + "/mo";
+          $("t-six").textContent = fmt(sixMo);
+
+          return {
+            webOn: webOn, seoOn: seoOn,
+            webTotal: webTotal, pages: P.webPages + webExtra, webExtra: webExtra,
+            seoLinks: seoLinks, linkTotal: linkTotal
+          };
+        }
+
+        var inputs = ["biz","web-on","web-extra","seo-on","seo-links","sprint-audit","sprint-gbp","sprint-cite","care-on","care-credits"];
+        inputs.forEach(function (id) {
+          $(id).addEventListener("input", calc);
+          $(id).addEventListener("change", calc);
+        });
+
+        document.querySelectorAll(".btn-copy").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var text = $(btn.getAttribute("data-copy")).textContent;
+            function done() {
+              btn.textContent = "Copied!";
+              btn.classList.add("copied");
+              setTimeout(function () {
+                btn.textContent = "Copy Link";
+                btn.classList.remove("copied");
+              }, 2000);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(done).catch(function () { fallback(); });
+            } else { fallback(); }
+            function fallback() {
+              var ta = document.createElement("textarea");
+              ta.value = text;
+              document.body.appendChild(ta);
+              ta.select();
+              try { document.execCommand("copy"); } catch (e) {}
+              document.body.removeChild(ta);
+              done();
+            }
+          });
+        });
+
+        $("gen").addEventListener("click", function () {
+          var c = calc();
+          var biz = $("biz").value.trim();
+          if (!biz) {
+            alert("Enter the business name first.");
+            $("biz").focus();
+            return;
+          }
+          var shown = 0;
+
+          if (c.webOn) {
+            var extras = [];
+            if (c.webExtra > 0) extras.push(c.webExtra + " extra page" + (c.webExtra > 1 ? "s" : "") + " at $200 each");
+            var url = "https://csramarketing.com/website-agreement/?" +
+              "client=" + encodeURIComponent(biz) +
+              "&price=" + c.webTotal +
+              "&pages=" + c.pages +
+              (extras.length ? "&extras=" + encodeURIComponent("Includes " + extras.join(", ") + ".") : "");
+            $("web-link").textContent = url;
+            $("web-link-block").style.display = "block";
+            shown++;
+          } else {
+            $("web-link-block").style.display = "none";
+          }
+
+          if (c.seoOn) {
+            var sextras = [];
+            if (c.seoLinks > 0) sextras.push(c.seoLinks + " extra authority link" + (c.seoLinks > 1 ? "s" : "") + " at $200 each (" + fmt(c.linkTotal) + " one-time)");
+            var surl = "https://csramarketing.com/seo-agreement/?" +
+              "client=" + encodeURIComponent(biz) +
+              "&price=" + P.seoMo +
+              "&term=" + P.seoTerm +
+              (sextras.length ? "&extras=" + encodeURIComponent(sextras.join(", ") + ".") : "");
+            $("seo-link").textContent = surl;
+            $("seo-link-block").style.display = "block";
+            shown++;
+          } else {
+            $("seo-link-block").style.display = "none";
+          }
+
+          $("links-note").textContent = shown === 0
+            ? "Select Website Design or SEO Retainer to generate an agreement link. Sprints and care plan are billed separately."
+            : "Send the client the link above. They can read and sign in real time.";
+          $("links").classList.add("show");
+          $("links").scrollIntoView({ behavior: "smooth", block: "start" });
+          try { gtag("event", "quote_generated", { business: biz }); } catch (e) {}
+        });
+
+        calc();
+      })();
+    </script>
+  </body>
+</html>
