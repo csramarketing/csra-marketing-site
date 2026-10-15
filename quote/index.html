@@ -88,6 +88,17 @@
         border: 1.5px solid var(--line); border-radius: 10px; text-align: center; color: var(--navy);
       }
       .qty input:focus { outline: none; border-color: var(--navy); }
+      .bill-toggle {
+        display: inline-flex; background: var(--bg); border: 1.5px solid var(--line);
+        border-radius: 999px; padding: 3px; gap: 2px; flex: 0 0 auto; margin-left: auto;
+      }
+      .bill-toggle button {
+        border: 0; background: transparent; font-family: inherit;
+        font-size: 12px; font-weight: 600; color: var(--muted);
+        padding: 7px 13px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+      }
+      .bill-toggle button.active { background: var(--navy); color: #fff; }
+      .row { flex-wrap: wrap; }
       .biz-input {
         width: 100%; padding: 14px; font-family: inherit; font-size: 16px;
         border: 1.5px solid var(--line); border-radius: 12px; color: var(--navy); font-weight: 500;
@@ -152,9 +163,17 @@
             <input type="checkbox" id="web-on" checked />
             <span>Website Design<span class="price">$2,500 base &middot; 9 pages &middot; 7 days &middot; 2 revision rounds</span></span>
           </label>
+          <div class="bill-toggle" data-bill="webBase">
+            <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
+          </div>
         </div>
         <div class="row">
-          <label for="web-extra">Extra pages <span class="price">$200 each, beyond the 9 included</span></label>
+          <label for="web-extra">Extra pages <span class="price">$250 each, beyond the 9 included</span></label>
+          <div class="bill-toggle" data-bill="webExtra">
+            <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
+          </div>
           <div class="qty"><input type="number" id="web-extra" min="0" max="50" value="0" inputmode="numeric" /></div>
         </div>
       </div>
@@ -166,9 +185,17 @@
             <input type="checkbox" id="seo-on" />
             <span>SEO Retainer<span class="price">$1,500/mo &middot; 6-month term &middot; $9,000 total</span></span>
           </label>
+          <div class="bill-toggle" data-bill="seoBase">
+            <button type="button" class="bt-opt" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt active" data-val="recurring">Monthly</button>
+          </div>
         </div>
         <div class="row">
           <label for="seo-links">Extra authority links <span class="price">$200 per link, one-time</span></label>
+          <div class="bill-toggle" data-bill="seoLinks">
+            <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
+          </div>
           <div class="qty"><input type="number" id="seo-links" min="0" max="50" value="0" inputmode="numeric" /></div>
         </div>
       </div>
@@ -202,9 +229,17 @@
             <input type="checkbox" id="care-on" />
             <span>Website Care Plan<span class="price">$65/mo &middot; 3 credits/mo included</span></span>
           </label>
+          <div class="bill-toggle" data-bill="careBase">
+            <button type="button" class="bt-opt" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt active" data-val="recurring">Monthly</button>
+          </div>
         </div>
         <div class="row">
           <label for="care-credits">Extra credits <span class="price">$25 each, one-time &middot; never expire</span></label>
+          <div class="bill-toggle" data-bill="careCredits">
+            <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
+          </div>
           <div class="qty"><input type="number" id="care-credits" min="0" max="100" value="0" inputmode="numeric" /></div>
         </div>
       </div>
@@ -249,7 +284,7 @@
     <script>
       (function () {
         var P = {
-          webBase: 2500, webPage: 200, webPages: 9,
+          webBase: 2500, webPage: 250, webPages: 9,
           seoMo: 1500, seoTerm: 6, seoLink: 200,
           sprintAudit: 697, sprintGbp: 897, sprintCite: 597,
           careMo: 65, careCredit: 25
@@ -261,6 +296,27 @@
         }
         function fmt(n) { return "$" + n.toLocaleString("en-US"); }
 
+        var BILL = {
+          webBase: "onetime",
+          webExtra: "onetime",
+          seoBase: "recurring",
+          seoLinks: "onetime",
+          careBase: "recurring",
+          careCredits: "onetime"
+        };
+
+        document.querySelectorAll(".bill-toggle").forEach(function (t) {
+          var key = t.getAttribute("data-bill");
+          t.querySelectorAll(".bt-opt").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              BILL[key] = btn.getAttribute("data-val");
+              t.querySelectorAll(".bt-opt").forEach(function (b) { b.classList.remove("active"); });
+              btn.classList.add("active");
+              calc();
+            });
+          });
+        });
+
         function calc() {
           var webOn = $("web-on").checked;
           var seoOn = $("seo-on").checked;
@@ -269,15 +325,28 @@
           var seoLinks = num("seo-links");
           var careCredits = num("care-credits");
 
-          var webTotal = webOn ? P.webBase + webExtra * P.webPage : 0;
+          var webBaseAmt = webOn ? P.webBase : 0;
+          var webExtraAmt = webExtra * P.webPage;
+          var seoBaseAmt = seoOn ? P.seoMo : 0;
           var linkTotal = seoLinks * P.seoLink;
           var sprintTotal = ($("sprint-audit").checked ? P.sprintAudit : 0) +
                             ($("sprint-gbp").checked ? P.sprintGbp : 0) +
                             ($("sprint-cite").checked ? P.sprintCite : 0);
+          var careBaseAmt = careOn ? P.careMo : 0;
           var creditTotal = careCredits * P.careCredit;
 
-          var oneTime = webTotal + linkTotal + sprintTotal + creditTotal;
-          var monthly = (seoOn ? P.seoMo : 0) + (careOn ? P.careMo : 0);
+          var oneTime = sprintTotal;
+          var monthly = 0;
+          function add(amt, mode) {
+            if (mode === "recurring") { monthly += amt; } else { oneTime += amt; }
+          }
+          add(webBaseAmt, BILL.webBase);
+          add(webExtraAmt, BILL.webExtra);
+          add(seoBaseAmt, BILL.seoBase);
+          add(linkTotal, BILL.seoLinks);
+          add(careBaseAmt, BILL.careBase);
+          add(creditTotal, BILL.careCredits);
+
           var sixMo = oneTime + monthly * P.seoTerm;
 
           $("t-onetime").textContent = fmt(oneTime);
@@ -286,8 +355,10 @@
 
           return {
             webOn: webOn, seoOn: seoOn,
-            webTotal: webTotal, pages: P.webPages + webExtra, webExtra: webExtra,
-            seoLinks: seoLinks, linkTotal: linkTotal
+            webTotal: webBaseAmt + webExtraAmt, pages: P.webPages + webExtra, webExtra: webExtra,
+            seoLinks: seoLinks, linkTotal: linkTotal,
+            webBilling: BILL.webBase, seoBilling: BILL.seoBase,
+            webExtraBilling: BILL.webExtra, seoLinksBilling: BILL.seoLinks
           };
         }
 
@@ -335,11 +406,16 @@
 
           if (c.webOn) {
             var extras = [];
-            if (c.webExtra > 0) extras.push(c.webExtra + " extra page" + (c.webExtra > 1 ? "s" : "") + " at $200 each");
+            if (c.webExtra > 0) {
+              var ep = "extra page" + (c.webExtra > 1 ? "s" : "") + " at $250 each";
+              if (c.webExtraBilling === "recurring") ep += "/mo";
+              extras.push(c.webExtra + " " + ep);
+            }
             var url = "https://csramarketing.com/website-agreement/?" +
               "client=" + encodeURIComponent(biz) +
               "&price=" + c.webTotal +
               "&pages=" + c.pages +
+              "&billing=" + c.webBilling +
               (extras.length ? "&extras=" + encodeURIComponent("Includes " + extras.join(", ") + ".") : "");
             $("web-link").textContent = url;
             $("web-link-block").style.display = "block";
@@ -350,11 +426,16 @@
 
           if (c.seoOn) {
             var sextras = [];
-            if (c.seoLinks > 0) sextras.push(c.seoLinks + " extra authority link" + (c.seoLinks > 1 ? "s" : "") + " at $200 each (" + fmt(c.linkTotal) + " one-time)");
+            if (c.seoLinks > 0) {
+              var sl = "extra authority link" + (c.seoLinks > 1 ? "s" : "") + " at $200 each";
+              if (c.seoLinksBilling === "recurring") sl += "/mo";
+              sextras.push(c.seoLinks + " " + sl + " (" + fmt(c.linkTotal) + (c.seoLinksBilling === "recurring" ? "/mo" : " one-time") + ")");
+            }
             var surl = "https://csramarketing.com/seo-agreement/?" +
               "client=" + encodeURIComponent(biz) +
               "&price=" + P.seoMo +
               "&term=" + P.seoTerm +
+              "&billing=" + c.seoBilling +
               (sextras.length ? "&extras=" + encodeURIComponent(sextras.join(", ") + ".") : "");
             $("seo-link").textContent = surl;
             $("seo-link-block").style.display = "block";
