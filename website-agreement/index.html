@@ -317,6 +317,12 @@
               html = html.split("plus 3 additional pages of your choice")
                 .join("plus " + (n - 6) + " additional pages of your choice");
             }
+            var extraPages = n - 9;
+            if (extraPages > 0) {
+              var days = 7 + extraPages * 2;
+              html = html.split("7 days").join(days + " days");
+              html = html.split("7-day").join(days + "-day");
+            }
           }
         }
         if (extrasParam) {
