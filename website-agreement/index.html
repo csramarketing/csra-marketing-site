@@ -314,9 +314,12 @@
         if (pagesParam) {
           var n = parseInt(pagesParam, 10);
           if (!isNaN(n) && n > 0) {
-            html = html.split("9-page").join(n + "-page");
-            html = html.split("9 pages").join(n + " pages");
-            html = html.split("9 page").join(n + " page");
+            // Single-pass replacement (longest match first): split/join in sequence
+            // would match inside its own output ("9 pages" -> "29 pages" contains
+            // "9 pages", producing "229 pages").
+            html = html.replace(/9-page|9 pages|9 page/g, function (m) {
+              return m === "9-page" ? n + "-page" : m === "9 pages" ? n + " pages" : n + " page";
+            });
             html = html.split("the 9 included").join("the " + n + " included");
             if (n !== 9) {
               html = html.split("plus 3 additional pages of your choice")
