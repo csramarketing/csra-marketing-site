@@ -223,7 +223,7 @@
             <p>Your website will be designed, built, and delivered within 7 days of receiving all required content from you (logo, photos, service descriptions, and contact details). The 7-day clock starts when we confirm we have everything we need. If content is delayed, the timeline shifts by the same number of days.</p>
 
             <h2><span class="num">3</span>Payment</h2>
-            <p>The total project fee is $2,500, due as follows: 50% ($1,250) to begin work, and the remaining 50% ($1,250) on delivery before the site goes live. We accept payment via the Stripe link in your proposal. Work begins when the deposit clears.</p>
+            <p>The total project fee is $2,500, due as follows: 60% ($1,500) to begin work, and the remaining 40% ($1,000) on delivery before the site goes live. We accept payment via the Stripe link in your proposal. Work begins when the deposit clears.</p>
 
             <h2><span class="num">4</span>Revision Rounds</h2>
             <p>Your project includes 2 revision rounds after the initial design is presented. A revision round means one consolidated list of changes from you, which we implement together. Additional revision rounds are $250 each. Structural changes requested after approval (new pages beyond the 9 included, full redesigns, new features) are quoted separately.</p>
@@ -336,7 +336,10 @@
         var html = view.innerHTML;
         if (priceVal > 0) {
           html = html.split("$2,500").join(fmt(priceVal));
-          html = html.split("$1,250").join(fmt(priceVal / 2));
+          var _dep = Math.round(priceVal * 0.6);
+          var _rem = priceVal - _dep;
+          html = html.split("$1,500").join(fmt(_dep));
+          html = html.split("$1,000").join(fmt(_rem));
         }
         if (pagesParam) {
           var n = parseInt(pagesParam, 10);
@@ -381,7 +384,7 @@
           html = html.split(" one time</span>").join("/month</span>");
           html = html.split(" one-time,").join("/month,");
           html = html.replace(
-            /<p>The total project fee is \$[^<]*due as follows: 50%[^<]*<\/p>/,
+            /<p>The total project fee is \$[^<]*due as follows: 60%[^<]*<\/p>/,
             "<p>The fee is " + (priceVal > 0 ? fmt(priceVal) : "as quoted") + " per month, billed monthly. The first month is due when you sign, and work begins when payment clears. You may cancel with 30 days written notice.</p>"
           );
         }
