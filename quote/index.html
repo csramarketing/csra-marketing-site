@@ -169,7 +169,7 @@
           </div>
         </div>
         <div class="row">
-          <label for="web-extra">Extra pages <span class="price">$300 each, beyond the 9 included</span></label>
+          <label for="web-extra">Extra pages <span class="price">$350 each, beyond the 9 included</span></label>
           <div class="bill-toggle" data-bill="webExtra">
             <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
             <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
@@ -195,7 +195,7 @@
           </div>
         </div>
         <div class="row">
-          <label for="seo-links">Extra authority links <span class="price">$200 per link, one-time</span></label>
+          <label for="seo-links">Extra authority links <span class="price">$250 per link, one-time</span></label>
           <div class="bill-toggle" data-bill="seoLinks">
             <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
             <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
@@ -288,8 +288,8 @@
     <script>
       (function () {
         var P = {
-          webBase: 2500, webPage: 300, webPages: 9,
-          seoMo: 1500, seoTerm: 6, seoLink: 200,
+          webBase: 2500, webPage: 350, webPages: 9,
+          seoMo: 1500, seoTerm: 6, seoLink: 250,
           sprintAudit: 697, sprintGbp: 897, sprintCite: 597,
           careMo: 65, careCredit: 25
         };
@@ -360,7 +360,7 @@
 
           return {
             webOn: webOn, seoOn: seoOn,
-            webTotal: 2500 + (parseInt(webExtra || 0, 10) * 300), pages: 9 + parseInt(webExtra || 0, 10), webExtra: webExtra,
+            webTotal: 2500 + (parseInt(webExtra || 0, 10) * 350), pages: 9 + parseInt(webExtra || 0, 10), webExtra: webExtra,
             revisions: 2 + webRevisions,
             seoLinks: seoLinks, linkTotal: linkTotal,
             webBilling: BILL.webBase, seoBilling: BILL.seoBase,
@@ -413,7 +413,7 @@
           if (c.webOn) {
             var extras = [];
             if (c.webExtra > 0) {
-              var ep = "extra page" + (c.webExtra > 1 ? "s" : "") + " at $300 each";
+              var ep = "extra page" + (c.webExtra > 1 ? "s" : "") + " at $350 each";
               if (c.webExtraBilling === "recurring") ep += "/mo";
               extras.push(c.webExtra + " " + ep);
             }
@@ -434,7 +434,7 @@
           if (c.seoOn) {
             var sextras = [];
             if (c.seoLinks > 0) {
-              var sl = "extra authority link" + (c.seoLinks > 1 ? "s" : "") + " at $200 each";
+              var sl = "extra authority link" + (c.seoLinks > 1 ? "s" : "") + " at $250 each";
               if (c.seoLinksBilling === "recurring") sl += "/mo";
               sextras.push(c.seoLinks + " " + sl + " (" + fmt(c.linkTotal) + (c.seoLinksBilling === "recurring" ? "/mo" : " one-time") + ")");
             }
