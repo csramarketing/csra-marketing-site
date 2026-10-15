@@ -324,6 +324,12 @@
             "<p>This agreement covers a one-time payment of " + (priceVal > 0 ? fmt(priceVal) : "as quoted") + ". Payment is due in full on the start date below. Work begins when payment clears.</p>"
           );
         }
+        if (extrasParam) {
+          html = html.replace(
+            /(agree to its terms \([^)]*)\)\./,
+            function (m, g1) { return g1 + ", plus " + esc(extrasParam) + ")."; }
+          );
+        }
         view.innerHTML = html;
       })();
     </script>
