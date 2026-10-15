@@ -169,7 +169,7 @@
           </div>
         </div>
         <div class="row">
-          <label for="web-extra">Extra pages <span class="price">$250 each, beyond the 9 included</span></label>
+          <label for="web-extra">Extra pages <span class="price">$300 each, beyond the 9 included</span></label>
           <div class="bill-toggle" data-bill="webExtra">
             <button type="button" class="bt-opt active" data-val="onetime">One-time</button>
             <button type="button" class="bt-opt" data-val="recurring">Monthly</button>
@@ -288,7 +288,7 @@
     <script>
       (function () {
         var P = {
-          webBase: 2500, webPage: 250, webPages: 9,
+          webBase: 2500, webPage: 300, webPages: 9,
           seoMo: 1500, seoTerm: 6, seoLink: 200,
           sprintAudit: 697, sprintGbp: 897, sprintCite: 597,
           careMo: 65, careCredit: 25
@@ -413,7 +413,7 @@
           if (c.webOn) {
             var extras = [];
             if (c.webExtra > 0) {
-              var ep = "extra page" + (c.webExtra > 1 ? "s" : "") + " at $250 each";
+              var ep = "extra page" + (c.webExtra > 1 ? "s" : "") + " at $300 each";
               if (c.webExtraBilling === "recurring") ep += "/mo";
               extras.push(c.webExtra + " " + ep);
             }
