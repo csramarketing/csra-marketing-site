@@ -245,6 +245,11 @@
                 <label for="date">Date</label>
                 <input type="date" id="date" name="date" required />
               </div>
+              <div class="field">
+                <label for="email">Email for agreement copy</label>
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="you@company.com" required />
+                <p class="hint">We'll email you a PDF copy of the signed agreement.</p>
+              </div>
               <label class="check-row">
                 <input type="checkbox" id="agree" required />
                 <span>I have read the Website Design Agreement above and agree to its terms ($2,500 one-time, 9 pages, delivered in 7 days).</span>
@@ -283,6 +288,7 @@
           signer: "entry.174372272",
           title: "entry.1090790527",
           date: "entry.445388483",
+          email: "entry.212559359",
           agree: "entry.78393916",
           signature: "entry.2142329064"
         };
@@ -305,10 +311,11 @@
           var signer = document.getElementById("signer").value.trim();
           var title = document.getElementById("title").value.trim();
           var date = document.getElementById("date").value;
+          var email = document.getElementById("email").value.trim();
           var agree = document.getElementById("agree").checked;
           var signature = document.getElementById("signature").value.trim();
 
-          if (!business || !signer || !title || !date || !agree || !signature) {
+          if (!business || !signer || !title || !date || !email || !agree || !signature) {
             alert("Please fill in all fields and check the agreement box.");
             return;
           }
@@ -321,6 +328,7 @@
           payload.append(E.signer, signer);
           payload.append(E.title, title);
           payload.append(E.date, date);
+          payload.append(E.email, email);
           payload.append(E.agree, "I agree");
           payload.append(E.signature, signature);
 
