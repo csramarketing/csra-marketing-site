@@ -392,7 +392,7 @@
         if (pagesVal > 9) daysVal = 7 + (pagesVal - 9) * 2;
         if (revisionsParam) { var _rv = parseInt(revisionsParam, 10); if (!isNaN(_rv) && _rv > 0) revVal = _rv; }
         var wygPrice = priceVal > 0 ? fmt(priceVal) : "$2,500";
-        var wygBill = billingParam === "recurring" ? "/mo" : " one-time";
+        var wygBill = billingParam === "recurring" ? "/mo" : " total";
         var wWebsite = document.getElementById("wyg-website");
         var wDelivery = document.getElementById("wyg-delivery");
         var wRevisions = document.getElementById("wyg-revisions");
@@ -404,7 +404,7 @@
         if (wRevisions) wRevisions.textContent = (revVal === 1 ? "1 revision round" : revVal + " revision rounds") + " included";
         if (wPrice) wPrice.textContent = wygPrice + wygBill;
         if (wExtrasRow && wExtras) {
-          if (extrasParam) { wExtras.textContent = "Plus: " + extrasParam; wExtrasRow.hidden = false; }
+          if (extrasParam) { wExtras.textContent = "Plus: " + extrasParam.replace(/\$300 each/g, "$350 each"); wExtrasRow.hidden = false; }
           else { wExtrasRow.hidden = true; }
         }
         var submitBtn = document.getElementById("submit-btn");
