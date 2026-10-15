@@ -478,12 +478,20 @@
       }
       .check-another button:hover { color: var(--coral); }
 
-      footer {
-        text-align: center;
-        padding: 8px 20px 30px;
-        font-size: 13px;
-        color: var(--faint);
-      }
+      .site-footer{background:#fff;text-align:center;padding:56px 20px;font-family:Poppins,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+      .site-footer-logo{height:52px;width:auto;display:inline-block;}
+      .site-footer-copy{color:#10233f;font-weight:400;font-size:12px;margin:18px 0 6px;}
+      .site-footer-tag{color:#6b7280;font-size:15px;margin:0;}
+      .site-footer-nav{margin:22px 0 0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px;}
+      .site-footer-nav a{color:#6b7280;font-size:14px;text-decoration:none;}
+      .site-footer-nav a:hover{color:#10233f;}
+      .site-footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:32px 28px;max-width:1080px;margin:0 auto 44px;text-align:left;}
+      .site-footer-col{display:flex;flex-direction:column;align-items:flex-start;}
+      .site-footer-col-title{margin:0 0 10px;font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#10233f;}
+      .site-footer-col a{color:#6b7280;font-size:14px;text-decoration:none;padding:5px 0;line-height:1.45;}
+      .site-footer-col a:hover{color:#10233f;text-decoration:underline;}
+      @media(max-width:900px){.site-footer-cols{grid-template-columns:repeat(2,1fr);}}
+      @media(max-width:560px){.site-footer-cols{grid-template-columns:1fr;gap:26px;}}
 
       [hidden] { display: none !important; }
 
