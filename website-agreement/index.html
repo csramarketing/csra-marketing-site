@@ -118,6 +118,22 @@
       .sign-section { margin-top: 36px; padding-top: 30px; border-top: 2px solid var(--line); }
       .sign-section h2 { font-size: 20px; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
       .sign-section .hint { font-size: 14px; color: var(--muted); margin: 0 0 22px; }
+      .what-you-get {
+        margin-top: 36px; background: #fffdf6; border: 2px solid #f3e3b3;
+        border-radius: 16px; padding: 22px 24px;
+      }
+      .what-you-get h2 { font-size: 18px; font-weight: 800; color: var(--navy); margin: 0 0 12px; }
+      .what-you-get ul { list-style: none; padding: 0; margin: 0; }
+      .what-you-get li {
+        display: flex; gap: 10px; align-items: flex-start;
+        font-size: 15px; color: var(--ink); line-height: 1.5; margin: 0 0 10px;
+      }
+      .what-you-get li:last-child { margin-bottom: 0; }
+      .what-you-get .check {
+        flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--coral); color: #fff; font-size: 13px; font-weight: 700;
+        display: inline-flex; align-items: center; justify-content: center; margin-top: 1px;
+      }
       .field { margin-bottom: 18px; }
       .field label { display: block; font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 7px; }
       .field input[type="text"],
@@ -225,6 +241,17 @@
             <p>Our total liability under this agreement is limited to the fees paid. We are not liable for indirect, incidental, or consequential damages, including lost profits or business interruption.</p>
           </div>
 
+          <div class="what-you-get" id="what-you-get">
+            <h2>What you get</h2>
+            <ul>
+              <li><span class="check">&#10003;</span><span id="wyg-website">Website Design &#8212; 9 pages</span></li>
+              <li><span class="check">&#10003;</span><span id="wyg-delivery">Delivery in 7 days</span></li>
+              <li><span class="check">&#10003;</span><span id="wyg-revisions">2 revision rounds included</span></li>
+              <li><span class="check">&#10003;</span><span id="wyg-price">$2,500 one-time</span></li>
+              <li id="wyg-extras-row" hidden><span class="check">&#10003;</span><span id="wyg-extras"></span></li>
+            </ul>
+          </div>
+
           <div class="sign-section">
             <h2>Sign the Agreement</h2>
             <p class="hint">Fill in the fields below and tap "Sign Agreement." Your typed signature counts as a legal signature.</p>
@@ -252,7 +279,7 @@
               </div>
               <label class="check-row">
                 <input type="checkbox" id="agree" required />
-                <span>I have read the Website Design Agreement above and agree to its terms ($2,500 one-time, 9 pages, delivered in 7 days).</span>
+                <span>I have read the Website Design Agreement above and agree to its terms.</span>
               </label>
               <div class="field">
                 <label for="signature">Type your full name as your electronic signature</label>
@@ -359,6 +386,27 @@
           );
         }
         if (hasParams) view.innerHTML = html;
+        // Populate the "What you get" summary from the quoted values.
+        var pagesVal = 9, daysVal = 7, revVal = 2;
+        if (pagesParam) { var _pg = parseInt(pagesParam, 10); if (!isNaN(_pg) && _pg > 0) pagesVal = _pg; }
+        if (pagesVal > 9) daysVal = 7 + (pagesVal - 9) * 2;
+        if (revisionsParam) { var _rv = parseInt(revisionsParam, 10); if (!isNaN(_rv) && _rv > 0) revVal = _rv; }
+        var wygPrice = priceVal > 0 ? fmt(priceVal) : "$2,500";
+        var wygBill = billingParam === "recurring" ? "/mo" : " one-time";
+        var wWebsite = document.getElementById("wyg-website");
+        var wDelivery = document.getElementById("wyg-delivery");
+        var wRevisions = document.getElementById("wyg-revisions");
+        var wPrice = document.getElementById("wyg-price");
+        var wExtrasRow = document.getElementById("wyg-extras-row");
+        var wExtras = document.getElementById("wyg-extras");
+        if (wWebsite) wWebsite.textContent = "Website Design \u2014 " + pagesVal + " pages";
+        if (wDelivery) wDelivery.textContent = "Delivery in " + daysVal + " days";
+        if (wRevisions) wRevisions.textContent = (revVal === 1 ? "1 revision round" : revVal + " revision rounds") + " included";
+        if (wPrice) wPrice.textContent = wygPrice + wygBill;
+        if (wExtrasRow && wExtras) {
+          if (extrasParam) { wExtras.textContent = "Plus: " + extrasParam; wExtrasRow.hidden = false; }
+          else { wExtrasRow.hidden = true; }
+        }
         var submitBtn = document.getElementById("submit-btn");
         if (submitBtn) {
           submitBtn.textContent = btnLabel;
