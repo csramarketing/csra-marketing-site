@@ -127,7 +127,7 @@
     .section-head h2{font-size:clamp(34px,5vw,60px);line-height:1.1;letter-spacing:-.03em;margin:0;font-weight:800}
     .section-head p{max-width:480px;color:var(--muted);margin:0}
     .page-hero{background:var(--paper);padding:120px 0 110px;border-bottom:12px solid var(--gold)}
-    .page-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:104px;align-items:end}
+    .page-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:104px;align-items:start}
     .page-hero p{color:var(--muted);font-size:18px;max-width:640px;margin:30px 0 0;line-height:1.75}
     .page-hero .brand-tagline{font-size:15px;font-weight:500;color:var(--muted);margin:16px 0 0;line-height:1.5;letter-spacing:.015em}
     .page-hero .brand-tagline strong{color:var(--ink);font-weight:700}
@@ -137,6 +137,11 @@
     .page-aside{border-top:0;background:var(--soft);padding:30px;border-radius:var(--radius-md)}
     .page-aside strong{display:block;font-size:21px;line-height:1.25;margin-bottom:14px}
     .page-aside p{font-size:14px;margin:0}
+    .cal-seamless{display:flex;flex-direction:column;align-items:flex-start;background:transparent;border:0;box-shadow:none;border-radius:0;padding:0}
+    .cal-seamless h2{font-size:clamp(28px,3.6vw,38px);line-height:1.15;letter-spacing:-.025em;margin:0 0 16px;font-weight:800}
+    .cal-seamless p{color:var(--muted);margin:0 0 26px}
+    .cal-seamless-frame{display:block;width:100%;height:650px;border:0;background:transparent}
+    @media(max-width:480px){.cal-seamless-frame{height:600px}}
     .hero-side{display:grid;gap:32px}
     .page-visual{position:relative;min-height:245px;background:var(--ink);color:var(--paper);overflow:hidden;box-shadow:var(--shadow);isolation:isolate;border-radius:var(--radius-lg)}
     .page-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,color-mix(in srgb,var(--coral) 12%,transparent),transparent 45%,color-mix(in srgb,var(--gold) 12%,transparent));z-index:-1}
@@ -160,6 +165,13 @@
     .area-list{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:10px}
     .area-list li{border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-pill);padding:8px 16px;font-weight:600;font-size:14px}
     .area-list li:last-child{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    .area-strip{background:var(--soft);border-bottom:1px solid var(--line);padding:34px 0}
+    .area-strip-inner{display:flex;flex-wrap:wrap;align-items:center;gap:18px 40px;justify-content:space-between}
+    .area-strip-copy{max-width:560px}
+    .area-strip h2{font-size:24px;line-height:1.2;letter-spacing:-.02em;margin:0 0 8px;font-weight:800}
+    .area-strip p{color:var(--muted);margin:0;font-size:15px;line-height:1.65}
+    .area-strip .area-list{margin:0;max-width:520px}
+    @media(max-width:900px){.area-strip-inner{flex-direction:column;align-items:flex-start}}
     .cta-band{padding:108px 0;background:var(--paper)}
     .cta-band h2{font-size:clamp(32px,5vw,54px);line-height:1.1;letter-spacing:-.03em;margin:0;font-weight:800}
     .cta-panel{position:relative;overflow:hidden;background:radial-gradient(560px 320px at 88% -10%,rgba(255,188,71,.30),transparent 60%),radial-gradient(520px 320px at -6% 112%,rgba(255,112,92,.24),transparent 60%),var(--navy);color:var(--white);border-radius:var(--radius-lg);padding:64px;box-shadow:var(--shadow)}
@@ -370,10 +382,30 @@
       </div>
       <div class="hero-side">
         <div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit"><div class="orbit-dot"></div><strong>CSRA</strong><span class="orbit-place one">EVANS</span><span class="orbit-place two">MARTINEZ</span><span class="orbit-place three">NORTH AUGUSTA</span><span class="orbit-place four">AIKEN</span><span class="orbit-place five">GROVETOWN</span><span class="orbit-place six">AUGUSTA</span></div></div>
-        <aside class="page-aside"><strong>Two easy ways to reach us.</strong><p>Grab a time on the calendar for a 15 minute review, or email us any time. Either way, you talk with us directly, no forms disappearing into a black hole.</p></aside>
+        <div class="page-aside">
+          <strong>Two easy ways to reach us.</strong>
+          <p>Grab a time on the calendar for a 15 minute review, or email us any time. Either way, you talk with us directly, no forms disappearing into a black hole.</p>
+        </div>
       </div>
     </div>
   </header>
+  <section class="area-strip" aria-label="Where we work">
+    <div class="wrap area-strip-inner">
+      <div class="area-strip-copy">
+        <h2>Where we work</h2>
+        <p>We work with roofing companies in Augusta, Evans, Martinez, Grovetown, North Augusta, Aiken, and across the greater CSRA. If your crews run jobs in this area, we can help you win more of them.</p>
+      </div>
+      <ul class="area-list">
+        <li>Augusta</li>
+        <li>Evans</li>
+        <li>Martinez</li>
+        <li>Grovetown</li>
+        <li>North Augusta</li>
+        <li>Aiken</li>
+        <li>The greater CSRA</li>
+      </ul>
+    </div>
+  </section>
   <section class="page-section">
     <div class="wrap">
       <div class="contact-split">
@@ -467,18 +499,26 @@
             <a class="btn btn-primary success-cta" href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book a 15 minute review</a>
           </div>
         </article>
-        <article class="contact-card coral reveal-target">
-          <h2>Where we work</h2>
-          <p>We work with roofing companies in Augusta, Evans, Martinez, Grovetown, North Augusta, Aiken, and across the greater CSRA. If your crews run jobs in this area, we can help you win more of them.</p>
-          <ul class="area-list">
-            <li>Augusta</li>
-            <li>Evans</li>
-            <li>Martinez</li>
-            <li>Grovetown</li>
-            <li>North Augusta</li>
-            <li>Aiken</li>
-            <li>The greater CSRA</li>
-          </ul>
+        <article class="cal-seamless reveal-target">
+          <h2>Book a 15 minute review</h2>
+          <p>Pick a time that works for you. We will look at your website and SEO together and show you where estimate calls are getting lost.</p>
+<!-- Cal inline embed code begins -->
+<div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-15min"></div>
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "15min", {origin:"https://app.cal.com"});
+Cal.config = Cal.config || {};
+Cal.config.forwardQueryParams = true;
+
+  Cal.ns["15min"]("inline", {
+    elementOrSelector:"#my-cal-inline-15min",
+    config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true"},
+    calLink: "csramarketing/15min",
+  });
+
+  Cal.ns["15min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+  </script>
+  <!-- Cal inline embed code ends -->
         </article>
       </div>
     </div>
