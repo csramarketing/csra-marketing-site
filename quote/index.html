@@ -109,6 +109,26 @@
         margin-bottom: 16px; position: sticky; top: 10px; z-index: 5;
         box-shadow: 0 6px 24px rgba(16,35,63,0.28);
       }
+      .breakdown { margin-bottom: 8px; }
+      .breakdown:empty { display: none; }
+      .bd-section { margin-bottom: 12px; }
+      .bd-title {
+        font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+        color: var(--yellow); margin-bottom: 4px;
+      }
+      .bd-line { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 3px 0; font-size: 13px; }
+      .bd-label { color: #cfd8e5; }
+      .bd-val { font-weight: 600; white-space: nowrap; }
+      .bd-val .tag {
+        font-size: 10px; font-weight: 600; color: #d7e0ec;
+        border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 1px 6px; margin-left: 6px;
+        white-space: nowrap;
+      }
+      .bd-sub {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+        padding: 6px 0 2px; margin-top: 4px; border-top: 1px dotted rgba(255,255,255,0.25);
+        font-size: 13px; font-weight: 700;
+      }
       .totals .t-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; }
       .totals .t-label { font-size: 13px; color: #b9c4d4; }
       .totals .t-val { font-size: 20px; font-weight: 700; }
@@ -249,6 +269,7 @@
       </div>
 
       <div class="totals" id="totals">
+        <div class="breakdown" id="breakdown"></div>
         <div class="t-row">
           <span class="t-label">One-time total</span>
           <span class="t-val" id="t-onetime">$0</span>
@@ -353,6 +374,43 @@
           add(creditTotal, BILL.careCredits);
 
           var sixMo = oneTime + monthly * P.seoTerm;
+
+          // Per-service breakdown (updates live with inputs)
+          function bdLine(label, amt, mode) {
+            var tag = mode === "recurring" ? "/mo" : '<span class="tag">one-time</span>';
+            return '<div class="bd-line"><span class="bd-label">' + label + '</span><span class="bd-val">' + fmt(amt) + tag + '</span></div>';
+          }
+          function bdSection(title, lines) {
+            var s = '<div class="bd-section"><div class="bd-title">' + title + '</div>';
+            var sOne = 0, sMo = 0;
+            lines.forEach(function (l) {
+              s += bdLine(l[0], l[1], l[2]);
+              if (l[2] === "recurring") { sMo += l[1]; } else { sOne += l[1]; }
+            });
+            var sub;
+            if (sOne > 0 && sMo > 0) { sub = fmt(sOne) + ' one-time + ' + fmt(sMo) + '/mo'; }
+            else if (sMo > 0) { sub = fmt(sMo) + '/mo'; }
+            else { sub = fmt(sOne) + ' <span class="tag">one-time</span>'; }
+            s += '<div class="bd-sub"><span>' + title + ' subtotal</span><span class="bd-val">' + sub + '</span></div></div>';
+            return s;
+          }
+          var bd = "";
+          var webLines = [];
+          if (webOn) { webLines.push(["Base (9 pages)", P.webBase, BILL.webBase]); }
+          if (webExtra > 0) { webLines.push(["Extra pages (" + webExtra + " \u00d7 $350)", webExtraAmt, BILL.webExtra]); }
+          if (webLines.length) { bd += bdSection("Website Design", webLines); }
+          var seoLines = [];
+          if (seoOn) { seoLines.push(["Retainer (6-month term)", P.seoMo, BILL.seoBase]); }
+          if (seoLinks > 0) { seoLines.push(["Extra authority links (" + seoLinks + " \u00d7 $250)", linkTotal, BILL.seoLinks]); }
+          if ($("sprint-audit").checked) { seoLines.push(["SEO Audit", P.sprintAudit, "onetime"]); }
+          if ($("sprint-gbp").checked) { seoLines.push(["GBP Overhaul", P.sprintGbp, "onetime"]); }
+          if ($("sprint-cite").checked) { seoLines.push(["Citation Cleanup &amp; Building", P.sprintCite, "onetime"]); }
+          if (seoLines.length) { bd += bdSection("Local SEO", seoLines); }
+          var careLines = [];
+          if (careOn) { careLines.push(["Base (3 credits/mo)", P.careMo, BILL.careBase]); }
+          if (careCredits > 0) { careLines.push(["Extra credits (" + careCredits + " \u00d7 $25)", creditTotal, BILL.careCredits]); }
+          if (careLines.length) { bd += bdSection("Care Plan", careLines); }
+          $("breakdown").innerHTML = bd;
 
           $("t-onetime").textContent = fmt(oneTime);
           $("t-monthly").textContent = fmt(monthly) + "/mo";
