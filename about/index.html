@@ -346,7 +346,7 @@
   <header class="page-hero">
     <div class="wrap page-hero-grid">
       <div class="hero-copy"><div class="eyebrow">Straight answers for local roofers</div><h1>Your marketing should earn its keep.</h1><p class="hero-subhead">Every call tracked and every dollar tied back to revenue. If your marketing is not paying for itself, you will know.</p><div class="hero-actions"><a class="btn btn-primary" href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book a 15-minute review</a></div><ul class="hero-bullets"><li>Every call tracked and tied to revenue</li><li>Straight reporting, no vanity metrics</li><li>Built only for roofing companies</li></ul><div class="hero-trust"><span class="hero-stars" aria-hidden="true">★★★★★</span><span class="hero-trust-text">Built for roofing companies in your service area</span></div></div>
-      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit"><div class="orbit-dot"></div><strong>CSRA</strong><span class="orbit-place one">EVANS</span><span class="orbit-place two">MARTINEZ</span><span class="orbit-place three">NORTH AUGUSTA</span><span class="orbit-place four">AIKEN</span><span class="orbit-place five">GROVETOWN</span><span class="orbit-place six">AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
+      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit" data-orbit><div class="orbit-dot"></div><strong data-orbit-center>CSRA</strong><span class="orbit-place one" data-orbit-place>EVANS</span><span class="orbit-place two" data-orbit-place>MARTINEZ</span><span class="orbit-place three" data-orbit-place>NORTH AUGUSTA</span><span class="orbit-place four" data-orbit-place>AIKEN</span><span class="orbit-place five" data-orbit-place>GROVETOWN</span><span class="orbit-place six" data-orbit-place>AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
     </div>
   </header>
   <section class="page-section alt">
@@ -501,5 +501,265 @@
   }, true);
 })();
 </script>
+<script>
+(function(){
+  try {
+    var centerEl = document.querySelector('[data-orbit-center]');
+    var placeEls = document.querySelectorAll('[data-orbit-place]');
+    if (!centerEl || placeEls.length !== 6) return;
+
+    function norm(s){
+      return String(s || '').toLowerCase().replace(/\./g,'').replace(/-/g,' ').replace(/\s+/g,' ').trim();
+    }
+    function upper(s){ return String(s || '').toUpperCase(); }
+
+    // Major US metros mapped to 6 surrounding cities / suburbs.
+    // Order matters for suburb lookups: more specific metros come first.
+    var METROS = [
+      {name:'Augusta', suburbs:['Evans','Martinez','North Augusta','Aiken','Grovetown','Hephzibah']},
+      {name:'Atlanta', suburbs:['Marietta','Decatur','Sandy Springs','Roswell','Kennesaw','Alpharetta']},
+      {name:'Dallas', suburbs:['Plano','Irving','Frisco','Arlington','Garland','McKinney']},
+      {name:'Fort Worth', suburbs:['Arlington','Keller','Mansfield','Burleson','Hurst','Bedford']},
+      {name:'Houston', suburbs:['Sugar Land','The Woodlands','Katy','Pearland','Pasadena','League City']},
+      {name:'Austin', suburbs:['Round Rock','Cedar Park','Pflugerville','Georgetown','Leander','San Marcos']},
+      {name:'San Antonio', suburbs:['New Braunfels','Boerne','Seguin','Alamo Heights','Cibolo','Schertz']},
+      {name:'New York', aliases:['new york city','brooklyn','queens','bronx','staten island','manhattan'], suburbs:['Jersey City','Newark','Yonkers','Stamford','White Plains','Edison']},
+      {name:'Los Angeles', suburbs:['Long Beach','Pasadena','Glendale','Burbank','Torrance','Inglewood']},
+      {name:'San Francisco', suburbs:['Oakland','Berkeley','Fremont','Daly City','San Mateo','Walnut Creek']},
+      {name:'San Jose', suburbs:['Sunnyvale','Santa Clara','Milpitas','Mountain View','Palo Alto','Cupertino']},
+      {name:'San Diego', suburbs:['Chula Vista','Oceanside','Escondido','Carlsbad','El Cajon','Vista']},
+      {name:'Sacramento', suburbs:['Roseville','Folsom','Elk Grove','Rancho Cordova','Citrus Heights','Davis']},
+      {name:'Phoenix', suburbs:['Scottsdale','Mesa','Chandler','Tempe','Gilbert','Glendale']},
+      {name:'Tucson', suburbs:['Oro Valley','Marana','Sahuarita','Green Valley','Vail','Sierra Vista']},
+      {name:'Las Vegas', suburbs:['Henderson','North Las Vegas','Paradise','Spring Valley','Boulder City','Mesquite']},
+      {name:'Denver', suburbs:['Aurora','Lakewood','Arvada','Westminster','Boulder','Littleton']},
+      {name:'Salt Lake City', aliases:['salt lake'], suburbs:['Sandy','Ogden','Provo','West Valley','Bountiful','Draper']},
+      {name:'Seattle', suburbs:['Bellevue','Tacoma','Everett','Kent','Renton','Kirkland']},
+      {name:'Portland', suburbs:['Beaverton','Hillsboro','Gresham','Vancouver','Tigard','Lake Oswego']},
+      {name:'Chicago', suburbs:['Naperville','Evanston','Schaumburg','Skokie','Oak Park','Aurora']},
+      {name:'Minneapolis', aliases:['minneapolis saint paul','saint paul','st paul'], suburbs:['St Paul','Bloomington','Plymouth','Maple Grove','Eden Prairie','Edina']},
+      {name:'Milwaukee', suburbs:['Waukesha','Brookfield','Wauwatosa','West Allis','Oak Creek','Racine']},
+      {name:'Detroit', suburbs:['Troy','Livonia','Dearborn','Royal Oak','Novi','Warren']},
+      {name:'Indianapolis', suburbs:['Carmel','Fishers','Noblesville','Greenwood','Plainfield','Zionsville']},
+      {name:'Columbus', suburbs:['Dublin','Westerville','Grove City','Reynoldsburg','Upper Arlington','Hilliard']},
+      {name:'Cleveland', suburbs:['Lakewood','Euclid','Mentor','Strongsville','Westlake','Parma']},
+      {name:'Cincinnati', suburbs:['Mason','West Chester','Florence','Covington','Blue Ash','Milford']},
+      {name:'Pittsburgh', suburbs:['Bethel Park','Monroeville','Cranberry','Wexford','Sewickley','Canonsburg']},
+      {name:'St Louis', aliases:['saint louis'], suburbs:['Chesterfield','Florissant','Clayton','Kirkwood','Ballwin','Belleville']},
+      {name:'Kansas City', suburbs:['Overland Park','Olathe','Independence','Lees Summit','Shawnee','Lenexa']},
+      {name:'Oklahoma City', suburbs:['Norman','Edmond','Moore','Yukon','Midwest City','Del City']},
+      {name:'Tulsa', suburbs:['Broken Arrow','Owasso','Bixby','Jenks','Sapulpa','Sand Springs']},
+      {name:'Boston', suburbs:['Cambridge','Somerville','Newton','Brookline','Quincy','Waltham']},
+      {name:'Providence', suburbs:['Warwick','Cranston','Pawtucket','E Providence','Woonsocket','Fall River']},
+      {name:'Hartford', suburbs:['West Hartford','New Britain','Manchester','Bristol','Enfield','Glastonbury']},
+      {name:'Buffalo', suburbs:['Amherst','Tonawanda','Cheektowaga','Hamburg','Orchard Park','Niagara Falls']},
+      {name:'Rochester', suburbs:['Greece','Henrietta','Pittsford','Webster','Irondequoit','Fairport']},
+      {name:'Philadelphia', suburbs:['Cherry Hill','King of Prussia','Norristown','Chester','Wilmington','Camden']},
+      {name:'Washington', aliases:['washington dc','district of columbia'], suburbs:['Arlington','Alexandria','Bethesda','Silver Spring','Rockville','Fairfax']},
+      {name:'Baltimore', suburbs:['Columbia','Towson','Annapolis','Glen Burnie','Ellicott City','Dundalk']},
+      {name:'Richmond', suburbs:['Henrico','Midlothian','Glen Allen','Mechanicsville','Chesterfield','Ashland']},
+      {name:'Virginia Beach', suburbs:['Norfolk','Chesapeake','Newport News','Hampton','Portsmouth','Suffolk']},
+      {name:'Charlotte', suburbs:['Concord','Gastonia','Rock Hill','Huntersville','Matthews','Mint Hill']},
+      {name:'Raleigh', suburbs:['Cary','Apex','Wake Forest','Holly Springs','Garner','Morrisville']},
+      {name:'Durham', suburbs:['Chapel Hill','Cary','Hillsborough','Carrboro','Morrisville','Apex']},
+      {name:'Greensboro', suburbs:['Winston Salem','High Point','Burlington','Kernersville','Thomasville','Asheboro']},
+      {name:'Charleston', aliases:['charleston sc'], suburbs:['Mount Pleasant','N Charleston','Summerville','James Island','Johns Island','Goose Creek']},
+      {name:'Columbia', aliases:['columbia sc'], suburbs:['Lexington','Irmo','Cayce','West Columbia','Chapin','Blythewood']},
+      {name:'Greenville', aliases:['greenville sc'], suburbs:['Spartanburg','Anderson','Mauldin','Simpsonville','Greer','Easley']},
+      {name:'Savannah', suburbs:['Pooler','Richmond Hill','Bluffton','Hilton Head','Statesboro','Hinesville']},
+      {name:'Jacksonville', suburbs:['St Augustine','Orange Park','Ponte Vedra','Middleburg','Fernandina','Atlantic Beach']},
+      {name:'Orlando', suburbs:['Winter Park','Kissimmee','Altamonte','Sanford','Lake Mary','Oviedo']},
+      {name:'Tampa', suburbs:['St Petersburg','Clearwater','Brandon','Largo','Wesley Chapel','Plant City']},
+      {name:'West Palm Beach', suburbs:['Boca Raton','Delray Beach','Boynton Beach','Jupiter','Wellington','Lake Worth']},
+      {name:'Miami', suburbs:['Fort Lauderdale','Hollywood','Pembroke Pines','Coral Gables','Hialeah','Doral']},
+      {name:'Birmingham', suburbs:['Hoover','Homewood','Trussville','Pelham','Alabaster','Bessemer']},
+      {name:'Nashville', suburbs:['Franklin','Murfreesboro','Brentwood','Hendersonville','Smyrna','Gallatin']},
+      {name:'Memphis', suburbs:['Germantown','Collierville','Bartlett','Olive Branch','Southaven','Horn Lake']},
+      {name:'Knoxville', suburbs:['Farragut','Maryville','Oak Ridge','Lenoir City','Alcoa','Powell']},
+      {name:'Chattanooga', suburbs:['Hixson','East Ridge','Cleveland','Ooltewah','Soddy Daisy','Signal Mtn']},
+      {name:'Louisville', suburbs:['Jeffersonville','New Albany','Clarksville','St Matthews','Jeffersontown','Prospect']},
+      {name:'New Orleans', suburbs:['Metairie','Kenner','Gretna','Slidell','Mandeville','Covington']},
+      {name:'Little Rock', suburbs:['N Little Rock','Conway','Benton','Bryant','Sherwood','Maumelle']},
+      {name:'Jackson', aliases:['jackson ms'], suburbs:['Madison','Ridgeland','Flowood','Brandon','Pearl','Clinton']}
+    ];
+
+    // Major cities by state, used when the visitor city has no metro match.
+    // 7 per state so the visitor city itself can be filtered out and still leave 6.
+    var STATE_CITIES = {
+      'AL':['Birmingham','Huntsville','Mobile','Montgomery','Tuscaloosa','Hoover','Auburn'],
+      'AK':['Anchorage','Juneau','Fairbanks','Sitka','Ketchikan','Wasilla','Kenai'],
+      'AZ':['Phoenix','Tucson','Mesa','Chandler','Scottsdale','Glendale','Tempe'],
+      'AR':['Little Rock','Fayetteville','Fort Smith','Springdale','Jonesboro','Conway','Bentonville'],
+      'CA':['Los Angeles','San Diego','San Jose','San Francisco','Sacramento','Fresno','Long Beach'],
+      'CO':['Denver','Colorado Springs','Aurora','Boulder','Fort Collins','Aspen','Lakewood'],
+      'CT':['Hartford','New Haven','Stamford','Bridgeport','Waterbury','Norwalk','Danbury'],
+      'DE':['Wilmington','Dover','Newark','Middletown','Smyrna','Milford','Seaford'],
+      'FL':['Jacksonville','Miami','Tampa','Orlando','Tallahassee','Fort Lauderdale','St Petersburg'],
+      'GA':['Atlanta','Augusta','Savannah','Athens','Columbus','Macon','Sandy Springs'],
+      'HI':['Honolulu','Hilo','Kailua','Pearl City','Waipahu','Kahului','Mililani'],
+      'ID':['Boise','Meridian','Nampa','Idaho Falls','Pocatello','Coeur d Alene','Twin Falls'],
+      'IL':['Chicago','Springfield','Naperville','Peoria','Rockford','Champaign','Evanston'],
+      'IN':['Indianapolis','Fort Wayne','Evansville','South Bend','Carmel','Fishers','Bloomington'],
+      'IA':['Des Moines','Cedar Rapids','Davenport','Sioux City','Iowa City','Waterloo','Ames'],
+      'KS':['Wichita','Overland Park','Kansas City','Topeka','Olathe','Lawrence','Shawnee'],
+      'KY':['Louisville','Lexington','Bowling Green','Owensboro','Covington','Hopkinsville','Frankfort'],
+      'LA':['New Orleans','Baton Rouge','Shreveport','Lafayette','Lake Charles','Kenner','Bossier City'],
+      'ME':['Portland','Lewiston','Bangor','South Portland','Auburn','Augusta','Biddeford'],
+      'MD':['Baltimore','Annapolis','Frederick','Rockville','Gaithersburg','Bowie','Columbia'],
+      'MA':['Boston','Worcester','Springfield','Cambridge','Lowell','Quincy','Newton'],
+      'MI':['Detroit','Grand Rapids','Ann Arbor','Lansing','Flint','Dearborn','Troy'],
+      'MN':['Minneapolis','St Paul','Rochester','Duluth','Bloomington','Plymouth','St Cloud'],
+      'MS':['Jackson','Gulfport','Southaven','Biloxi','Hattiesburg','Meridian','Tupelo'],
+      'MO':['Kansas City','St Louis','Springfield','Columbia','Independence','Lees Summit','O Fallon'],
+      'MT':['Billings','Missoula','Great Falls','Bozeman','Butte','Helena','Kalispell'],
+      'NE':['Omaha','Lincoln','Bellevue','Grand Island','Kearney','Fremont','Hastings'],
+      'NV':['Las Vegas','Henderson','Reno','North Las Vegas','Sparks','Carson City','Boulder City'],
+      'NH':['Manchester','Nashua','Concord','Derry','Rochester','Salem','Dover'],
+      'NJ':['Newark','Jersey City','Paterson','Elizabeth','Trenton','Edison','Clifton'],
+      'NM':['Albuquerque','Las Cruces','Rio Rancho','Santa Fe','Roswell','Farmington','Clovis'],
+      'NY':['New York','Buffalo','Rochester','Syracuse','Albany','Yonkers','Ithaca'],
+      'NC':['Charlotte','Raleigh','Greensboro','Durham','Winston Salem','Fayetteville','Asheville'],
+      'ND':['Fargo','Bismarck','Grand Forks','Minot','West Fargo','Williston','Dickinson'],
+      'OH':['Columbus','Cleveland','Cincinnati','Toledo','Akron','Dayton','Canton'],
+      'OK':['Oklahoma City','Tulsa','Norman','Broken Arrow','Edmond','Lawton','Moore'],
+      'OR':['Portland','Salem','Eugene','Gresham','Hillsboro','Beaverton','Bend'],
+      'PA':['Philadelphia','Pittsburgh','Allentown','Erie','Reading','Scranton','Harrisburg'],
+      'RI':['Providence','Warwick','Cranston','Pawtucket','Woonsocket','Newport','East Providence'],
+      'SC':['Charleston','Columbia','Greenville','Mount Pleasant','Rock Hill','Spartanburg','Myrtle Beach'],
+      'SD':['Sioux Falls','Rapid City','Aberdeen','Brookings','Watertown','Mitchell','Yankton'],
+      'TN':['Nashville','Memphis','Knoxville','Chattanooga','Clarksville','Murfreesboro','Franklin'],
+      'TX':['Houston','Dallas','Austin','San Antonio','Fort Worth','El Paso','Plano'],
+      'UT':['Salt Lake City','West Valley','Provo','West Jordan','Orem','Sandy','Ogden'],
+      'VT':['Burlington','South Burlington','Rutland','Barre','Montpelier','Winooski','St Albans'],
+      'VA':['Virginia Beach','Richmond','Norfolk','Arlington','Newport News','Alexandria','Chesapeake'],
+      'WA':['Seattle','Spokane','Tacoma','Vancouver','Bellevue','Kent','Olympia'],
+      'WV':['Charleston','Huntington','Morgantown','Parkersburg','Wheeling','Weirton','Fairmont'],
+      'WI':['Milwaukee','Madison','Green Bay','Kenosha','Racine','Appleton','Waukesha'],
+      'WY':['Cheyenne','Casper','Laramie','Gillette','Rock Springs','Sheridan','Riverton'],
+      'DC':['Washington','Georgetown','Arlington','Alexandria','Bethesda','Silver Spring','Fairfax']
+    };
+    var STATE_NAME_TO_CODE = {
+      'alabama':'AL','alaska':'AK','arizona':'AZ','arkansas':'AR','california':'CA','colorado':'CO','connecticut':'CT','delaware':'DE','florida':'FL','georgia':'GA','hawaii':'HI','idaho':'ID','illinois':'IL','indiana':'IN','iowa':'IA','kansas':'KS','kentucky':'KY','louisiana':'LA','maine':'ME','maryland':'MD','massachusetts':'MA','michigan':'MI','minnesota':'MN','mississippi':'MS','missouri':'MO','montana':'MT','nebraska':'NE','nevada':'NV','new hampshire':'NH','new jersey':'NJ','new mexico':'NM','new york':'NY','north carolina':'NC','north dakota':'ND','ohio':'OH','oklahoma':'OK','oregon':'OR','pennsylvania':'PA','rhode island':'RI','south carolina':'SC','south dakota':'SD','tennessee':'TN','texas':'TX','utah':'UT','vermont':'VT','virginia':'VA','washington':'WA','west virginia':'WV','wisconsin':'WI','wyoming':'WY','district of columbia':'DC'
+    };
+
+    function findMetro(cityNorm){
+      var i, j, m;
+      for (i = 0; i < METROS.length; i++) {
+        m = METROS[i];
+        if (norm(m.name) === cityNorm) return m;
+        if (m.aliases) {
+          for (j = 0; j < m.aliases.length; j++) if (norm(m.aliases[j]) === cityNorm) return m;
+        }
+      }
+      for (i = 0; i < METROS.length; i++) {
+        m = METROS[i];
+        for (j = 0; j < m.suburbs.length; j++) if (norm(m.suburbs[j]) === cityNorm) return m;
+      }
+      return null;
+    }
+
+    function setCenter(text, secondLine){
+      centerEl.style.whiteSpace = '';
+      centerEl.style.maxWidth = '';
+      centerEl.style.textAlign = '';
+      centerEl.style.lineHeight = '';
+      centerEl.style.fontSize = '';
+      if (secondLine) {
+        centerEl.textContent = text + '\n' + secondLine;
+        centerEl.style.whiteSpace = 'pre-line';
+        centerEl.style.maxWidth = '58px';
+        centerEl.style.textAlign = 'center';
+        centerEl.style.lineHeight = '1.15';
+        if (text.length > 10) centerEl.style.fontSize = '9px';
+        return;
+      }
+      centerEl.textContent = text;
+      if (text.length > 7) {
+        centerEl.style.maxWidth = '58px';
+        centerEl.style.textAlign = 'center';
+        centerEl.style.lineHeight = '1.15';
+        centerEl.style.whiteSpace = 'normal';
+        if (text.length > 14) centerEl.style.fontSize = '9px';
+        else if (text.length > 10) centerEl.style.fontSize = '10px';
+      }
+    }
+    function setPlaces(list){
+      for (var i = 0; i < placeEls.length; i++) {
+        if (list[i]) placeEls[i].textContent = upper(list[i]);
+      }
+    }
+    function render(city, regionCode, regionName){
+      var cityNorm = norm(city);
+      var metro = findMetro(cityNorm);
+      if (metro) {
+        var list = metro.suburbs.slice();
+        // If the visitor is in one of the suburbs, swap that suburb out for the metro hub
+        // so the center city never duplicates an orbit label.
+        var isHub = norm(metro.name) === cityNorm || (metro.aliases && metro.aliases.some(function(a){ return norm(a) === cityNorm; }));
+        if (!isHub) {
+          for (var i = 0; i < list.length; i++) {
+            if (norm(list[i]) === cityNorm) { list[i] = metro.name; break; }
+          }
+        }
+        setCenter(upper(city));
+        setPlaces(list);
+        return;
+      }
+      // State fallback: center shows the visitor city with its state, orbit shows major state cities.
+      var code = '';
+      if (regionCode && STATE_CITIES[String(regionCode).toUpperCase()]) code = String(regionCode).toUpperCase();
+      else if (regionName && STATE_NAME_TO_CODE[norm(regionName)]) code = STATE_NAME_TO_CODE[norm(regionName)];
+      if (code && STATE_CITIES[code]) {
+        var stateList = STATE_CITIES[code].filter(function(c){ return norm(c) !== cityNorm; }).slice(0, 6);
+        if (stateList.length === 6) {
+          setCenter(upper(city), code);
+          setPlaces(stateList);
+          return;
+        }
+      }
+      // City known but no state list available: still personalize the center.
+      setCenter(upper(city));
+    }
+
+    var started = false;
+    function personalize(){
+      if (started) return;
+      started = true;
+      try {
+        var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+        var timeoutId = null;
+        if (controller) {
+          timeoutId = setTimeout(function(){ try { controller.abort(); } catch(e){} }, 4000);
+        }
+        var fetchOptions = controller ? { signal: controller.signal } : {};
+        fetch('https://ipapi.co/json/', fetchOptions)
+          .then(function(res){
+            if (timeoutId) clearTimeout(timeoutId);
+            if (!res || !res.ok) return null;
+            return res.json();
+          })
+          .then(function(data){
+            try {
+              if (data && data.city) {
+                render(data.city, data.region_code || '', data.region || '');
+              }
+            } catch(e){}
+          })
+          .catch(function(){
+            if (timeoutId) clearTimeout(timeoutId);
+          });
+      } catch(e){}
+    }
+    if (document.readyState === 'complete') {
+      setTimeout(personalize, 0);
+    } else {
+      window.addEventListener('load', function(){ setTimeout(personalize, 0); }, { once: true });
+      setTimeout(function(){
+        if (document.readyState === 'complete') personalize();
+      }, 1200);
+    }
+  } catch(e){}
+})();
+
 </body>
 </html>
