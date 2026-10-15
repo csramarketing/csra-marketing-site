@@ -155,7 +155,8 @@
     .local-orbit{width:232px;height:232px;border:1px solid color-mix(in srgb,var(--paper) 22%,transparent);border-radius:50%;display:grid;place-items:center;position:relative}
     .local-orbit:before,.local-orbit:after{content:"";position:absolute;border:1px solid color-mix(in srgb,var(--paper) 18%,transparent);border-radius:50%}.local-orbit:before{inset:33px}.local-orbit:after{inset:69px;background:var(--coral);border:8px solid var(--ink)}
     .local-orbit strong{position:absolute;z-index:2;font-size:12px;color:#10233f;top:50%;left:50%;transform:translate(-50%,-50%)}
-    .orbit-dot{position:absolute;width:11px;height:11px;background:var(--gold);border:3px solid var(--ink);border-radius:50%;left:50%;top:-6px;transform-origin:0 122px;animation:orbit 22s linear infinite}
+    .orbit-pin-orbit{position:absolute;inset:0;animation:orbit 22s linear infinite}
+    .orbit-pin{position:absolute;left:50%;top:-32px;width:20px;height:auto;transform:translateX(-50%)}
     .orbit-place{position:absolute;font-size:11px;font-weight:800;line-height:1;white-space:nowrap;color:color-mix(in srgb,var(--paper) 72%,transparent);transform:translate(-50%,-50%)}.orbit-place.one{top:-9px;left:50%}.orbit-place.two{top:22%;left:100%}.orbit-place.three{top:78%;left:100%}.orbit-place.four{top:calc(100% + 9px);left:50%}.orbit-place.five{top:78%;left:0}.orbit-place.six{top:22%;left:0}
     .page-section{padding:124px 0}
     .page-section.alt{background:var(--surface)}
@@ -258,7 +259,8 @@
       .local-orbit:before{inset:24px}
       .local-orbit:after{inset:50px;border-width:7px}
       .local-orbit strong{font-size:10px}
-      .orbit-dot{animation-duration:41s;transform-origin:0 90px}
+      .orbit-pin-orbit{animation-duration:41s}
+      .orbit-pin{width:16px;top:-25px}
       .page-hero .hero-subhead{font-size:15.5px;line-height:1.6;margin-top:16px}
       .hero-actions{margin-top:22px}
       .hero-bullets{margin-top:24px;gap:10px}
@@ -306,7 +308,7 @@
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}.btn,.site-nav,.fit-panel,.page-visual{transition:none}.btn:hover,.btn:active,.fit-panel:hover,.page-visual:hover{transform:none}
       .motion-ok .reveal,.motion-ok .page-hero-grid>div,.motion-ok .page-hero-grid>.hero-side,.motion-ok .page-visual{opacity:1;transform:none;transition:none;animation:none}
-      .orbit-dot{animation:none}
+      .orbit-pin-orbit{animation:none}
     }
   </style>
 <style>
@@ -346,7 +348,7 @@
   <header class="page-hero">
     <div class="wrap page-hero-grid">
       <div class="hero-copy"><div class="eyebrow">Straight answers for local roofers</div><h1>Your marketing should earn its keep.</h1><p class="hero-subhead">Every call tracked and every dollar tied back to revenue. If your marketing is not paying for itself, you will know.</p><div class="hero-actions"><a class="btn btn-primary" href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book a 15-minute review</a></div><ul class="hero-bullets"><li>Every call tracked and tied to revenue</li><li>Straight reporting, no vanity metrics</li><li>Built only for roofing companies</li></ul><div class="hero-trust"><span class="hero-stars" aria-hidden="true">★★★★★</span><span class="hero-trust-text">Built for roofing companies in your service area</span></div></div>
-      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit" data-orbit><div class="orbit-dot"></div><strong data-orbit-center>CSRA</strong><span class="orbit-place one" data-orbit-place>EVANS</span><span class="orbit-place two" data-orbit-place>MARTINEZ</span><span class="orbit-place three" data-orbit-place>NORTH AUGUSTA</span><span class="orbit-place four" data-orbit-place>AIKEN</span><span class="orbit-place five" data-orbit-place>GROVETOWN</span><span class="orbit-place six" data-orbit-place>AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
+      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit" data-orbit><div class="orbit-pin-orbit"><img class="orbit-pin" src="/assets/map-pin.png" alt=""></div><strong data-orbit-center>CSRA</strong><span class="orbit-place one" data-orbit-place>EVANS</span><span class="orbit-place two" data-orbit-place>MARTINEZ</span><span class="orbit-place three" data-orbit-place>NORTH AUGUSTA</span><span class="orbit-place four" data-orbit-place>AIKEN</span><span class="orbit-place five" data-orbit-place>GROVETOWN</span><span class="orbit-place six" data-orbit-place>AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
     </div>
   </header>
   <section class="page-section alt">
@@ -658,31 +660,6 @@
       return null;
     }
 
-    function setCenter(text, secondLine){
-      centerEl.style.whiteSpace = '';
-      centerEl.style.maxWidth = '';
-      centerEl.style.textAlign = '';
-      centerEl.style.lineHeight = '';
-      centerEl.style.fontSize = '';
-      if (secondLine) {
-        centerEl.textContent = text + '\n' + secondLine;
-        centerEl.style.whiteSpace = 'pre-line';
-        centerEl.style.maxWidth = '58px';
-        centerEl.style.textAlign = 'center';
-        centerEl.style.lineHeight = '1.15';
-        if (text.length > 10) centerEl.style.fontSize = '9px';
-        return;
-      }
-      centerEl.textContent = text;
-      if (text.length > 7) {
-        centerEl.style.maxWidth = '58px';
-        centerEl.style.textAlign = 'center';
-        centerEl.style.lineHeight = '1.15';
-        centerEl.style.whiteSpace = 'normal';
-        if (text.length > 14) centerEl.style.fontSize = '9px';
-        else if (text.length > 10) centerEl.style.fontSize = '10px';
-      }
-    }
     function setPlaces(list){
       for (var i = 0; i < placeEls.length; i++) {
         if (list[i]) placeEls[i].textContent = upper(list[i]);
@@ -694,31 +671,28 @@
       if (metro) {
         var list = metro.suburbs.slice();
         // If the visitor is in one of the suburbs, swap that suburb out for the metro hub
-        // so the center city never duplicates an orbit label.
+        // so the orbit labels never duplicate each other.
         var isHub = norm(metro.name) === cityNorm || (metro.aliases && metro.aliases.some(function(a){ return norm(a) === cityNorm; }));
         if (!isHub) {
           for (var i = 0; i < list.length; i++) {
             if (norm(list[i]) === cityNorm) { list[i] = metro.name; break; }
           }
         }
-        setCenter(upper(city));
         setPlaces(list);
         return;
       }
-      // State fallback: center shows the visitor city with its state, orbit shows major state cities.
+      // State fallback: orbit shows major state cities.
       var code = '';
       if (regionCode && STATE_CITIES[String(regionCode).toUpperCase()]) code = String(regionCode).toUpperCase();
       else if (regionName && STATE_NAME_TO_CODE[norm(regionName)]) code = STATE_NAME_TO_CODE[norm(regionName)];
       if (code && STATE_CITIES[code]) {
         var stateList = STATE_CITIES[code].filter(function(c){ return norm(c) !== cityNorm; }).slice(0, 6);
         if (stateList.length === 6) {
-          setCenter(upper(city), code);
           setPlaces(stateList);
           return;
         }
       }
-      // City known but no state list available: still personalize the center.
-      setCenter(upper(city));
+      // No match: keep the default CSRA orbit labels.
     }
 
     var started = false;
