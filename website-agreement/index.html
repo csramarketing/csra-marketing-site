@@ -281,6 +281,51 @@
     </footer>
 
     <script>
+      // Dynamic quote params: ?client=&price=&pages=&extras=
+      // Applied before the form script below so all fields stay wired.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var priceParam = params.get("price");
+        var pagesParam = params.get("pages");
+        var extrasParam = params.get("extras");
+        if (!priceParam && !pagesParam && !extrasParam) return;
+        var view = document.getElementById("agreement-view");
+        if (!view) return;
+        function esc(s) {
+          return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+        function fmt(n) { return "$" + n.toLocaleString("en-US"); }
+        var html = view.innerHTML;
+        if (priceParam) {
+          var p = parseFloat(String(priceParam).replace(/[^0-9.]/g, ""));
+          if (!isNaN(p) && p > 0) {
+            html = html.split("$2,500").join(fmt(p));
+            html = html.split("$1,250").join(fmt(p / 2));
+          }
+        }
+        if (pagesParam) {
+          var n = parseInt(pagesParam, 10);
+          if (!isNaN(n) && n > 0) {
+            html = html.split("9-page").join(n + "-page");
+            html = html.split("9 pages").join(n + " pages");
+            html = html.split("9 page").join(n + " page");
+            html = html.split("the 9 included").join("the " + n + " included");
+            if (n !== 9) {
+              html = html.split("plus 3 additional pages of your choice")
+                .join("plus " + (n - 6) + " additional pages of your choice");
+            }
+          }
+        }
+        if (extrasParam) {
+          html = html.replace(
+            '<div class="key-facts">',
+            '<div class="key-facts">\n            <span class="extra-scope">Plus: ' + esc(extrasParam) + '</span>'
+          );
+        }
+        view.innerHTML = html;
+      })();
+    </script>
+    <script>
       (function () {
         var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfcs_CGyneMU6ADcmeFQIfrfXkhgEAEpOOG5EEJ6ND-VzIdew/formResponse";
         var E = {
