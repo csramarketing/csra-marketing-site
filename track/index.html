@@ -514,22 +514,22 @@
 
         <!-- Lookup form -->
         <section id="view-form">
-          <h1>Check your request status</h1>
-          <p class="lead">Enter the tracking ID from your confirmation email.</p>
+          <h1>Track your request</h1>
+          <p class="lead">Enter the reference ID from your confirmation.</p>
           <form id="lookup-form" novalidate>
-            <label class="field-label" for="tracking-input">Tracking ID</label>
+            <label class="field-label" for="tracking-input">Reference ID</label>
             <input
               type="text"
               id="tracking-input"
               name="trackingId"
-              placeholder="e.g. CR-20261014-002"
+              placeholder="e.g. CP-BQX6EJ"
               autocomplete="off"
               autocapitalize="characters"
               spellcheck="false"
             />
             <button type="submit" class="btn">Check status</button>
           </form>
-          <p class="hint">Your tracking ID is in the confirmation email you received when you sent your request.</p>
+          <p class="hint">Your reference ID is in the confirmation you received when you sent your request.</p>
         </section>
 
         <!-- Loading -->
@@ -545,7 +545,7 @@
           <div class="message">
             <div class="icon-circle" aria-hidden="true">?</div>
             <h2>Request not found</h2>
-            <p>We couldn't find that tracking ID. Check the ID in your email and try again.</p>
+            <p>We couldn't find that reference ID. Check your confirmation for the correct ID.</p>
             <button type="button" class="btn" id="notfound-again">Try again</button>
           </div>
         </section>
@@ -636,10 +636,11 @@
       (function () {
         "use strict";
 
-        var API_URL = "https://script.google.com/macros/s/AKfycbwP7eDubjYH5f7Xu3DMz7Bz9PyYKsKdmApzF8UpYIXb34oUF0AHThIuxP3xrBp1wVFR/exec";
+        var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1vjDdC7klQY_bKo0wkRqYcTfxYmBar0CuTsiuc1R6yik/export?format=csv";
 
         var VIEWS = ["view-form", "view-loading", "view-notfound", "view-error", "view-status"];
         var lastId = "";
+        var cachedRows = null;
 
         var STATUSES = [
           { name: "Received", desc: "We've got your request.", dot: "received" },
@@ -724,8 +725,12 @@
 
           var pageEl = el("st-page");
           var pageLabel = req.pageUrl || req.page || "";
-          if (pageLabel) {
-            pageEl.textContent = "Page: " + pageLabel;
+          var typeLabel = req.changeType || "";
+          var pageParts = [];
+          if (pageLabel) pageParts.push("Page: " + pageLabel);
+          if (typeLabel) pageParts.push("Type: " + typeLabel);
+          if (pageParts.length > 0) {
+            pageEl.textContent = pageParts.join("  ·  ");
             pageEl.hidden = false;
           } else {
             pageEl.hidden = true;
@@ -829,18 +834,73 @@
           });
         }
 
+        // Quote-aware CSV parser. Returns array of rows, each an array of fields.
+        function parseCSV(text) {
+          var rows = [];
+          var row = [];
+          var field = "";
+          var inQuotes = false;
+          var i = 0;
+          while (i < text.length) {
+            var c = text[i];
+            if (inQuotes) {
+              if (c === '"') {
+                if (text[i + 1] === '"') { field += '"'; i += 2; }
+                else { inQuotes = false; i++; }
+              } else { field += c; i++; }
+            } else {
+              if (c === '"') { inQuotes = true; i++; }
+              else if (c === ',') { row.push(field); field = ""; i++; }
+              else if (c === '\r') { i++; }
+              else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ""; i++; }
+              else { field += c; i++; }
+            }
+          }
+          if (field !== "" || row.length > 0) { row.push(field); rows.push(row); }
+          return rows;
+        }
+
+        function sheetRowToRequest(row) {
+          return {
+            timestamp: row[0] || "",
+            trackingId: row[1] || "",
+            businessName: row[2] || "",
+            change: row[3] || "",
+            page: row[4] || "",
+            changeType: row[5] || "",
+            details: row[6] || "",
+            clientEmail: row[7] || "",
+            status: "Received"
+          };
+        }
+
         function lookup(id) {
           lastId = id;
           show("view-loading");
-          var url = API_URL + "?action=get&trackingId=" + encodeURIComponent(id);
-          fetch(url, { method: "GET" })
-            .then(function (res) {
-              if (!res.ok) { throw new Error("bad response"); }
-              return res.json();
-            })
-            .then(function (data) {
-              if (data && data.ok === true && data.request) {
-                renderStatus(data.request);
+          var fetchRows = cachedRows
+            ? Promise.resolve(cachedRows)
+            : fetch(SHEET_CSV_URL, { method: "GET" })
+                .then(function (res) {
+                  if (!res.ok) { throw new Error("bad response"); }
+                  return res.text();
+                })
+                .then(function (text) {
+                  var rows = parseCSV(text);
+                  // Drop the header row.
+                  if (rows.length > 0) rows = rows.slice(1);
+                  cachedRows = rows;
+                  return rows;
+                });
+          fetchRows
+            .then(function (rows) {
+              var target = normalize(id);
+              var match = null;
+              for (var i = 0; i < rows.length; i++) {
+                var ref = normalize(rows[i][1] || "");
+                if (ref === target) { match = rows[i]; break; }
+              }
+              if (match) {
+                renderStatus(sheetRowToRequest(match));
               } else {
                 show("view-notfound");
               }
@@ -878,11 +938,11 @@
           backToForm(true);
         });
 
-        // Auto lookup from URL hash, e.g. #CR-20261014-002
+        // Auto lookup from URL hash, e.g. #CP-BQX6EJ
         var hash = "";
         try { hash = decodeURIComponent(window.location.hash.replace(/^#/, "")); } catch (e) { hash = ""; }
         var hashId = normalize(hash);
-        if (/^[A-Z]{2}-\d{8}-\d+$/.test(hashId)) {
+        if (/^[A-Z]{2}-[A-Z0-9]{6}$/.test(hashId)) {
           el("tracking-input").value = hashId;
           lookup(hashId);
         }
