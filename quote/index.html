@@ -360,7 +360,7 @@
 
           return {
             webOn: webOn, seoOn: seoOn,
-            webTotal: webBaseAmt + webExtraAmt, pages: P.webPages + webExtra, webExtra: webExtra,
+            webTotal: 2500 + (parseInt(webExtra || 0, 10) * 300), pages: 9 + parseInt(webExtra || 0, 10), webExtra: webExtra,
             revisions: 2 + webRevisions,
             seoLinks: seoLinks, linkTotal: linkTotal,
             webBilling: BILL.webBase, seoBilling: BILL.seoBase,
