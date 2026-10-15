@@ -281,14 +281,15 @@
     </footer>
 
     <script>
-      // Dynamic quote params: ?client=&price=&pages=&extras=
+      // Dynamic quote params: ?client=&price=&pages=&extras=&billing=
       // Applied before the form script below so all fields stay wired.
       (function () {
         var params = new URLSearchParams(window.location.search);
         var priceParam = params.get("price");
         var pagesParam = params.get("pages");
         var extrasParam = params.get("extras");
-        if (!priceParam && !pagesParam && !extrasParam) return;
+        var billingParam = params.get("billing");
+        if (!priceParam && !pagesParam && !extrasParam && !billingParam) return;
         var view = document.getElementById("agreement-view");
         if (!view) return;
         function esc(s) {
@@ -296,9 +297,11 @@
         }
         function fmt(n) { return "$" + n.toLocaleString("en-US"); }
         var html = view.innerHTML;
+        var priceVal = 0;
         if (priceParam) {
           var p = parseFloat(String(priceParam).replace(/[^0-9.]/g, ""));
           if (!isNaN(p) && p > 0) {
+            priceVal = p;
             html = html.split("$2,500").join(fmt(p));
             html = html.split("$1,250").join(fmt(p / 2));
           }
@@ -320,6 +323,14 @@
           html = html.replace(
             '<div class="key-facts">',
             '<div class="key-facts">\n            <span class="extra-scope">Plus: ' + esc(extrasParam) + '</span>'
+          );
+        }
+        if (billingParam === "recurring") {
+          html = html.split(" one time</span>").join("/month</span>");
+          html = html.split(" one-time,").join("/month,");
+          html = html.replace(
+            /<p>The total project fee is \$[^<]*due as follows: 50%[^<]*<\/p>/,
+            "<p>The fee is " + (priceVal > 0 ? fmt(priceVal) : "as quoted") + " per month, billed monthly. The first month is due when you sign, and work begins when payment clears. You may cancel with 30 days written notice.</p>"
           );
         }
         view.innerHTML = html;
