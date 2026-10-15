@@ -180,12 +180,12 @@
     @keyframes art-drift{to{transform:translateY(-8px)}}
     @keyframes note-drift{to{transform:translateY(5px) rotate(-1deg)}}
     .booking{background:var(--ink);color:var(--paper);padding:124px 0}
-    .booking-grid{display:grid;grid-template-columns:1fr .95fr;gap:92px;align-items:center}
+    .booking-grid{display:grid;grid-template-columns:1fr .95fr;gap:92px;align-items:center}.booking-grid>div:first-child{align-self:center}
     .booking p{color:color-mix(in srgb,var(--paper) 72%,transparent);max-width:650px}
     .calendar-shell{background:var(--surface);color:var(--ink);padding:36px;border-radius:9px;box-shadow:var(--shadow)}
     .calendar-shell h3{margin:0 0 8px;font-size:22px}
     .calendar-shell p{color:var(--muted);font-size:14px}
-    .cal-embed{display:block;width:100%;height:640px;border:0;border-radius:var(--radius-md);margin-top:22px;background:var(--surface)}
+    .cal-embed{display:block;width:100%;height:580px;border:0;border-radius:var(--radius-md);margin-top:22px;background:var(--surface)}
     .calendar-placeholder{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin:22px 0}
     .calendar-placeholder span{aspect-ratio:1;background:var(--soft);border-radius:4px}
     .calendar-placeholder span:nth-child(11),.calendar-placeholder span:nth-child(18),.calendar-placeholder span:nth-child(23){background:var(--coral)}
