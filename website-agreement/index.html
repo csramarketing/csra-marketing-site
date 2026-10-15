@@ -281,15 +281,16 @@
     </footer>
 
     <script>
-      // Dynamic quote params: ?client=&price=&pages=&extras=&billing=
+      // Dynamic quote params: ?client=&price=&pages=&revisions=&extras=&billing=
       // Applied before the form script below so all fields stay wired.
       (function () {
         var params = new URLSearchParams(window.location.search);
         var priceParam = params.get("price");
         var pagesParam = params.get("pages");
+        var revisionsParam = params.get("revisions");
         var extrasParam = params.get("extras");
         var billingParam = params.get("billing");
-        if (!priceParam && !pagesParam && !extrasParam && !billingParam) return;
+        if (!priceParam && !pagesParam && !revisionsParam && !extrasParam && !billingParam) return;
         var view = document.getElementById("agreement-view");
         if (!view) return;
         function esc(s) {
@@ -323,6 +324,17 @@
               html = html.split("7 days").join(days + " days");
               html = html.split("7-day").join(days + "-day");
             }
+          }
+        }
+        if (revisionsParam) {
+          var rv = parseInt(revisionsParam, 10);
+          if (!isNaN(rv) && rv > 0 && rv !== 2) {
+            var rvLabel = rv === 1 ? "1 revision round" : rv + " revision rounds";
+            html = html.split("2 revision rounds").join(rvLabel);
+            html = html.replace(
+              /delivered in (\d+ days?)\)\./,
+              function (m, d) { return "delivered in " + d + ", " + rvLabel + ")."; }
+            );
           }
         }
         if (extrasParam) {
