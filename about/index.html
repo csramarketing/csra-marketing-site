@@ -155,8 +155,8 @@
     .local-orbit{width:232px;height:232px;border:1px solid color-mix(in srgb,var(--paper) 22%,transparent);border-radius:50%;display:grid;place-items:center;position:relative}
     .local-orbit:before,.local-orbit:after{content:"";position:absolute;border:1px solid color-mix(in srgb,var(--paper) 18%,transparent);border-radius:50%}.local-orbit:before{inset:33px}.local-orbit:after{inset:69px;background:var(--coral);border:8px solid var(--ink)}
     .local-orbit strong{position:absolute;z-index:2;font-size:12px;color:#10233f;top:50%;left:50%;transform:translate(-50%,-50%)}
-    .orbit-pin-orbit{position:absolute;inset:0;animation:orbit 22s linear infinite}
-    .orbit-pin{position:absolute;left:50%;top:-32px;width:20px;height:auto;transform:translateX(-50%)}
+    .orbit-pin-orbit{position:absolute;inset:0;animation:orbit 35s linear infinite}
+    .orbit-pin{position:absolute;left:50%;top:-16px;width:20px;height:auto;transform:translateX(-50%)}
     .orbit-place{position:absolute;font-size:11px;font-weight:800;line-height:1;white-space:nowrap;color:color-mix(in srgb,var(--paper) 72%,transparent);transform:translate(-50%,-50%)}.orbit-place.one{top:-9px;left:50%}.orbit-place.two{top:22%;left:100%}.orbit-place.three{top:78%;left:100%}.orbit-place.four{top:calc(100% + 9px);left:50%}.orbit-place.five{top:78%;left:0}.orbit-place.six{top:22%;left:0}
     .page-section{padding:124px 0}
     .page-section.alt{background:var(--surface)}
@@ -259,8 +259,8 @@
       .local-orbit:before{inset:24px}
       .local-orbit:after{inset:50px;border-width:7px}
       .local-orbit strong{font-size:10px}
-      .orbit-pin-orbit{animation-duration:41s}
-      .orbit-pin{width:16px;top:-25px}
+      .orbit-pin-orbit{animation-duration:60s}
+      .orbit-pin{width:16px;top:-13px}
       .page-hero .hero-subhead{font-size:15.5px;line-height:1.6;margin-top:16px}
       .hero-actions{margin-top:22px}
       .hero-bullets{margin-top:24px;gap:10px}
@@ -348,7 +348,7 @@
   <header class="page-hero">
     <div class="wrap page-hero-grid">
       <div class="hero-copy"><div class="eyebrow">Straight answers for local roofers</div><h1>Your marketing should earn its keep.</h1><p class="hero-subhead">Every call tracked and every dollar tied back to revenue. If your marketing is not paying for itself, you will know.</p><div class="hero-actions"><a class="btn btn-primary" href="https://cal.com/csramarketing/15min" target="_blank" rel="noopener noreferrer">Book a 15-minute review</a></div><ul class="hero-bullets"><li>Every call tracked and tied to revenue</li><li>Straight reporting, no vanity metrics</li><li>Built only for roofing companies</li></ul><div class="hero-trust"><span class="hero-stars" aria-hidden="true">★★★★★</span><span class="hero-trust-text">Built for roofing companies in your service area</span></div></div>
-      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit" data-orbit><div class="orbit-pin-orbit"><img class="orbit-pin" src="/assets/map-pin.png" alt=""></div><strong data-orbit-center>CSRA</strong><span class="orbit-place one" data-orbit-place>EVANS</span><span class="orbit-place two" data-orbit-place>MARTINEZ</span><span class="orbit-place three" data-orbit-place>NORTH AUGUSTA</span><span class="orbit-place four" data-orbit-place>AIKEN</span><span class="orbit-place five" data-orbit-place>GROVETOWN</span><span class="orbit-place six" data-orbit-place>AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
+      <div class="hero-side"><div class="page-visual visual-about" aria-hidden="true"><div class="local-orbit" data-orbit><div class="orbit-pin-orbit"><svg class="orbit-pin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s7.2-7.6 7.2-12.3C19.2 5.9 16 3 12 3S4.8 5.9 4.8 9.7C4.8 14.4 12 22 12 22Z" fill="#ff705c"/><circle cx="12" cy="9.8" r="2.9" fill="#fff"/></svg></div><strong data-orbit-center>CSRA</strong><span class="orbit-place one" data-orbit-place>EVANS</span><span class="orbit-place two" data-orbit-place>MARTINEZ</span><span class="orbit-place three" data-orbit-place>NORTH AUGUSTA</span><span class="orbit-place four" data-orbit-place>AIKEN</span><span class="orbit-place five" data-orbit-place>GROVETOWN</span><span class="orbit-place six" data-orbit-place>AUGUSTA</span></div></div><aside class="page-aside"><strong>Local, not copy paste.</strong><p>Your service area, your competitors, storm season, and the jobs you want most shape the work, not a plan recycled from another trade or city. Augusta is home, and that local first thinking travels with us to every market we serve across the country.</p></aside></div>
     </div>
   </header>
   <section class="page-section alt">
@@ -735,5 +735,6 @@
   } catch(e){}
 })();
 
+</script>
 </body>
 </html>
