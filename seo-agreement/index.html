@@ -277,6 +277,46 @@
     </footer>
 
     <script>
+      // Dynamic quote params: ?client=&price=&term=&extras=
+      // Applied before the form script below so all fields stay wired.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var priceParam = params.get("price");
+        var termParam = params.get("term");
+        var extrasParam = params.get("extras");
+        if (!priceParam && !termParam && !extrasParam) return;
+        var view = document.getElementById("agreement-view");
+        if (!view) return;
+        function esc(s) {
+          return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+        function fmt(n) { return "$" + n.toLocaleString("en-US"); }
+        var html = view.innerHTML;
+        if (priceParam) {
+          var p = parseFloat(String(priceParam).replace(/[^0-9.]/g, ""));
+          if (!isNaN(p) && p > 0) {
+            html = html.split("$1,500 / month").join(fmt(p) + " / month");
+            html = html.split("$1,500 per month").join(fmt(p) + " per month");
+            html = html.split("$1,500/month").join(fmt(p) + "/month");
+          }
+        }
+        if (termParam) {
+          var t = parseInt(termParam, 10);
+          if (!isNaN(t) && t > 0 && t !== 6) {
+            html = html.split("6-month").join(t + "-month");
+            html = html.split("6 month").join(t + " month");
+          }
+        }
+        if (extrasParam) {
+          html = html.replace(
+            '<div class="key-facts">',
+            '<div class="key-facts">\n            <span class="extra-scope">Plus: ' + esc(extrasParam) + '</span>'
+          );
+        }
+        view.innerHTML = html;
+      })();
+    </script>
+    <script>
       (function () {
         var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd8ZtPBOdXCDOybilG1ws63cKuGbPUDaDHHSgibteJnK16isg/formResponse";
         var E = {
