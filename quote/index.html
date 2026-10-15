@@ -176,6 +176,10 @@
           </div>
           <div class="qty"><input type="number" id="web-extra" min="0" max="50" value="0" inputmode="numeric" /></div>
         </div>
+        <div class="row">
+          <label for="web-revisions">Extra revision rounds <span class="price">free, added to the 2 included</span></label>
+          <div class="qty"><input type="number" id="web-revisions" min="0" max="10" value="0" inputmode="numeric" /></div>
+        </div>
       </div>
 
       <div class="card">
@@ -322,6 +326,7 @@
           var seoOn = $("seo-on").checked;
           var careOn = $("care-on").checked;
           var webExtra = num("web-extra");
+          var webRevisions = num("web-revisions");
           var seoLinks = num("seo-links");
           var careCredits = num("care-credits");
 
@@ -356,13 +361,14 @@
           return {
             webOn: webOn, seoOn: seoOn,
             webTotal: webBaseAmt + webExtraAmt, pages: P.webPages + webExtra, webExtra: webExtra,
+            revisions: 2 + webRevisions,
             seoLinks: seoLinks, linkTotal: linkTotal,
             webBilling: BILL.webBase, seoBilling: BILL.seoBase,
             webExtraBilling: BILL.webExtra, seoLinksBilling: BILL.seoLinks
           };
         }
 
-        var inputs = ["biz","web-on","web-extra","seo-on","seo-links","sprint-audit","sprint-gbp","sprint-cite","care-on","care-credits"];
+        var inputs = ["biz","web-on","web-extra","web-revisions","seo-on","seo-links","sprint-audit","sprint-gbp","sprint-cite","care-on","care-credits"];
         inputs.forEach(function (id) {
           $(id).addEventListener("input", calc);
           $(id).addEventListener("change", calc);
@@ -415,6 +421,7 @@
               "client=" + encodeURIComponent(biz) +
               "&price=" + c.webTotal +
               "&pages=" + c.pages +
+              "&revisions=" + c.revisions +
               "&billing=" + c.webBilling +
               (extras.length ? "&extras=" + encodeURIComponent("Includes " + extras.join(", ") + ".") : "");
             $("web-link").textContent = url;
