@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="A single, organized index of client website builds ready to review." />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Client Builds</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f6f6f6;
+      --ink: #164b33;
+      --muted: #3f6854;
+      --line: #e5e5e5;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .06);
+      --focus: #6f6f6f;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: light;
+        --page: #ffffff;
+        --surface: #ffffff;
+        --surface-soft: #f6f6f6;
+        --ink: #164b33;
+        --muted: #3f6854;
+        --line: #e5e5e5;
+        --shadow: 0 18px 50px rgba(0, 0, 0, .06);
+        --focus: #6f6f6f;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--page); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--page);
+      color: var(--ink);
+      font-family: "Poppins", sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    a, button { font: inherit; }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 60px 0 80px;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      padding-bottom: 36px;
+    }
+
+    .site-header img {
+      display: block;
+      width: 160px;
+      height: auto;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(290px, .65fr);
+      gap: 42px;
+      align-items: end;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 600;
+    }
+
+    h1, h2, p { margin-top: 0; }
+    h1 {
+      max-width: 780px;
+      margin-bottom: 20px;
+      font-size: clamp(2.75rem, 6vw, 5.8rem);
+      line-height: .98;
+      letter-spacing: -.055em;
+      font-weight: 700;
+    }
+
+    .lead {
+      max-width: 700px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.18rem);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px 18px 44px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-count {
+      display: grid;
+      place-items: center;
+      width: 72px;
+      aspect-ratio: 1;
+      color: var(--ink);
+      border-right: 1px solid var(--line);
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .summary strong, .summary span { display: block; }
+    .summary strong { margin-bottom: 3px; font-size: 1rem; }
+    .summary span { color: var(--muted); font-size: .82rem; }
+
+    .library { padding-top: 50px; }
+    .library-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      margin-bottom: 22px;
+    }
+
+    .library-head h2 {
+      margin-bottom: 6px;
+      font-size: clamp(1.65rem, 3vw, 2.5rem);
+      letter-spacing: -.035em;
+      line-height: 1.1;
+    }
+
+    .library-head p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .status-key {
+      display: inline-block;
+      color: var(--muted);
+      font-size: .78rem;
+      white-space: nowrap;
+    }
+
+    .empty {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 360px;
+      padding: clamp(34px, 6vw, 66px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 28px 76px 28px 28px;
+    }
+
+    .empty-copy { align-self: center; position: relative; z-index: 1; }
+    .empty-copy h2 {
+      max-width: 600px;
+      margin-bottom: 18px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      letter-spacing: -.045em;
+      line-height: 1.05;
+    }
+
+    .empty-copy p {
+      max-width: 620px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .note {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      max-width: 720px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    .note b { color: var(--ink); }
+
+    .site-footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    .site-footer p { margin: 0; }
+
+    @media (max-width: 760px) {
+      .page { width: min(100% - 28px, 1180px); padding: 34px 0 54px; }
+      .intro { grid-template-columns: 1fr; gap: 28px; padding-bottom: 34px; }
+      h1 { font-size: clamp(2.75rem, 14vw, 4.3rem); }
+      .summary { max-width: 420px; }
+      .library { padding-top: 36px; }
+      .library-head { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .empty { min-height: 0; padding: 32px 24px 38px; border-radius: 22px 50px 22px 22px; }
+    }
+
+    @media (max-width: 420px) {
+      .summary { grid-template-columns: 62px 1fr; padding: 18px; }
+      .summary-count { width: 62px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="site-header">
+      <img src="assets/csra-logo.png" alt="CSRA Marketing" width="160" height="53" />
+    </header>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <span class="kicker">Website review library</span>
+        <h1 id="page-title">Every client build, one click away.</h1>
+        <p class="lead">Finished drafts will be collected here with a direct link, clear review status, and the details you need to pick up on any device.</p>
+      </div>
+      <aside class="summary" aria-label="Build count">
+        <span class="summary-count" aria-hidden="true">0</span>
+        <div><strong>No client sites yet</strong><span>The library is ready for the first build.</span></div>
+      </aside>
+    </section>
+
+    <section class="library" aria-labelledby="library-title">
+      <div class="library-head">
+        <div>
+          <h2 id="library-title">Build library</h2>
+          <p>Newest client sites will appear first.</p>
+        </div>
+        <span class="status-key">Updated after each completed build</span>
+      </div>
+
+      <div class="empty">
+        <div class="empty-copy">
+          <h2>Your first client site will land here.</h2>
+          <p>Once a build is ready to review, this space will show the client name, project status, and a direct link to the site.</p>
+        </div>
+
+      </div>
+      <p class="note"><span><b>Review tip:</b> site links will open in a new tab so this library stays easy to return to.</span></p>
+    </section>
+    <footer class="site-footer">
+      <p>© 2026 CSRA Marketing</p>
+    </footer>
+  </main>
+</body>
+</html>
