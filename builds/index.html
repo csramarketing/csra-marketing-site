@@ -38,6 +38,11 @@
       }
     }
 
+    .private-badge {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; background: #ff705c; color: #fff;
+      border-radius: 999px; padding: 6px 14px; margin-bottom: 12px;
+    }
     * { box-sizing: border-box; }
     html { background: var(--page); }
     body {
@@ -242,7 +247,8 @@
     <section class="intro" aria-labelledby="page-title">
       <div>
         <span class="kicker">Website review library</span>
-        <h1 id="page-title">Every client build, one click away.</h1>
+        <div class="private-badge">Private Tool</div>
+    <h1 id="page-title">Every client build, one click away.</h1>
         <p class="lead">Finished drafts will be collected here with a direct link, clear review status, and the details you need to pick up on any device.</p>
       </div>
       <aside class="summary" aria-label="Build count">
