@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Toolbox | CSRA Marketing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: light; --navy: #10233f; --coral: #ff705c; --yellow: #ffd814; --muted: #5a6c7d; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Poppins", sans-serif; background: #fff; color: var(--navy); min-height: 100vh; }
+    header { padding: 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; }
+    header img { height: 40px; width: auto; }
+    .private-badge { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; background: var(--coral); color: #fff; border-radius: 999px; padding: 6px 14px; }
+    main { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .sub { color: var(--muted); margin: 0 0 32px; }
+    .tool { display: flex; align-items: center; gap: 16px; padding: 20px; border: 2px solid #eee; border-radius: 16px; margin-bottom: 16px; text-decoration: none; color: inherit; transition: border-color .2s; }
+    .tool:hover { border-color: var(--coral); }
+    .tool-icon { font-size: 32px; }
+    .tool-name { font-weight: 700; font-size: 18px; }
+    .tool-desc { color: var(--muted); font-size: 14px; margin-top: 2px; }
+    .tool-arrow { margin-left: auto; color: var(--coral); font-size: 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="/builds/assets/csra-logo.png" alt="CSRA Marketing" />
+    <span class="private-badge">Private Tool</span>
+  </header>
+  <main>
+    <h1>Toolbox</h1>
+    <p class="sub">Your private tools. Bookmark this page.</p>
+    <a class="tool" href="/quote/">
+      <div class="tool-icon">🧮</div>
+      <div><div class="tool-name">Quote Calculator</div><div class="tool-desc">Build the quote on the call, generate agreement links</div></div>
+      <div class="tool-arrow">→</div>
+    </a>
+    <a class="tool" href="/builds/">
+      <div class="tool-icon">🏗️</div>
+      <div><div class="tool-name">Client Builds</div><div class="tool-desc">Index of all client website builds</div></div>
+      <div class="tool-arrow">→</div>
+    </a>
+    <a class="tool" href="/track/">
+      <div class="tool-icon">📋</div>
+      <div><div class="tool-name">Request Tracker</div><div class="tool-desc">Look up Care Plan request status</div></div>
+      <div class="tool-arrow">→</div>
+    </a>
+  </main>
+</body>
+</html>
