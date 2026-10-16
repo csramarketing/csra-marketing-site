@@ -47,8 +47,27 @@
         position: relative;
         overflow: hidden;
         background: #ffffff;
-        padding: 64px 20px 56px;
+        padding: 0 0 56px;
         text-align: center;
+      }
+      .hero-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        display: block;
+      }
+      .hero-img-wrap {
+        position: relative;
+        margin-bottom: 36px;
+      }
+      .hero-img-wrap::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(to bottom, transparent, #ffffff);
       }
       .hero::before {
         content: "";
@@ -191,7 +210,10 @@
   <body>
     <main>
       <section class="hero">
-        <div class="hero-inner">
+        <div class="hero-img-wrap">
+        <img class="hero-img" src="roofer-hero.jpg" alt="Roofer at work">
+      </div>
+      <div class="hero-inner" style="padding: 0 20px;">
           <span class="eyebrow">You got our mail</span>
           <h1>Got our postcard? <span class="coral">Here is the deal.</span></h1>
           <p class="sub">We turn your Google presence into booked roofing jobs. More calls, more estimates, more revenue.</p>
