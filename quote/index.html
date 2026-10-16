@@ -142,8 +142,12 @@
       }
       .btn:active { background: var(--yellow-hover); }
       .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-      .links { display: none; scroll-margin-top: 20px; }
-      .links.show { display: block; margin-top: 32px; }
+      .links-section { display: none; scroll-margin-top: 20px; }
+      .links-section.show { display: block; margin-top: 48px; }
+      .totals.unstuck { position: static; }
+      .section-divider { height: 48px; }
+      .links-section .section-sub { color: #5a6b82; font-size: 14px; margin: -8px 0 20px; }
+      .links-section h2 { font-size: 20px; margin-bottom: 8px; }
       .link-block { margin-top: 14px; }
       .link-block .link-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
       .link-box {
@@ -286,8 +290,11 @@
         <button class="btn" id="gen">Generate Agreement Links</button>
       </div>
 
-      <div class="card links" id="links">
-        <h2><span class="dot"></span>Agreement Links</h2>
+      <div class="section-divider"></div>
+
+      <section class="card links-section" id="links">
+        <h2><span class="dot"></span>Generated Agreement Links</h2>
+        <p class="section-sub">Your signing links are ready below. Copy and send to the client.</p>
         <div class="link-block" id="web-link-block" style="display:none;">
           <div class="link-title">Website Design Agreement</div>
           <div class="link-box" id="web-link"></div>
@@ -516,12 +523,12 @@
           // Scroll the links card into view below the sticky totals panel
           // Use setTimeout so the browser lays out the newly-visible card before measuring
           setTimeout(function() {
-            var totalsEl = $("totals");
-            var totalsH = totalsEl ? totalsEl.offsetHeight : 0;
-            var linksTop = $("links").getBoundingClientRect().top + window.scrollY;
-            var targetY = linksTop - totalsH - 48;
+            // Scroll the dedicated links section fully into view
+            var el = $("links");
+            var rect = el.getBoundingClientRect();
+            var targetY = rect.top + window.scrollY - 24;
             window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
-          }, 100);
+          }, 150);
           try { gtag("event", "quote_generated", { business: biz }); } catch (e) {}
         });
 
