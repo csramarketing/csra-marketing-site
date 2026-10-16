@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Redirecting...</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DWV0LCRRJS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DWV0LCRRJS');
+      // Log the QR scan, then redirect
+      gtag('event', 'qr_scan', {
+        'event_category': 'direct_mail',
+        'event_label': 'postcard_roofer_oct2026'
+      });
+      var params = new URLSearchParams(window.location.search);
+      var city = params.get('city');
+      var dest = 'https://csramarketing.com/roofer/?utm_source=directmail&utm_medium=postcard&utm_campaign=roofer-outreach-oct2026';
+      if (city) { dest += '&city=' + encodeURIComponent(city); }
+      setTimeout(function() { window.location.replace(dest); }, 800);
+    </script>
+    <meta http-equiv="refresh" content="2;url=https://csramarketing.com/roofer/" />
+  </head>
+  <body style="font-family: sans-serif; text-align: center; padding-top: 100px; color: #10233f;">
+    <p>Taking you to CSRA Marketing...</p>
+  </body>
+</html>
