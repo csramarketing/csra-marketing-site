@@ -143,7 +143,7 @@
       .btn:active { background: var(--yellow-hover); }
       .btn:disabled { opacity: 0.5; cursor: not-allowed; }
       .links { display: none; scroll-margin-top: 20px; }
-      .links.show { display: block; }
+      .links.show { display: block; margin-top: 32px; }
       .link-block { margin-top: 14px; }
       .link-block .link-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
       .link-box {
@@ -514,9 +514,14 @@
             : "Send the client the link above. They can read and sign in real time.";
           $("links").classList.add("show");
           // Scroll the links card into view below the sticky totals panel
-          var totalsH = $("totals").offsetHeight || 0;
-          var targetY = $("links").getBoundingClientRect().top + window.scrollY - totalsH - 24;
-          window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
+          // Use setTimeout so the browser lays out the newly-visible card before measuring
+          setTimeout(function() {
+            var totalsEl = $("totals");
+            var totalsH = totalsEl ? totalsEl.offsetHeight : 0;
+            var linksTop = $("links").getBoundingClientRect().top + window.scrollY;
+            var targetY = linksTop - totalsH - 48;
+            window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
+          }, 100);
           try { gtag("event", "quote_generated", { business: biz }); } catch (e) {}
         });
 
