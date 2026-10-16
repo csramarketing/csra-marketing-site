@@ -154,6 +154,10 @@
         background: rgba(16,35,63,0.5); z-index: 9998; }
       .links-modal-backdrop.show { display: block; }
       .links-modal-inner { padding: 32px 24px; position: relative; min-height: 100%; }
+      .modal-link-block { background: #f8fafd; border: 1px solid #e0e6ed; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+      .modal-link-label { font-weight: 700; color: #10233f; font-size: 14px; margin-bottom: 8px; }
+      .modal-link-url { font-size: 12px; color: #5a6b82; word-break: break-all; margin-bottom: 12px; line-height: 1.4; }
+      .modal-copy-btn { background: #ffd814; color: #10233f; font-weight: 700; font-size: 13px; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
       .links-modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none;
         font-size: 28px; cursor: pointer; color: #5a6b82; line-height: 1; padding: 8px; }
       .section-divider { height: 48px; }
@@ -541,15 +545,42 @@
             ? "Select Website Design or SEO Retainer to generate an agreement link. Sprints and care plan are billed separately."
             : "Send the client the link above. They can read and sign in real time.";
           $("links").classList.add("show");
-          // Scroll the links card into view below the sticky totals panel
-          // Use setTimeout so the browser lays out the newly-visible card before measuring
-          setTimeout(function() {
-            // Scroll the dedicated links section fully into view
-            var el = $("links");
-            var rect = el.getBoundingClientRect();
-            var targetY = rect.top + window.scrollY - 24;
-            window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
-          }, 150);
+          // Populate and open the side drawer
+          var modalContent = $("modal-links-content");
+          modalContent.innerHTML = "";
+          if (c.webOn) {
+            var webDiv = document.createElement("div");
+            webDiv.className = "modal-link-block";
+            webDiv.innerHTML = '<p class="modal-link-label">Website Design Agreement</p>' +
+              '<p class="modal-link-url">' + url.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</p>" +
+              '<button class="modal-copy-btn" data-url="' + url.replace(/"/g, "&quot;") + '">Copy Link</button>';
+            modalContent.appendChild(webDiv);
+          }
+          if (c.seoOn) {
+            var seoDiv = document.createElement("div");
+            seoDiv.className = "modal-link-block";
+            seoDiv.innerHTML = '<p class="modal-link-label">SEO Agreement</p>' +
+              '<p class="modal-link-url">' + surl.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</p>" +
+              '<button class="modal-copy-btn" data-url="' + surl.replace(/"/g, "&quot;") + '">Copy Link</button>';
+            modalContent.appendChild(seoDiv);
+          }
+          // Wire copy buttons
+          var copyBtns = modalContent.querySelectorAll(".modal-copy-btn");
+          for (var i = 0; i < copyBtns.length; i++) {
+            copyBtns[i].addEventListener("click", function() {
+              var u = this.getAttribute("data-url");
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(u);
+                this.textContent = "Copied!";
+                var btn = this;
+                setTimeout(function() { btn.textContent = "Copy Link"; }, 1500);
+              }
+            });
+          }
+          // Open the drawer
+          $("links-modal").classList.add("show");
+          $("links-backdrop").classList.add("show");
+          document.body.style.overflow = "hidden";
           try { gtag("event", "quote_generated", { business: biz }); } catch (e) {}
         });
 
