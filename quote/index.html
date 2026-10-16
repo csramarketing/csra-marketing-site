@@ -242,6 +242,16 @@
           </div>
           <div class="qty"><input type="number" id="seo-links" min="0" max="50" value="0" inputmode="numeric" /></div>
         </div>
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="review-on" />
+            <span>Review Engine<span class="price">$297/mo &middot; automated review requests</span></span>
+          </label>
+          <div class="bill-toggle" data-bill="reviewBase">
+            <button type="button" class="bt-opt" data-val="onetime">One-time</button>
+            <button type="button" class="bt-opt active" data-val="recurring">Monthly</button>
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -342,7 +352,7 @@
       (function () {
         var P = {
           webBase: 2500, webPage: 350, webPages: 9,
-          seoMo: 1500, seoTerm: 6, seoLink: 250,
+          seoMo: 1500, seoTerm: 6, seoLink: 250, reviewMo: 297,
           sprintAudit: 697, sprintGbp: 897, sprintCite: 597,
           careMo: 65, careCredit: 25
         };
@@ -358,6 +368,7 @@
           webExtra: "onetime",
           seoBase: "recurring",
           seoLinks: "onetime",
+          reviewBase: "recurring",
           careBase: "recurring",
           careCredits: "onetime"
         };
@@ -377,6 +388,7 @@
         function calc() {
           var webOn = $("web-on").checked;
           var seoOn = $("seo-on").checked;
+          var reviewOn = $("review-on").checked;
           var careOn = $("care-on").checked;
           var webExtra = num("web-extra");
           var webRevisions = num("web-revisions");
@@ -386,6 +398,7 @@
           var webBaseAmt = webOn ? P.webBase : 0;
           var webExtraAmt = webExtra * P.webPage;
           var seoBaseAmt = seoOn ? P.seoMo : 0;
+          var reviewBaseAmt = reviewOn ? P.reviewMo : 0;
           var linkTotal = seoLinks * P.seoLink;
           var sprintTotal = ($("sprint-audit").checked ? P.sprintAudit : 0) +
                             ($("sprint-gbp").checked ? P.sprintGbp : 0) +
@@ -402,6 +415,7 @@
           add(webExtraAmt, BILL.webExtra);
           add(seoBaseAmt, BILL.seoBase);
           add(linkTotal, BILL.seoLinks);
+          add(reviewBaseAmt, BILL.reviewBase);
           add(careBaseAmt, BILL.careBase);
           add(creditTotal, BILL.careCredits);
 
@@ -434,6 +448,7 @@
           var seoLines = [];
           if (seoOn) { seoLines.push(["Retainer (6-month term)", P.seoMo, BILL.seoBase]); }
           if (seoLinks > 0) { seoLines.push(["Extra authority links (" + seoLinks + " \u00d7 $250)", linkTotal, BILL.seoLinks]); }
+          if (reviewOn) { seoLines.push(["Review Engine", P.reviewMo, BILL.reviewBase]); }
           if ($("sprint-audit").checked) { seoLines.push(["SEO Audit", P.sprintAudit, "onetime"]); }
           if ($("sprint-gbp").checked) { seoLines.push(["GBP Overhaul", P.sprintGbp, "onetime"]); }
           if ($("sprint-cite").checked) { seoLines.push(["Citation Cleanup &amp; Building", P.sprintCite, "onetime"]); }
@@ -458,7 +473,7 @@
           };
         }
 
-        var inputs = ["biz","web-on","web-extra","web-revisions","seo-on","seo-links","sprint-audit","sprint-gbp","sprint-cite","care-on","care-credits"];
+        var inputs = ["biz","web-on","web-extra","web-revisions","seo-on","seo-links","review-on","sprint-audit","sprint-gbp","sprint-cite","care-on","care-credits"];
         inputs.forEach(function (id) {
           $(id).addEventListener("input", calc);
           $(id).addEventListener("change", calc);
