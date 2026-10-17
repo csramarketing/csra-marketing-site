@@ -210,6 +210,18 @@ body{-webkit-text-size-adjust:100%;}
 .toc-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:18px;}
 .chapter a,.intro-lede a,.faq-item .a a{color:var(--navy);text-decoration:underline;text-decoration-color:var(--coral);text-decoration-thickness:2px;text-underline-offset:3px;}
 .chapter a:hover,.intro-lede a:hover{color:var(--coral);}
+
+/* Coral underlines on all inline links (brand standard) */
+.post-body a, .article-body a, main a:not(.btn):not(.card-preview):not(.card-view) {
+  color: #10233f;
+  text-decoration: underline;
+  text-decoration-color: #ff705c;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.post-body a:hover, .article-body a:hover, main a:not(.btn):not(.card-preview):not(.card-view):hover {
+  color: #ff705c;
+}
 </style>
 </head>
 <body>
