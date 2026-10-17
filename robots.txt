@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+Disallow: /quote/
+Disallow: /builds/
+Disallow: /track/
+Disallow: /toolbox/
+Disallow: /r/
+Disallow: /roofer/
+Disallow: /seo-agreement/
+Disallow: /website-agreement/
+
+Sitemap: https://csramarketing.com/sitemap.xml
