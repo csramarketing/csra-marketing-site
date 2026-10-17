@@ -42,7 +42,7 @@ body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:#fff
 .hint{font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
 .hint strong{color:var(--navy);}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
-.stat{border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;background:#fff;}
+.stat{border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;background:#fff;cursor:pointer;transition:border-color .15s,box-shadow .15s,background .15s;-webkit-tap-highlight-color:transparent;}.stat:hover{border-color:var(--coral);}.stat.active{border:2px solid var(--coral);background:#fff7f5;box-shadow:0 2px 10px rgba(255,112,92,.18);}.stat .clear-hint{display:none;font-size:9px;font-weight:700;color:var(--peach-tx);margin-top:4px;letter-spacing:.04em;text-transform:uppercase;}.stat.active .clear-hint{display:block;}
 .stat .big{font-size:24px;font-weight:800;color:var(--navy);}
 .stat .lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
@@ -140,7 +140,7 @@ html,body{overflow-x:hidden;max-width:100vw;}
     <button class="reset-btn" id="resetBtn">Reset to default schedule</button>
   </div>
 
-  <p class="hint" id="hintText"><strong>Desktop:</strong> drag a card onto another day to move it. Click a card to see details. Click its status badge to cycle it. <strong>Phone:</strong> tap a card to select it, then tap a day to move it there.</p>
+  <p class="hint" id="hintText"><strong>Desktop:</strong> drag a card onto another day to move it. Click a card to see details. Click its status badge to cycle it. <strong>Phone:</strong> tap a card to select it, then tap a day to move it there. <strong>Tip:</strong> tap a stat card above to filter the calendar by status; tap it again to show everything.</p>
 
   <div class="stats" id="statsRow"></div>
 
@@ -172,6 +172,7 @@ var MONTHS = [
 ];
 var cur = 0;
 var selectedId = null;
+var filterStatus = null;
 var draggedId = null;
 var justDragged = false;
 var isTouch = (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || ("ontouchstart" in window);
@@ -241,6 +242,7 @@ function renderGrid(){
     html += '<div class="' + cls + '" data-date="' + ds + '"><div class="cell-day">' + d + '</div><div class="cell-posts">';
     for (var j=0;j<POSTS.length;j++){
       var p = POSTS[j];
+      if (filterStatus && postState(p).status !== filterStatus) continue;
       if (postState(p).date === ds) html += cardHTML(p);
     }
     if (ds==="2026-12-16") html += '<div class="note-static">' + esc(DEC16_NOTE) + '</div>';
@@ -257,10 +259,12 @@ function renderAgenda(){
   var prefix = M.y + "-" + pad(M.m+1) + "-";
   var byDate = {};
   for (var j=0;j<POSTS.length;j++){
-    var ds = postState(POSTS[j]).date;
+    var p = POSTS[j];
+    if (filterStatus && postState(p).status !== filterStatus) continue;
+    var ds = postState(p).date;
     if (ds && ds.indexOf(prefix)===0){
       if (!byDate[ds]) byDate[ds] = [];
-      byDate[ds].push(POSTS[j]);
+      byDate[ds].push(p);
     }
   }
   var today = new Date();
@@ -271,8 +275,8 @@ function renderAgenda(){
   if (M.y===2026 && M.m===11 && dates.indexOf("2026-12-16")<0) dates.push("2026-12-16");
   dates.sort();
   var html = "";
-  if (!dates.length){
-    html = '<div class="agenda-empty">No posts scheduled this month.</div>';
+  if (!dates.length || (filterStatus && !Object.keys(byDate).length)){
+    html = '<div class="agenda-empty">' + (filterStatus ? 'No ' + STATUS_LABEL[filterStatus].toLowerCase() + ' posts this month. Tap the stat card again to clear the filter.' : 'No posts scheduled this month.') + '</div>';
   }
   for (var i=0;i<dates.length;i++){
     var dstr = dates[i];
@@ -296,13 +300,16 @@ function renderStats(){
   for (var i=0;i<POSTS.length;i++){ counts[postState(POSTS[i]).status]++; }
   var row = document.getElementById("statsRow");
   row.innerHTML =
-    statHTML(counts.live, "Live", "var(--grn-tx)") +
-    statHTML(counts.prod, "In production", "var(--peach-tx)") +
-    statHTML(counts.ready, "Ready", "var(--amb-tx)") +
-    statHTML(counts.sched, "Scheduled", "var(--gry-tx)");
+    statHTML(counts.live, "Live", "var(--grn-tx)", "live") +
+    statHTML(counts.prod, "In production", "var(--peach-tx)", "prod") +
+    statHTML(counts.ready, "Ready", "var(--amb-tx)", "ready") +
+    statHTML(counts.sched, "Scheduled", "var(--gry-tx)", "sched");
 }
-function statHTML(n, label, color){
-  return '<div class="stat"><div class="big">' + n + '</div><div class="lbl" style="color:' + color + '">' + label + '</div></div>';
+function statHTML(n, label, color, key){
+  var active = (filterStatus === key) ? " active" : "";
+  return '<div class="stat' + active + '" data-filter="' + key + '" role="button" tabindex="0" aria-pressed="' + (filterStatus===key) + '" aria-label="Filter by ' + label + '">'
+    + '<div class="big">' + n + '</div><div class="lbl" style="color:' + color + '">' + label + '</div>'
+    + '<div class="clear-hint">Tap again to clear</div></div>';
 }
 
 var grid = document.getElementById("calGrid");
@@ -380,6 +387,24 @@ document.addEventListener("keydown", function(e){
 
 document.getElementById("prevBtn").addEventListener("click", function(){ if (cur>0){ cur--; render(); } });
 document.getElementById("nextBtn").addEventListener("click", function(){ if (cur<MONTHS.length-1){ cur++; render(); } });
+document.getElementById("statsRow").addEventListener("click", function(e){
+  var stat = e.target.closest(".stat");
+  if (!stat) return;
+  var key = stat.getAttribute("data-filter");
+  filterStatus = (filterStatus === key) ? null : key;
+  selectedId = null;
+  render();
+});
+document.getElementById("statsRow").addEventListener("keydown", function(e){
+  if (e.key !== "Enter" && e.key !== " ") return;
+  var stat = e.target.closest(".stat");
+  if (!stat) return;
+  e.preventDefault();
+  var key = stat.getAttribute("data-filter");
+  filterStatus = (filterStatus === key) ? null : key;
+  selectedId = null;
+  render();
+});
 document.getElementById("resetBtn").addEventListener("click", function(){
   if (confirm("Reset all dates and statuses to the default schedule?")){
     try { localStorage.removeItem(LS_KEY); } catch(e){}
