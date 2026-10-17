@@ -149,6 +149,18 @@ body{-webkit-text-size-adjust:100%;}
 .toc a{color:var(--navy);text-decoration:none;font-weight:600;}
 .toc a:hover{color:var(--coral);text-decoration:underline;}
 .toc .toc-num{color:var(--coral);font-weight:700;margin-right:8px;}
+
+/* Coral underlines on all inline links (brand standard) */
+.post-body a, .article-body a, main a:not(.btn):not(.card-preview):not(.card-view) {
+  color: #10233f;
+  text-decoration: underline;
+  text-decoration-color: #ff705c;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.post-body a:hover, .article-body a:hover, main a:not(.btn):not(.card-preview):not(.card-view):hover {
+  color: #ff705c;
+}
 </style>
 </head>
 <body>
