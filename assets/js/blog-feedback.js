@@ -1,5 +1,5 @@
 /* ============================================================
- * CSRA Marketing — Blog Feedback Widget
+ * CSRA Marketing - Blog Feedback Widget
  * Lets Kemar leave comments on drafted preview posts.
  *
  * SETUP:
