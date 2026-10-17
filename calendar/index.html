@@ -305,5 +305,19 @@ document.getElementById("resetBtn").addEventListener("click", function(){
 render();
 </script>
 
+
+<script>
+// Preview URLs for reviewed posts (added 2026-10-17)
+window.PREVIEW_URLS = {
+  "does-roofing-seo-work": "/preview/does-roofing-seo-work/",
+  "roofing-website-must-haves": "/preview/roofing-website-must-haves/",
+  "roofing-marketing-budget": "/preview/roofing-marketing-budget/"
+};
+// Patch card expansion to show preview link
+document.addEventListener('click', function(e){
+  var badge = e.target.closest('.status-badge');
+  if(badge) return; // status cycling handled separately
+}, true);
+</script>
 </body>
 </html>
