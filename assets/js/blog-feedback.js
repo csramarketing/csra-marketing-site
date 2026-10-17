@@ -1,8 +1,9 @@
 /* ============================================================
- * CSRA Marketing - Blog Feedback Widget (Google Form edition)
+ * CSRA Marketing - Blog Feedback Widget (Native form edition)
  *
- * Lets Kemar leave feedback on drafted preview posts via an
- * embedded Google Form. No backend to deploy.
+ * Lets Kemar leave feedback on drafted preview posts through a
+ * native in-modal form that posts to a Google Form endpoint.
+ * No iframes, no new windows, no redirects. Everything inline.
  *
  * SETUP:
  * 1. Upload this file to /assets/js/blog-feedback.js in the repo.
@@ -14,12 +15,13 @@
 (function () {
   'use strict';
 
-  /* ---------- CONFIG: Google Form ---------- */
-  var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSfBAwT_6pV07GyXf94dL4oB0fAbN2Pl1HE7Oi3-cwDbsoz5Pw/viewform';
-  var E_POST = 'entry.588016490';      /* Post (short answer, required) */
+  /* ---------- CONFIG: Google Form POST endpoint ---------- */
+  var FORM_RESPONSE = 'https://docs.google.com/forms/d/e/1FAIpQLSfBAwT_6pV07GyXf94dL4oB0fAbN2Pl1HE7Oi3-cwDbsoz5Pw/formResponse';
+  var E_POST    = 'entry.588016490';   /* Post (short answer, required) */
+  var E_COMMENT = 'entry.1252854519';  /* Comment (paragraph, required) */
   var E_REFTEXT = 'entry.1025621485';  /* Referenced text (paragraph, optional) */
-  var E_NAME = 'entry.1232869221';     /* Your name (short answer) */
-  /* ----------------------------------------- */
+  var E_NAME    = 'entry.1232869221';  /* Your name (short answer) */
+  /* ------------------------------------------------------ */
 
   var cfg = window.CSRA_FEEDBACK || {};
   var POST_SLUG = cfg.postSlug || '';
@@ -29,7 +31,7 @@
   if (window.location.pathname.indexOf('/preview/') === -1) return;
   if (!POST_SLUG) return;
 
-  var NAVY = '#10233f', CORAL = '#ff705c', YELLOW = '#ffc61a';
+  var NAVY = '#10233f', CORAL = '#ff705c';
 
   /* ---------------- CSS (injected, namespaced) ---------------- */
   var CSS = ''
@@ -68,8 +70,34 @@
     + '.csra-fb-modal-head p{margin:2px 0 0;font-size:12.5px;color:#8a97a8;}'
     + '.csra-fb-x{background:#eef2f7;color:' + NAVY + ';border:none;border-radius:999px;width:36px;height:36px;'
     + 'font-size:18px;font-weight:700;cursor:pointer;flex:none;line-height:1;}'
-    + '.csra-fb-modal-body{flex:1;overflow:hidden;position:relative;min-height:420px;}'
-    + '.csra-fb-modal-body iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;}'
+    /* native form */
+    + '.csra-fb-form{padding:20px;overflow-y:auto;}'
+    + '.csra-fb-field{margin-bottom:16px;}'
+    + '.csra-fb-field label{display:block;font-size:13px;font-weight:700;color:' + NAVY + ';margin-bottom:6px;}'
+    + '.csra-fb-field textarea{width:100%;min-height:140px;resize:vertical;border:1.5px solid #e5eaf1;border-radius:12px;'
+    + 'padding:12px 14px;font-size:14.5px;color:' + NAVY + ';font-family:inherit;outline:none;background:#fbfcfe;}'
+    + '.csra-fb-field textarea:focus{border-color:' + CORAL + ';background:#fff;}'
+    + '.csra-fb-quote{background:#fff8f6;border-left:3px solid ' + CORAL + ';border-radius:0 10px 10px 0;'
+    + 'padding:10px 14px;font-size:13.5px;color:#5a6a7e;font-style:italic;line-height:1.5;}'
+    + '.csra-fb-quote .q-label{display:block;font-size:11px;font-weight:700;color:' + CORAL + ';font-style:normal;'
+    + 'text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;}'
+    + '.csra-fb-submit{width:100%;background:' + CORAL + ';color:#fff;border:none;border-radius:12px;'
+    + 'padding:14px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;}'
+    + '.csra-fb-submit:hover{opacity:.92;}'
+    + '.csra-fb-submit:disabled{opacity:.55;cursor:default;}'
+    + '.csra-fb-err{display:none;margin-top:12px;background:#fef2f2;border:1px solid #f5c2c2;color:#b42318;'
+    + 'border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:500;}'
+    + '.csra-fb-err.show{display:block;}'
+    /* success state */
+    + '.csra-fb-done{display:none;padding:44px 28px;text-align:center;}'
+    + '.csra-fb-done.show{display:block;}'
+    + '.csra-fb-check{width:64px;height:64px;border-radius:50%;background:' + CORAL + ';margin:0 auto 16px;'
+    + 'display:flex;align-items:center;justify-content:center;}'
+    + '.csra-fb-check svg{width:30px;height:30px;fill:#fff;}'
+    + '.csra-fb-done h5{margin:0 0 6px;font-size:18px;font-weight:700;color:' + NAVY + ';}'
+    + '.csra-fb-done p{margin:0 0 20px;font-size:14px;color:#8a97a8;}'
+    + '.csra-fb-again{background:#eef2f7;color:' + NAVY + ';border:none;border-radius:12px;padding:12px 24px;'
+    + 'font-size:14px;font-weight:700;cursor:pointer;}'
     /* mobile: bottom sheet */
     + '@media (max-width:640px){'
     + '.csra-fb-overlay{padding:0;align-items:flex-end;}'
@@ -87,7 +115,7 @@
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  /* ---------------- floating button + menu ---------------- */
+  /* ---------------- floating button + menu + modal ---------------- */
   var root = document.createElement('div');
   root.className = 'csra-fb';
   root.innerHTML = ''
@@ -104,7 +132,21 @@
     + '<div class="csra-fb-modal" role="dialog" aria-label="Leave feedback">'
     + '<div class="csra-fb-modal-head"><div><h4>Feedback</h4><p id="csraFbSub">' + esc(POST_TITLE) + '</p></div>'
     + '<button class="csra-fb-x" id="csraFbClose" aria-label="Close">&times;</button></div>'
-    + '<div class="csra-fb-modal-body"><iframe id="csraFbFrame" title="Feedback form" allow="clipboard-write"></iframe></div>'
+    + '<form class="csra-fb-form" id="csraFbForm" novalidate>'
+    + '<div class="csra-fb-field" id="csraFbQuoteWrap" style="display:none;">'
+    + '<div class="csra-fb-quote"><span class="q-label">Commenting on</span><span id="csraFbQuote"></span></div>'
+    + '</div>'
+    + '<div class="csra-fb-field"><label for="csraFbComment">Your comment</label>'
+    + '<textarea id="csraFbComment" placeholder="What should change here?" required></textarea></div>'
+    + '<div class="csra-fb-err" id="csraFbErr">Couldn\'t send. Try again.</div>'
+    + '<button type="submit" class="csra-fb-submit" id="csraFbSubmit">Send feedback</button>'
+    + '</form>'
+    + '<div class="csra-fb-done" id="csraFbDone">'
+    + '<div class="csra-fb-check"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></div>'
+    + '<h5>Thanks, your feedback is in.</h5>'
+    + '<p>I\'ll review it and apply the changes.</p>'
+    + '<button class="csra-fb-again" id="csraFbAgain">Leave another</button>'
+    + '</div>'
     + '</div></div>';
   document.body.appendChild(root);
 
@@ -112,7 +154,15 @@
   var menu = document.getElementById('csraFbMenu');
   var bar = document.getElementById('csraFbBar');
   var overlay = document.getElementById('csraFbOverlay');
-  var frame = document.getElementById('csraFbFrame');
+  var form = document.getElementById('csraFbForm');
+  var commentBox = document.getElementById('csraFbComment');
+  var quoteWrap = document.getElementById('csraFbQuoteWrap');
+  var quoteEl = document.getElementById('csraFbQuote');
+  var errEl = document.getElementById('csraFbErr');
+  var doneEl = document.getElementById('csraFbDone');
+  var submitBtn = document.getElementById('csraFbSubmit');
+
+  var currentRefText = '';
 
   function closeMenu() { menu.classList.remove('open'); }
 
@@ -125,25 +175,33 @@
   });
 
   /* ---------------- modal ---------------- */
-  function formUrl(refText) {
-    var q = '?embedded=true'
-      + '&' + encodeURIComponent(E_POST) + '=' + encodeURIComponent(POST_SLUG)
-      + '&' + encodeURIComponent(E_NAME) + '=' + encodeURIComponent('Kemar');
-    if (refText) q += '&' + encodeURIComponent(E_REFTEXT) + '=' + encodeURIComponent(refText);
-    return FORM_BASE + q;
+  function resetForm() {
+    form.style.display = '';
+    doneEl.classList.remove('show');
+    commentBox.value = '';
+    errEl.classList.remove('show');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send feedback';
   }
 
   function openModal(refText, label) {
-    frame.src = formUrl(refText);
+    currentRefText = refText || '';
+    resetForm();
+    if (currentRefText) {
+      quoteEl.textContent = currentRefText;
+      quoteWrap.style.display = '';
+    } else {
+      quoteWrap.style.display = 'none';
+    }
     document.getElementById('csraFbSub').textContent = label || POST_TITLE;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    setTimeout(function () { commentBox.focus(); }, 60);
   }
 
   function closeModal() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
-    frame.src = 'about:blank';
   }
 
   document.getElementById('csraFbClose').addEventListener('click', closeModal);
@@ -152,6 +210,43 @@
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { closeModal(); cancelPick(); closeMenu(); }
+  });
+
+  document.getElementById('csraFbAgain').addEventListener('click', function () {
+    openModal('', 'General feedback: ' + POST_TITLE);
+  });
+
+  /* ---------------- native submit -> Google Forms ---------------- */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var comment = commentBox.value.trim();
+    if (!comment) {
+      commentBox.focus();
+      commentBox.style.borderColor = CORAL;
+      return;
+    }
+    commentBox.style.borderColor = '';
+    errEl.classList.remove('show');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    var body = new URLSearchParams();
+    body.append(E_POST, POST_SLUG);
+    body.append(E_COMMENT, comment);
+    if (currentRefText) body.append(E_REFTEXT, currentRefText);
+    body.append(E_NAME, 'Kemar');
+
+    fetch(FORM_RESPONSE, { method: 'POST', mode: 'no-cors', body: body })
+      .then(function () {
+        // no-cors responses are opaque; a resolved promise means it went out
+        form.style.display = 'none';
+        doneEl.classList.add('show');
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send feedback';
+        errEl.classList.add('show');
+      });
   });
 
   /* ---------------- pick mode ---------------- */
