@@ -65,6 +65,8 @@ body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:#fff
 .cbadge.cb{background:var(--peach-bg);color:var(--peach-tx);}
 .cbadge.cc{background:var(--yel-bg);color:var(--yel-tx);}
 .card-title{font-size:11.5px;font-weight:600;color:var(--navy);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:break-word;}
+.card-keyword{margin-top:4px;font-size:9.5px;color:var(--muted);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-keyword .kw-ico{margin-right:3px;}
 .status{display:inline-block;margin-top:6px;font-size:9px;font-weight:800;letter-spacing:.05em;padding:3px 9px;border-radius:999px;cursor:pointer;user-select:none;-webkit-user-select:none;}
 .status.st-sched{background:var(--gry-bg);color:var(--gry-tx);}
 .status.st-prod{background:var(--peach-bg);color:var(--peach-tx);}
@@ -85,6 +87,7 @@ body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:#fff
   .cell-day{font-size:10px;}
   .card{padding:5px 6px;border-radius:8px;}
   .card-title{font-size:10px;-webkit-line-clamp:3;}
+  .card-keyword{font-size:8.5px;margin-top:3px;}
   .cbadge{width:16px;height:16px;font-size:9px;border-radius:5px;}
   .status{font-size:8px;padding:2px 7px;margin-top:4px;}
   .month-label{font-size:17px;min-width:150px;}
@@ -204,6 +207,7 @@ function cardHTML(p){
     + '<span class="card-title">' + esc(p.title) + '</span>'
      + (p.preview ? '<a class="card-preview" href="' + esc(p.preview) + '" target="_blank" onclick="event.stopPropagation();" title="Preview this draft">Preview</a>' : (p.url ? '<a class="card-view" href="' + esc(p.url) + '" target="_blank" onclick="event.stopPropagation();" title="View live post">View</a>' : ''))
      + '</div>'
+    + '<div class="card-keyword" title="Target keyword"><span class="kw-ico">&#127919;</span>' + esc(p.keyword) + '</div>'
     + '<span class="status ' + STATUS_CLASS[st.status] + '" data-statusof="' + p.id + '">' + STATUS_LABEL[st.status] + '</span>'
     + details + '</div>';
 }
