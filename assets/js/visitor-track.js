@@ -185,10 +185,12 @@
       var profile = getProfile();
       var pageCounts = {};
       var funnelCounts = { TOFU: 0, MOFU: 0, BOFU: 0 };
+      var totalSeconds = 0;
       profile.pages.forEach(function(p) {
         pageCounts[p.url] = (pageCounts[p.url] || 0) + 1;
         var f = p.funnel || getFunnelStage(p.url);
         if (funnelCounts[f] !== undefined) funnelCounts[f]++;
+        if (p.timeOnPage) totalSeconds += p.timeOnPage;
       });
       var topPages = Object.keys(pageCounts)
         .sort(function(a, b) { return pageCounts[b] - pageCounts[a]; })
@@ -200,6 +202,9 @@
       if (funnelCounts.MOFU >= funnelCounts.TOFU && funnelCounts.MOFU >= funnelCounts.BOFU) dominant = 'MOFU';
       if (funnelCounts.BOFU > funnelCounts.MOFU && funnelCounts.BOFU >= funnelCounts.TOFU) dominant = 'BOFU';
 
+      // Format total time as human-readable
+      var totalTime = formatDuration(totalSeconds);
+
       return {
         visitorId: profile.vid,
         visitCount: profile.visitCount,
@@ -208,7 +213,9 @@
         totalPagesViewed: profile.pages.length,
         topPages: topPages.join('; '),
         funnelBreakdown: 'TOFU:' + funnelCounts.TOFU + ' MOFU:' + funnelCounts.MOFU + ' BOFU:' + funnelCounts.BOFU,
-        dominantFunnel: dominant
+        dominantFunnel: dominant,
+        totalTimeSeconds: totalSeconds,
+        totalTimeFormatted: totalTime
       };
     },
 
@@ -217,10 +224,19 @@
       return 'Visits: ' + s.visitCount
         + ' | First: ' + s.firstVisit.split('T')[0]
         + ' | Pages viewed: ' + s.totalPagesViewed
+        + ' | Time on site: ' + s.totalTimeFormatted
         + ' | Funnel: ' + s.funnelBreakdown + ' (' + s.dominantFunnel + ')'
         + ' | Top: ' + s.topPages;
     }
   };
+
+  function formatDuration(seconds) {
+    if (seconds < 60) return seconds + 's';
+    var mins = Math.floor(seconds / 60);
+    if (mins < 60) return mins + 'm ' + (seconds % 60) + 's';
+    var hours = Math.floor(mins / 60);
+    return hours + 'h ' + (mins % 60) + 'm';
+  }
 
   // Track on load
   if (document.readyState === 'loading') {
