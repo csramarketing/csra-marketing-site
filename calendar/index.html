@@ -72,6 +72,10 @@ body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:#fff
 .status.st-prod{background:var(--peach-bg);color:var(--peach-tx);}
 .status.st-ready{background:var(--amb-bg);color:var(--amb-tx);}
 .status.st-live{background:var(--grn-bg);color:var(--grn-tx);}
+.funnel{display:inline-block;margin-top:6px;margin-left:6px;font-size:9px;font-weight:800;letter-spacing:.05em;padding:3px 9px;border-radius:999px;}
+.funnel.f-tofu{background:#e8f0fe;color:#1a56db;}
+.funnel.f-mofu{background:#fff0e8;color:#c2410c;}
+.funnel.f-bofu{background:#e6f9ed;color:#15803d;}
 .card-details{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--muted);line-height:1.65;}
 .card.expanded .card-details{display:block;}
 .card-details strong{color:var(--navy);font-weight:600;}
@@ -209,6 +213,7 @@ function cardHTML(p){
      + '</div>'
     + '<div class="card-keyword" title="Target keyword"><span class="kw-ico">&#127919;</span>' + esc(p.keyword) + '</div>'
     + '<span class="status ' + STATUS_CLASS[st.status] + '" data-statusof="' + p.id + '">' + STATUS_LABEL[st.status] + '</span>'
+    + '<span class="funnel f-' + p.stage.toLowerCase() + '">' + p.stage + '</span>'
     + details + '</div>';
 }
 
