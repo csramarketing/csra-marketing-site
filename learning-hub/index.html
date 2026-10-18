@@ -502,7 +502,7 @@
           <h3>The Roofing SEO Playbook</h3>
           <p>The complete system: rankings, the map pack, reviews, and the 90-day plan.</p>
           <div class="res-meta"><span class="soon-pill">Coming soon</span></div>
-          <button class="btn btn-yellow" data-resource="The Roofing SEO Playbook" onclick="openHubModal(this)">Notify me</button>
+          <button class="btn btn-yellow" data-resource="The Roofing SEO Playbook" data-pdf="/assets/hub/roofing-seo-playbook.pdf" onclick="openHubModal(this)">Download</button>
         </div>
       </article>
 
@@ -515,7 +515,7 @@
           <h3>The 2026 Roofing Website Buyer's Guide</h3>
           <p>What to pay, what to ask, and the red flags that cost roofers jobs.</p>
           <div class="res-meta"><span class="soon-pill">Coming soon</span></div>
-          <button class="btn btn-yellow" data-resource="The 2026 Roofing Website Buyer's Guide" onclick="openHubModal(this)">Notify me</button>
+          <button class="btn btn-yellow" data-resource="The 2026 Roofing Website Buyer's Guide" data-pdf="/assets/hub/website-buyers-guide.pdf" onclick="openHubModal(this)">Download</button>
         </div>
       </article>
     </div>
@@ -532,7 +532,7 @@
           <h3>Review Request Script Pack</h3>
           <p>Word-for-word scripts that turn happy customers into 5-star reviews.</p>
           <div class="res-meta"><span class="soon-pill">Coming soon</span></div>
-          <button class="btn btn-yellow" data-resource="Review Request Script Pack" onclick="openHubModal(this)">Notify me</button>
+          <button class="btn btn-yellow" data-resource="Review Request Script Pack" data-pdf="/assets/hub/review-request-scripts.pdf" onclick="openHubModal(this)">Download</button>
         </div>
       </article>
 
@@ -545,7 +545,7 @@
           <h3>Quote Follow-Up Email Templates</h3>
           <p>The follow-up sequence that wins back estimates gone quiet.</p>
           <div class="res-meta"><span class="soon-pill">Coming soon</span></div>
-          <button class="btn btn-yellow" data-resource="Quote Follow-Up Email Templates" onclick="openHubModal(this)">Notify me</button>
+          <button class="btn btn-yellow" data-resource="Quote Follow-Up Email Templates" data-pdf="/assets/hub/quote-followup-templates.pdf" onclick="openHubModal(this)">Download</button>
         </div>
       </article>
     </div>
@@ -562,7 +562,7 @@
           <h3>The Google Business Profile Checklist</h3>
           <p>Every field, photo, and review tactic that moves map-pack rankings.</p>
           <div class="res-meta"><span class="soon-pill">Coming soon</span></div>
-          <button class="btn btn-yellow" data-resource="The Google Business Profile Checklist" onclick="openHubModal(this)">Notify me</button>
+          <button class="btn btn-yellow" data-resource="The Google Business Profile Checklist" data-pdf="/assets/hub/gbp-checklist.pdf" onclick="openHubModal(this)">Download</button>
         </div>
       </article>
 
@@ -575,7 +575,7 @@
           <h3>New Website Launch Checklist</h3>
           <p>Everything to verify before your new site goes live.</p>
           <div class="res-meta"><span class="soon-pill">Coming soon</span></div>
-          <button class="btn btn-yellow" data-resource="New Website Launch Checklist" onclick="openHubModal(this)">Notify me</button>
+          <button class="btn btn-yellow" data-resource="New Website Launch Checklist" data-pdf="/assets/hub/website-launch-checklist.pdf" onclick="openHubModal(this)">Download</button>
         </div>
       </article>
     </div>
@@ -623,7 +623,7 @@
           <input type="checkbox" id="hub-newsletter" checked />
           <span>Also send me the monthly Roofing Revenue Brief</span>
         </label>
-        <button class="btn btn-yellow" type="submit" id="hubSubmit" style="width:100%;">Notify me</button>
+        <button class="btn btn-yellow" type="submit" id="hubSubmit" style="width:100%;">Download</button>
         <p class="hub-privacy">We respect your inbox. No spam, ever.</p>
       </form>
     </div>
@@ -640,11 +640,13 @@
   var FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbysr6X3ptdaN_uT89cpaWqrd6aSyb7rGXApp83niLlWsBHjRieWpmJMX9sO9rA6xkiKnQ/exec';
   var overlay = document.getElementById('hubModalOverlay');
   var currentResource = '';
+  var currentPdf = '';
 
   window.openHubModal = function(btn) {
     currentResource = btn.getAttribute('data-resource') || 'this resource';
+    currentPdf = btn.getAttribute('data-pdf') || '';
     document.getElementById('hubModalSub').textContent =
-      'Drop your details and we will email \u201C' + currentResource + '\u201D to you the moment it drops.';
+      'Drop your details to download \u201C' + currentResource + '\u201D instantly.';
     document.getElementById('hubFormWrap').hidden = false;
     document.getElementById('hubSuccessWrap').hidden = true;
     overlay.classList.add('open');
@@ -689,12 +691,13 @@
       .then(function() { showSuccess(); })
       .catch(function() { showSuccess(); });
     function showSuccess() {
-      document.getElementById('hubSuccessText').textContent =
-        'We will email \u201C' + currentResource + '\u201D to you the moment it is ready.';
+      document.getElementById('hubSuccessText').innerHTML =
+        'Your download is starting. If it does not begin automatically, <a href="' + currentPdf + '" download style="color:#ff705c;font-weight:600;">click here</a>.';
       document.getElementById('hubFormWrap').hidden = true;
       document.getElementById('hubSuccessWrap').hidden = false;
       if (typeof gtag === 'function') gtag('event', 'hub_lead', {resource: currentResource, newsletter: newsletter});
-      btn.disabled = false; btn.textContent = 'Notify me';
+      btn.disabled = false; btn.textContent = 'Download';
+      if (currentPdf) { var a = document.createElement('a'); a.href = currentPdf; a.download = ''; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
       form.reset();
       document.getElementById('hub-newsletter').checked = true;
     }
