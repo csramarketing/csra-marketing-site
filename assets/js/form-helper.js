@@ -27,7 +27,8 @@
         'top_pages': summary.topPages,
         'funnel_breakdown': summary.funnelBreakdown,
         'dominant_funnel': summary.dominantFunnel,
-        'time_on_site': summary.totalTimeFormatted
+        'time_on_site': summary.totalTimeFormatted,
+        'session_breakdown': summary.sessionBreakdown
       };
 
       Object.keys(fields).forEach(function(name) {
