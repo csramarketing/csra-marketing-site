@@ -23,33 +23,63 @@
     body { margin: 0; font-family: "Poppins", sans-serif; background: #fff; color: var(--navy); line-height: 1.6; }
     header { padding: 18px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
     header img { height: 44px; width: auto; }
-    .cta-btn { display: inline-block; background: var(--yellow); color: var(--navy); font-weight: 700; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-size: 17px; }
+    .cta-btn { display: inline-block; background: var(--yellow); color: var(--navy); font-weight: 700; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-size: 17px; border: none; cursor: pointer; }
     .cta-btn:hover { filter: brightness(0.95); }
     main { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-    .hero { text-align: center; padding: 60px 20px 40px; }
+    .hero { text-align: center; padding: 60px 20px 30px; }
     .hero .kicker { display: inline-block; background: #fff3f1; color: var(--coral); font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 18px; border-radius: 999px; margin-bottom: 20px; }
     .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; margin: 0 0 16px; line-height: 1.15; }
     .hero h1 .hl { color: var(--coral); }
     .hero p.lead { font-size: 19px; color: var(--muted); max-width: 700px; margin: 0 auto 32px; }
-    .math-box { background: var(--navy); color: #fff; border-radius: 20px; padding: 40px; margin: 40px auto; max-width: 800px; }
-    .math-box h2 { margin: 0 0 24px; font-size: 24px; text-align: center; }
-    .math-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.12); font-size: 17px; }
-    .math-row:last-child { border-bottom: none; }
-    .math-row .label { color: #a0aec0; }
-    .math-row .val { font-weight: 700; font-size: 20px; }
-    .math-row .val.red { color: var(--coral); }
-    .math-row .val.green { color: #68d391; }
-    .math-total { text-align: center; margin-top: 24px; padding-top: 24px; border-top: 2px solid rgba(255,255,255,0.15); }
-    .math-total .big { font-size: 42px; font-weight: 800; color: var(--yellow); }
-    .math-total .sub { color: #a0aec0; font-size: 15px; margin-top: 8px; }
+
+    /* Keyword pain section */
+    .kw-section { background: var(--navy); border-radius: 20px; padding: 40px; margin: 30px auto; color: #fff; }
+    .kw-section h2 { text-align: center; margin: 0 0 8px; font-size: clamp(22px, 3.5vw, 30px); }
+    .kw-section .geo-note { text-align: center; color: #a0aec0; font-size: 14px; margin-bottom: 28px; }
+    .kw-grid { display: grid; gap: 12px; max-width: 700px; margin: 0 auto; }
+    .kw-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 20px; }
+    .kw-row .kw { font-weight: 600; font-size: 16px; }
+    .kw-row .kw .city { color: var(--yellow); }
+    .kw-row .cpc { text-align: right; }
+    .kw-row .cpc .amt { font-weight: 800; font-size: 20px; color: var(--coral); }
+    .kw-row .cpc .lbl { display: block; font-size: 12px; color: #a0aec0; }
+    .kw-total { text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); }
+    .kw-total .lbl { color: #a0aec0; font-size: 14px; }
+    .kw-total .amt { font-size: 40px; font-weight: 800; color: var(--coral); }
+
+    /* Calculator */
+    .calc-section { padding: 50px 0; }
+    .calc-section h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 800; text-align: center; margin: 0 0 12px; }
+    .calc-section .sub { text-align: center; color: var(--muted); max-width: 650px; margin: 0 auto 36px; font-size: 17px; }
+    .calc-box { background: var(--bg); border-radius: 20px; padding: 36px; max-width: 800px; margin: 0 auto; }
+    .calc-kw { margin-bottom: 24px; }
+    .calc-kw .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .calc-kw .name { font-weight: 600; font-size: 15px; }
+    .calc-kw .name .city { color: var(--coral); font-weight: 700; }
+    .calc-kw .vals { font-size: 14px; color: var(--muted); }
+    .calc-kw .vals strong { color: var(--navy); }
+    .calc-kw input[type=range] { width: 100%; accent-color: var(--coral); height: 32px; }
+    .calc-result { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .calc-card { border-radius: 16px; padding: 28px; text-align: center; }
+    .calc-card.ads { background: #fff0ee; border: 2px solid var(--coral); }
+    .calc-card.seo { background: #f0faf4; border: 2px solid #38a169; }
+    .calc-card .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .calc-card.ads .lbl { color: var(--coral); }
+    .calc-card.seo .lbl { color: #38a169; }
+    .calc-card .amt { font-size: 36px; font-weight: 800; }
+    .calc-card .per { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .calc-note { text-align: center; color: var(--muted); font-size: 14px; margin-top: 20px; }
+
+    /* Plan section */
     .section { padding: 50px 0; }
     .section h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 800; text-align: center; margin: 0 0 12px; }
     .section .sub { text-align: center; color: var(--muted); max-width: 650px; margin: 0 auto 40px; font-size: 17px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-    .card { background: var(--bg); border-radius: 16px; padding: 32px; }
-    .card .icon { font-size: 36px; margin-bottom: 12px; }
-    .card h3 { margin: 0 0 10px; font-size: 20px; }
-    .card p { color: var(--muted); margin: 0; font-size: 15px; }
+    .timeline { max-width: 700px; margin: 0 auto 40px; }
+    .t-row { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid #eee; }
+    .t-row:last-child { border-bottom: none; }
+    .t-month { background: var(--navy); color: #fff; font-weight: 700; border-radius: 10px; padding: 8px 16px; white-space: nowrap; font-size: 14px; min-width: 110px; text-align: center; }
+    .t-desc { font-size: 15px; }
+    .t-desc strong { color: var(--coral); }
     .plan-box { background: #fff; border: 3px solid var(--navy); border-radius: 20px; padding: 40px; max-width: 700px; margin: 0 auto; }
     .plan-box h3 { margin: 0 0 8px; font-size: 24px; }
     .plan-box .price { font-size: 48px; font-weight: 800; color: var(--navy); }
@@ -61,14 +91,20 @@
     .cta-section h2 { margin: 0 0 12px; }
     .cta-section p { color: var(--muted); max-width: 550px; margin: 0 auto 28px; }
     footer { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 13px; border-top: 1px solid #eee; }
-    @media (max-width: 600px) { .math-box { padding: 24px 20px; } .math-row { font-size: 15px; } .math-row .val { font-size: 17px; } }
+    @media (max-width: 600px) {
+      .kw-section { padding: 28px 18px; }
+      .kw-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .kw-row .cpc { text-align: left; }
+      .calc-box { padding: 24px 18px; }
+      .calc-result { grid-template-columns: 1fr; }
+    }
   </style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "Google Ads vs SEO for Roofers: Stop Renting Your Leads",
-    "description": "The real math on what roofing companies pay for Google Ads versus what SEO costs — and why smart roofers are making the switch.",
+    "description": "The real math on what roofing companies pay for Google Ads versus what SEO costs.",
     "author": { "@type": "Organization", "name": "CSRA Marketing", "url": "https://csramarketing.com/" },
     "publisher": { "@type": "Organization", "name": "CSRA Marketing", "url": "https://csramarketing.com/" }
   }
@@ -83,64 +119,154 @@
     <div class="hero">
       <div class="kicker">For roofers already running Google Ads</div>
       <h1>You're <span class="hl">renting</span> your leads.<br />Here's what owning them costs.</h1>
-      <p class="lead">If you're spending thousands a month on Google Ads, you're paying for every single click — and the meter never stops. SEO flips that equation. Let's do the math.</p>
+      <p class="lead">Every click you buy disappears the moment you stop paying. We build the pages and rankings that keep working after the ad budget runs out.</p>
     </div>
 
-    <div class="math-box">
-      <h2>The real cost of "roof replacement near me"</h2>
-      <div class="math-row"><span class="label">Average cost per click</span><span class="val red">$35 – $50</span></div>
-      <div class="math-row"><span class="label">Clicks per month (moderate campaign)</span><span class="val">200</span></div>
-      <div class="math-row"><span class="label">Monthly ad spend</span><span class="val red">$7,000 – $10,000</span></div>
-      <div class="math-row"><span class="label">Annual ad spend</span><span class="val red">$84,000 – $120,000</span></div>
-      <div class="math-row"><span class="label">What you own after 12 months</span><span class="val red">Nothing. Stop paying, traffic stops.</span></div>
-      <div class="math-total">
-        <div class="big">vs. SEO</div>
-        <div class="sub">Rank organically for the same keywords. The clicks are free. The asset is yours.</div>
+    <div class="kw-section">
+      <h2>These are <span class="city-kw">your</span> keywords. This is what they cost <span class="city-kw">you</span>.</h2>
+      <p class="geo-note">Showing estimated CPCs for <strong class="city-name" style="color:#fff">your area</strong> — detected automatically</p>
+      <div class="kw-grid" id="kwGrid"></div>
+      <div class="kw-total">
+        <div class="lbl">Combined monthly cost if you bid on all 8</div>
+        <div class="amt" id="kwTotal">$0</div>
+      </div>
+    </div>
+
+    <div class="calc-section">
+      <h2>Run your own numbers</h2>
+      <p class="sub">Drag the sliders to match your actual monthly clicks per keyword. Watch what you're spending versus what SEO costs.</p>
+      <div class="calc-box">
+        <div id="calcKws"></div>
+        <div class="calc-result">
+          <div class="calc-card ads">
+            <div class="lbl">Google Ads cost</div>
+            <div class="amt" id="adsCost">$0</div>
+            <div class="per">per month, gone forever</div>
+          </div>
+          <div class="calc-card seo">
+            <div class="lbl">Aggressive SEO plan</div>
+            <div class="amt">$5,000</div>
+            <div class="per">per month, starting at — you own everything</div>
+          </div>
+        </div>
+        <p class="calc-note" id="calcNote"></p>
       </div>
     </div>
 
     <div class="section">
-      <h2>How the aggressive plan works</h2>
-      <p class="sub">This isn't starter SEO. This is a full assault on the exact keywords you're currently paying for — built to replace your ad spend, not supplement it.</p>
-      <div class="cards">
-        <div class="card">
-          <div class="icon">🎯</div>
-          <h3>Money pages for your money keywords</h3>
-          <p>We build dedicated landing pages targeting the exact keywords you're bidding on. Same search intent, zero cost per click once they rank.</p>
-        </div>
-        <div class="card">
-          <div class="icon">🔗</div>
-          <h3>Aggressive link building</h3>
-          <p>Authority links are what move competitive keywords. We scale link velocity to match the competition level of your market — not a one-size-fits-all package.</p>
-        </div>
-        <div class="card">
-          <div class="icon">📍</div>
-          <h3>Map pack domination</h3>
-          <p>Google Business Profile optimization, review generation, and local signals — because 42% of local clicks go to the map pack, not the ads.</p>
-        </div>
+      <h2>5 money pages a month. Every month.</h2>
+      <p class="sub">We start with your highest cost-per-click keywords — the ones hurting the most — and build dedicated pages to rank for them organically. Then we keep going.</p>
+      <div class="timeline">
+        <div class="t-row"><div class="t-month">Month 1–2</div><div class="t-desc"><strong>10 money pages</strong> targeting your 10 most expensive keywords. Link building starts.</div></div>
+        <div class="t-row"><div class="t-month">Month 3–4</div><div class="t-desc"><strong>20 money pages.</strong> First pages start ranking. Ad spend on those keywords drops.</div></div>
+        <div class="t-row"><div class="t-month">Month 5–6</div><div class="t-desc"><strong>30 money pages.</strong> Organic traffic compounds. You're buying fewer clicks every month.</div></div>
+        <div class="t-row"><div class="t-month">Month 7–12</div><div class="t-desc"><strong>Up to 60 money pages.</strong> Full keyword coverage. The meter stops running.</div></div>
       </div>
-    </div>
-
-    <div class="section">
       <div class="plan-box">
         <h3>Aggressive SEO Plan</h3>
-        <div class="price">$4,500<span>/mo</span></div>
-        <p style="color: var(--muted); font-size: 15px;">Example for a competitive market. Your plan is scoped to your keywords and competition.</p>
-        <div class="plan-line"><span>Core SEO retainer</span><strong>$1,500/mo</strong></div>
-        <div class="plan-line"><span>Link budget (8 authority links)</span><strong>$2,000/mo</strong></div>
-        <div class="plan-line"><span>Money pages (3 landing pages)</span><strong>$1,000/mo</strong></div>
+        <div class="price">Starting at $5,000<span>/mo</span></div>
+        <p style="color: var(--muted); font-size: 15px;">Scoped to your keywords, your market, your competition. 6 or 12 month terms.</p>
+        <div class="plan-line"><span>Core SEO retainer</span><strong>Included</strong></div>
+        <div class="plan-line"><span>Money pages (5/month targeting your top CPC keywords)</span><strong>Included</strong></div>
+        <div class="plan-line"><span>Authority link budget (scaled to your market)</span><strong>Included</strong></div>
+        <div class="plan-line"><span>Google Business Profile + map pack</span><strong>Included</strong></div>
         <div style="margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--navy); font-size: 15px; color: var(--muted);">
-          Compare: $4,500/mo to own your rankings vs. $8,000+/mo to rent clicks indefinitely.
+          One plan. One price. Everything it takes to replace your ad spend with rankings you own.
         </div>
       </div>
     </div>
 
     <div class="cta-section">
       <h2>30 minutes. Your ads. Your keywords. No fluff.</h2>
-      <p>I'll pull your actual ad data before our call, map your keyword gaps, and show you exactly where SEO replaces your ad spend first. You'll leave with a plan whether you hire us or not.</p>
+      <p>I'll pull your actual ad data before our call, map your most expensive keywords, and show you which five money pages we'd build first. You'll leave with a plan whether you hire us or not.</p>
       <a class="cta-btn" href="https://cal.com/csramarketing/30min">Book Your 30-Minute Consultation</a>
     </div>
   </main>
   <footer>© 2026 CSRA Marketing</footer>
+
+  <script>
+    // Keyword data with base CPCs (national roofing averages)
+    const KEYWORDS = [
+      { kw: "roof replacement", cpc: 48, clicks: 60 },
+      { kw: "roofing contractor", cpc: 42, clicks: 80 },
+      { kw: "roof repair", cpc: 38, clicks: 70 },
+      { kw: "metal roofing", cpc: 35, clicks: 40 },
+      { kw: "roof installation", cpc: 33, clicks: 50 },
+      { kw: "emergency roof repair", cpc: 45, clicks: 30 },
+      { kw: "roof inspection", cpc: 22, clicks: 45 },
+      { kw: "gutter installation", cpc: 18, clicks: 35 }
+    ];
+    const SEO_PRICE = 5000;
+    let city = "";
+
+    // Detect visitor city via IP geolocation
+    async function detectCity() {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        if (data.city) city = data.city;
+      } catch (e) { /* silent fallback */ }
+      renderKeywords();
+      renderCalculator();
+    }
+
+    function kwWithCity(kw) {
+      return city ? kw + ' <span class="city">' + city + '</span>' : kw;
+    }
+
+    function renderKeywords() {
+      const grid = document.getElementById("kwGrid");
+      let total = 0;
+      grid.innerHTML = KEYWORDS.map(k => {
+        const monthly = k.cpc * k.clicks;
+        total += monthly;
+        return '<div class="kw-row"><div class="kw">' + kwWithCity(k.kw) + '</div>' +
+          '<div class="cpc"><span class="amt">$' + k.cpc + '</span><span class="lbl">per click &times; ' + k.clicks + ' clicks/mo = $' + monthly.toLocaleString() + '/mo</span></div></div>';
+      }).join("");
+      document.getElementById("kwTotal").textContent = "$" + total.toLocaleString() + "/mo";
+      document.querySelectorAll(".city-name").forEach(el => {
+        if (city) el.textContent = city;
+      });
+    }
+
+    function renderCalculator() {
+      const wrap = document.getElementById("calcKws");
+      wrap.innerHTML = KEYWORDS.slice(0, 6).map((k, i) => {
+        return '<div class="calc-kw" data-i="' + i + '">' +
+          '<div class="top"><div class="name">' + kwWithCity(k.kw) + ' <span style="color:var(--muted);font-weight:400">($' + k.cpc + '/click)</span></div>' +
+          '<div class="vals"><strong class="clickVal">' + k.clicks + '</strong> clicks/mo = <strong class="costVal">$' + (k.cpc * k.clicks).toLocaleString() + '</strong></div></div>' +
+          '<input type="range" min="0" max="200" value="' + k.clicks + '" data-cpc="' + k.cpc + '" />' +
+          '</div>';
+      }).join("");
+
+      wrap.querySelectorAll('input[type=range]').forEach(input => {
+        input.addEventListener("input", updateCalc);
+      });
+      updateCalc();
+    }
+
+    function updateCalc() {
+      let total = 0;
+      document.querySelectorAll(".calc-kw").forEach(row => {
+        const input = row.querySelector("input");
+        const clicks = parseInt(input.value);
+        const cpc = parseFloat(input.dataset.cpc);
+        const cost = clicks * cpc;
+        total += cost;
+        row.querySelector(".clickVal").textContent = clicks;
+        row.querySelector(".costVal").textContent = "$" + cost.toLocaleString();
+      });
+      document.getElementById("adsCost").textContent = "$" + total.toLocaleString();
+      const savings = total - SEO_PRICE;
+      const note = document.getElementById("calcNote");
+      if (savings > 0) {
+        note.innerHTML = "You'd save <strong style='color:#38a169'>$" + savings.toLocaleString() + "/month</strong> — and own the rankings instead of renting clicks.";
+      } else {
+        note.innerHTML = "At this click volume, ads cost less — but every click still disappears when you stop paying. SEO builds an asset.";
+      }
+    }
+
+    detectCity();
+  </script>
 </body>
 </html>
