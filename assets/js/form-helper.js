@@ -24,7 +24,9 @@
         'visit_count': String(summary.visitCount),
         'first_visit': summary.firstVisit,
         'pages_viewed': String(summary.totalPagesViewed),
-        'top_pages': summary.topPages
+        'top_pages': summary.topPages,
+        'funnel_breakdown': summary.funnelBreakdown,
+        'dominant_funnel': summary.dominantFunnel
       };
 
       Object.keys(fields).forEach(function(name) {
