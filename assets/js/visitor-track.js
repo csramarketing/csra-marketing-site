@@ -117,9 +117,12 @@
         firstVisit: new Date().toISOString(),
         visitCount: 0,
         lastVisit: null,
-        pages: []  // {url, title, ts, timeOnPage}
+        pages: [],      // {url, title, funnel, ts, timeOnPage}
+        sessions: []    // {start, end, pagesViewed, durationSec}
       };
     }
+    // Backfill sessions array for profiles created before this feature
+    if (!profile.sessions) profile.sessions = [];
     return profile;
   }
 
@@ -137,6 +140,27 @@
     var isNewVisit = !profile.lastVisit ||
       (now - new Date(profile.lastVisit)) > SESSION_TIMEOUT;
     if (isNewVisit) {
+      // Close out the previous session
+      if (profile.sessions.length > 0) {
+        var prevSession = profile.sessions[profile.sessions.length - 1];
+        if (!prevSession.end) {
+          prevSession.end = profile.lastVisit;
+          prevSession.durationSec = Math.round(
+            (new Date(prevSession.end) - new Date(prevSession.start)) / 1000
+          );
+        }
+      }
+      // Start a new session
+      profile.sessions.push({
+        start: nowIso,
+        end: null,
+        pagesViewed: 0,
+        durationSec: null
+      });
+      // Cap sessions at 20 to avoid bloat
+      if (profile.sessions.length > 20) {
+        profile.sessions = profile.sessions.slice(-20);
+      }
       profile.visitCount++;
     }
     profile.lastVisit = nowIso;
@@ -165,6 +189,10 @@
       // Cap at 50 pages to avoid bloat
       if (profile.pages.length > 50) {
         profile.pages = profile.pages.slice(-50);
+      }
+      // Increment current session page count
+      if (profile.sessions.length > 0) {
+        profile.sessions[profile.sessions.length - 1].pagesViewed++;
       }
     }
 
@@ -205,6 +233,13 @@
       // Format total time as human-readable
       var totalTime = formatDuration(totalSeconds);
 
+      // Per-session breakdown
+      var sessionList = (profile.sessions || []).map(function(s, idx) {
+        var date = s.start ? s.start.split('T')[0] : 'unknown';
+        var dur = s.durationSec ? formatDuration(s.durationSec) : 'in progress';
+        return 'Session ' + (idx + 1) + ' (' + date + '): ' + dur + ', ' + (s.pagesViewed || 0) + ' pages';
+      }).join('; ');
+
       return {
         visitorId: profile.vid,
         visitCount: profile.visitCount,
@@ -215,7 +250,8 @@
         funnelBreakdown: 'TOFU:' + funnelCounts.TOFU + ' MOFU:' + funnelCounts.MOFU + ' BOFU:' + funnelCounts.BOFU,
         dominantFunnel: dominant,
         totalTimeSeconds: totalSeconds,
-        totalTimeFormatted: totalTime
+        totalTimeFormatted: totalTime,
+        sessionBreakdown: sessionList
       };
     },
 
@@ -226,6 +262,7 @@
         + ' | Pages viewed: ' + s.totalPagesViewed
         + ' | Time on site: ' + s.totalTimeFormatted
         + ' | Funnel: ' + s.funnelBreakdown + ' (' + s.dominantFunnel + ')'
+        + ' | Sessions: ' + s.sessionBreakdown
         + ' | Top: ' + s.topPages;
     }
   };
@@ -245,7 +282,7 @@
     trackPageView();
   }
 
-  // Record time on page when leaving
+  // Record time on page when leaving (and update current session)
   window.addEventListener('beforeunload', function() {
     var profile = getProfile();
     if (profile.pages.length > 0) {
@@ -254,8 +291,17 @@
         lastPage.timeOnPage = Math.round(
           (new Date() - new Date(lastPage.ts)) / 1000
         );
-        saveProfile(profile);
       }
     }
+    // Update current session end time
+    if (profile.sessions.length > 0) {
+      var curr = profile.sessions[profile.sessions.length - 1];
+      var nowIso = new Date().toISOString();
+      curr.end = nowIso;
+      curr.durationSec = Math.round(
+        (new Date(nowIso) - new Date(curr.start)) / 1000
+      );
+    }
+    saveProfile(profile);
   });
 })();
