@@ -15,6 +15,68 @@
   var VISITOR_ID_KEY = 'csra_vid';
   var SESSION_TIMEOUT = 30 * 60 * 1000; // 30 min
 
+  // --- Funnel stage mapping (URL path -> TOFU/MOFU/BOFU) ---
+  // BOFU = ready to buy (audit, contact, quote, pricing)
+  // MOFU = evaluating options (comparisons, how-tos, tools, service pages)
+  // TOFU = learning (educational blog posts, glossary, guides)
+  var FUNNEL_MAP = {
+    // BOFU pages
+    '/website-audit/': 'BOFU',
+    '/contact/': 'BOFU',
+    '/quote/': 'BOFU',
+    '/roofer/': 'BOFU',
+    '/builds/': 'BOFU',
+    '/seo-agreement/': 'BOFU',
+    '/website-agreement/': 'BOFU',
+    // MOFU pages
+    '/web-design/': 'MOFU',
+    '/local-seo/': 'MOFU',
+    '/services/': 'MOFU',
+    '/service-areas/': 'MOFU',
+    '/learning-hub/': 'MOFU',
+    '/tools/lead-cost-comparison/': 'MOFU',
+    '/tools/lost-revenue-calculator/': 'MOFU',
+    '/tools/estimate-follow-up/': 'MOFU',
+    '/tools/gbp-scorecard/': 'MOFU',
+    '/tools/roofing-marketing-glossary/': 'TOFU',
+    '/guides/roofer-google-reviews/': 'MOFU',
+    '/guides/storm-damage-marketing/': 'MOFU',
+    '/about/': 'MOFU',
+    // Blog posts (by slug)
+    '/blog/roofing-website-cost/': 'MOFU',
+    '/blog/roofing-seo-cost/': 'MOFU',
+    '/blog/angi-vs-own-website-roofing-leads/': 'BOFU',
+    '/blog/does-roofing-seo-work/': 'MOFU',
+    '/blog/roofing-website-must-haves/': 'MOFU',
+    '/blog/roofing-marketing-budget/': 'MOFU',
+    '/blog/how-long-does-roofing-seo-take/': 'MOFU',
+    '/blog/best-website-platform-for-roofers/': 'MOFU',
+    '/blog/google-ads-vs-seo-cost-per-lead/': 'MOFU',
+    '/blog/what-is-local-seo-for-roofers/': 'TOFU',
+    '/blog/how-google-ranks-roofers-map-pack/': 'MOFU',
+    '/blog/roofing-website-speed-costing-leads/': 'MOFU',
+    '/blog/google-business-profile-roofers-setup/': 'MOFU',
+    '/blog/roofing-website-traffic-no-calls/': 'MOFU',
+    '/blog/how-many-roofing-leads-website/': 'MOFU',
+    '/blog/roofing-service-area-pages-seo/': 'MOFU',
+    '/blog/wix-vs-wordpress-vs-custom-roofing/': 'MOFU',
+    '/blog/thumbtack-vs-angi-vs-homeadvisor-roofing/': 'MOFU'
+  };
+
+  function getFunnelStage(path) {
+    // Exact match first
+    if (FUNNEL_MAP[path]) return FUNNEL_MAP[path];
+    // Prefix match for sub-pages
+    for (var key in FUNNEL_MAP) {
+      if (path.indexOf(key) === 0) return FUNNEL_MAP[key];
+    }
+    // Default by section
+    if (path.indexOf('/blog/') === 0) return 'MOFU'; // Most blog posts are MOFU
+    if (path.indexOf('/tools/') === 0) return 'MOFU';
+    if (path === '/') return 'MOFU'; // Homepage = evaluating
+    return 'TOFU'; // Unknown = top of funnel
+  }
+
   // --- Visitor ID (persistent, first-party) ---
   function getVisitorId() {
     var id = null;
@@ -96,6 +158,7 @@
       profile.pages.push({
         url: currentPath,
         title: document.title || currentPath,
+        funnel: getFunnelStage(currentPath),
         ts: nowIso,
         timeOnPage: null
       });
@@ -121,13 +184,21 @@
     getSummary: function() {
       var profile = getProfile();
       var pageCounts = {};
+      var funnelCounts = { TOFU: 0, MOFU: 0, BOFU: 0 };
       profile.pages.forEach(function(p) {
         pageCounts[p.url] = (pageCounts[p.url] || 0) + 1;
+        var f = p.funnel || getFunnelStage(p.url);
+        if (funnelCounts[f] !== undefined) funnelCounts[f]++;
       });
       var topPages = Object.keys(pageCounts)
         .sort(function(a, b) { return pageCounts[b] - pageCounts[a]; })
         .slice(0, 5)
         .map(function(url) { return url + ' (' + pageCounts[url] + 'x)'; });
+
+      // Determine dominant funnel stage
+      var dominant = 'TOFU';
+      if (funnelCounts.MOFU >= funnelCounts.TOFU && funnelCounts.MOFU >= funnelCounts.BOFU) dominant = 'MOFU';
+      if (funnelCounts.BOFU > funnelCounts.MOFU && funnelCounts.BOFU >= funnelCounts.TOFU) dominant = 'BOFU';
 
       return {
         visitorId: profile.vid,
@@ -135,7 +206,9 @@
         firstVisit: profile.firstVisit,
         lastVisit: profile.lastVisit,
         totalPagesViewed: profile.pages.length,
-        topPages: topPages.join('; ')
+        topPages: topPages.join('; '),
+        funnelBreakdown: 'TOFU:' + funnelCounts.TOFU + ' MOFU:' + funnelCounts.MOFU + ' BOFU:' + funnelCounts.BOFU,
+        dominantFunnel: dominant
       };
     },
 
@@ -144,6 +217,7 @@
       return 'Visits: ' + s.visitCount
         + ' | First: ' + s.firstVisit.split('T')[0]
         + ' | Pages viewed: ' + s.totalPagesViewed
+        + ' | Funnel: ' + s.funnelBreakdown + ' (' + s.dominantFunnel + ')'
         + ' | Top: ' + s.topPages;
     }
   };
