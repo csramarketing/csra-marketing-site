@@ -26,7 +26,8 @@
         'pages_viewed': String(summary.totalPagesViewed),
         'top_pages': summary.topPages,
         'funnel_breakdown': summary.funnelBreakdown,
-        'dominant_funnel': summary.dominantFunnel
+        'dominant_funnel': summary.dominantFunnel,
+        'time_on_site': summary.totalTimeFormatted
       };
 
       Object.keys(fields).forEach(function(name) {
