@@ -140,7 +140,7 @@
 
     <div class="kw-section">
       <h2>These are <span class="city-kw">your</span> keywords. This is what they cost <span class="city-kw">you</span>.</h2>
-      <p class="geo-note">Showing estimated CPCs for <strong class="city-name" style="color:#fff">your area</strong> — detected automatically</p>
+      <p class="geo-note">Showing estimated CPCs for <strong class="city-name" style="color:#fff">your area</strong> — detected automatically. Estimates based on roofing industry averages, adjusted for market size.</p>
       <div class="kw-grid" id="kwGrid"></div>
       <div class="kw-total">
         <div class="lbl">Combined monthly cost if you bid on all 8</div>
@@ -239,13 +239,34 @@
     ];
     const SEO_PRICE = 5000;
     let city = "";
+    let cpcMultiplier = 1.0;
+
+    // Market-tier CPC multipliers based on metro competitiveness
+    // Tier 1: major metros with fierce roofing ad competition
+    const TIER1 = ["atlanta", "miami", "nashville", "charlotte", "tampa", "orlando", "jacksonville", "fort lauderdale", "marietta"];
+    // Tier 3: smaller markets with less competition
+    const TIER3 = ["huntsville", "macon", "augusta", "aiken", "evans", "martinez", "grovetown", "north augusta", "athens", "gainesville", "tallahassee", "montgomery", "mobile", "chattanooga", "knoxville", "asheville", "greensboro", "winston-salem", "columbia", "madison"];
+
+    function getMultiplier(cityName) {
+      const c = cityName.toLowerCase().trim();
+      if (TIER1.some(m => c.includes(m))) return 1.25;
+      if (TIER3.some(m => c.includes(m))) return 0.75;
+      return 1.0; // Tier 2 default: mid-size markets
+    }
+
+    function adjustedCPC(base) {
+      return Math.round(base * cpcMultiplier);
+    }
 
     // Detect visitor city via IP geolocation
     async function detectCity() {
       try {
         const res = await fetch("https://ipapi.co/json/");
         const data = await res.json();
-        if (data.city) city = data.city;
+        if (data.city) {
+          city = data.city;
+          cpcMultiplier = getMultiplier(city);
+        }
       } catch (e) { /* silent fallback */ }
       renderKeywords();
       renderCalculator();
@@ -259,10 +280,11 @@
       const grid = document.getElementById("kwGrid");
       let total = 0;
       grid.innerHTML = KEYWORDS.map(k => {
-        const monthly = k.cpc * k.clicks;
+        const cpc = adjustedCPC(k.cpc);
+        const monthly = cpc * k.clicks;
         total += monthly;
         return '<div class="kw-row"><div class="kw">' + kwWithCity(k.kw) + '</div>' +
-          '<div class="cpc"><span class="amt">$' + k.cpc + '</span><span class="lbl">per click &times; ' + k.clicks + ' clicks/mo = $' + monthly.toLocaleString() + '/mo</span></div></div>';
+          '<div class="cpc"><span class="amt">$' + cpc + '</span><span class="lbl">per click &times; ' + k.clicks + ' clicks/mo = $' + monthly.toLocaleString() + '/mo</span></div></div>';
       }).join("");
       document.getElementById("kwTotal").textContent = "$" + total.toLocaleString() + "/mo";
       document.querySelectorAll(".city-name").forEach(el => {
@@ -273,10 +295,11 @@
     function renderCalculator() {
       const wrap = document.getElementById("calcKws");
       wrap.innerHTML = KEYWORDS.slice(0, 6).map((k, i) => {
+        const cpc = adjustedCPC(k.cpc);
         return '<div class="calc-kw" data-i="' + i + '">' +
-          '<div class="top"><div class="name">' + kwWithCity(k.kw) + ' <span style="color:var(--muted);font-weight:400">($' + k.cpc + '/click)</span></div>' +
-          '<div class="vals"><strong class="clickVal">' + k.clicks + '</strong> clicks/mo = <strong class="costVal">$' + (k.cpc * k.clicks).toLocaleString() + '</strong></div></div>' +
-          '<input type="range" min="0" max="200" value="' + k.clicks + '" data-cpc="' + k.cpc + '" />' +
+          '<div class="top"><div class="name">' + kwWithCity(k.kw) + ' <span style="color:var(--muted);font-weight:400">($' + cpc + '/click)</span></div>' +
+          '<div class="vals"><strong class="clickVal">' + k.clicks + '</strong> clicks/mo = <strong class="costVal">$' + (cpc * k.clicks).toLocaleString() + '</strong></div></div>' +
+          '<input type="range" min="0" max="200" value="' + k.clicks + '" data-cpc="' + cpc + '" />' +
           '</div>';
       }).join("");
 
