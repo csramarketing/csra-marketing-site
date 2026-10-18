@@ -125,6 +125,24 @@ html,body{overflow-x:hidden;max-width:100vw;}
   .page{padding:0 16px;}
   .month-label{min-width:0;flex:1;}
 }
+
+.funnel-bar-wrap{margin:0 0 18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+.funnel-bar-title{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:10px;}
+.funnel-bar{display:flex;height:28px;border-radius:999px;overflow:hidden;background:var(--gry-bg);}
+.funnel-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;min-width:0;transition:width .3s;}
+.funnel-seg.seg-tofu{background:#3b82f6;}
+.funnel-seg.seg-mofu{background:#f97316;}
+.funnel-seg.seg-bofu{background:#22c55e;}
+.funnel-legend{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;}
+.funnel-legend-item{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.funnel-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.funnel-dot.dot-tofu{background:#3b82f6;}
+.funnel-dot.dot-mofu{background:#f97316;}
+.funnel-dot.dot-bofu{background:#22c55e;}
+.funnel-legend-item strong{color:var(--navy);}
+.funnel-target{font-size:10.5px;color:var(--muted);margin-top:6px;}
+.funnel-target .on-track{color:var(--grn-tx);font-weight:700;}
+.funnel-target .off-track{color:var(--peach-tx);font-weight:700;}
 </style>
 </head>
 <body>
@@ -150,6 +168,12 @@ html,body{overflow-x:hidden;max-width:100vw;}
   <p class="hint" id="hintText"><strong>Desktop:</strong> drag a card onto another day to move it. Click a card to see details. Click its status badge to cycle it. <strong>Phone:</strong> tap a card to select it, then tap a day to move it there. <strong>Tip:</strong> tap a stat card above to filter the calendar by status; tap it again to show everything.</p>
 
   <div class="stats" id="statsRow"></div>
+  <div class="funnel-bar-wrap" id="funnelBarWrap">
+    <div class="funnel-bar-title">Funnel Distribution</div>
+    <div class="funnel-bar" id="funnelBar"></div>
+    <div class="funnel-legend" id="funnelLegend"></div>
+    <div class="funnel-target" id="funnelTarget"></div>
+  </div>
 
   <div class="cal" id="calGrid" aria-label="Blog schedule calendar"></div>
 
@@ -314,6 +338,52 @@ function renderStats(){
     statHTML(counts.ready, "Ready", "var(--amb-tx)", "ready") +
     statHTML(counts.sched, "Scheduled", "var(--gry-tx)", "sched");
 }
+
+function renderFunnel(){
+  var counts = {TOFU:0, MOFU:0, BOFU:0};
+  for (var i=0;i<POSTS.length;i++){
+    var s = POSTS[i].stage;
+    if (counts[s] !== undefined) counts[s]++;
+  }
+  var total = POSTS.length;
+  var pct = {
+    TOFU: total ? Math.round(counts.TOFU/total*100) : 0,
+    MOFU: total ? Math.round(counts.MOFU/total*100) : 0,
+    BOFU: total ? Math.round(counts.BOFU/total*100) : 0
+  };
+
+  // Target: 70% MOFU / 20% BOFU / 10% TOFU
+  var targets = {TOFU:10, MOFU:70, BOFU:20};
+
+  var bar = document.getElementById("funnelBar");
+  bar.innerHTML =
+    '<div class="funnel-seg seg-tofu" style="width:'+pct.TOFU+'%">'+(pct.TOFU>=8?pct.TOFU+'%':'')+'</div>' +
+    '<div class="funnel-seg seg-mofu" style="width:'+pct.MOFU+'%">'+(pct.MOFU>=8?pct.MOFU+'%':'')+'</div>' +
+    '<div class="funnel-seg seg-bofu" style="width:'+pct.BOFU+'%">'+(pct.BOFU>=8?pct.BOFU+'%':'')+'</div>';
+
+  var legend = document.getElementById("funnelLegend");
+  legend.innerHTML =
+    '<span class="funnel-legend-item"><span class="funnel-dot dot-tofu"></span><strong>TOFU</strong> '+counts.TOFU+' posts ('+pct.TOFU+'%)</span>' +
+    '<span class="funnel-legend-item"><span class="funnel-dot dot-mofu"></span><strong>MOFU</strong> '+counts.MOFU+' posts ('+pct.MOFU+'%)</span>' +
+    '<span class="funnel-legend-item"><span class="funnel-dot dot-bofu"></span><strong>BOFU</strong> '+counts.BOFU+' posts ('+pct.BOFU+'%)</span>';
+
+  // Check against targets (within 5% = on track)
+  function check(stage){
+    var diff = Math.abs(pct[stage] - targets[stage]);
+    return diff <= 5
+      ? '<span class="on-track">on track</span>'
+      : '<span class="off-track">'+(pct[stage] > targets[stage] ? 'over' : 'under')+' by '+diff+'%</span>';
+  }
+  var tgt = document.getElementById("funnelTarget");
+  tgt.innerHTML = 'Target: 10% TOFU / 70% MOFU / 20% BOFU &mdash; '
+    + 'TOFU ' + check('TOFU') + ' &middot; '
+    + 'MOFU ' + check('MOFU') + ' &middot; '
+    + 'BOFU ' + check('BOFU');
+}
+
+// Hook into render()
+var _origRender = render;
+render = function(){ _origRender(); renderFunnel(); };
 function statHTML(n, label, color, key){
   var active = (filterStatus === key) ? " active" : "";
   return '<div class="stat' + active + '" data-filter="' + key + '" role="button" tabindex="0" aria-pressed="' + (filterStatus===key) + '" aria-label="Filter by ' + label + '">'
