@@ -681,6 +681,17 @@
     payload.append('website', website.value.trim());
     payload.append('business', 'Learning Hub');
     payload.append('message', 'Resource: ' + currentResource + ' | Roofing Revenue Brief opt-in: ' + (newsletter ? 'Yes' : 'No'));
+    // Attach visitor history for lead enrichment
+    if (typeof CSRAVisitor !== 'undefined') {
+      try {
+        var vs = CSRAVisitor.getSummary();
+        payload.append('visitor_id', vs.visitorId);
+        payload.append('visit_count', vs.visitCount);
+        payload.append('first_visit', vs.firstVisit);
+        payload.append('pages_viewed', vs.totalPagesViewed);
+        payload.append('top_pages', vs.topPages);
+      } catch (e) {}
+    }
     fetch(FORM_ENDPOINT, {method: 'POST', mode: 'no-cors', body: payload})
       .then(function() { showSuccess(); })
       .catch(function() { showSuccess(); });
