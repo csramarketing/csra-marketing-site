@@ -143,7 +143,7 @@
       <p class="geo-note">Showing estimated CPCs for <strong class="city-name" style="color:#fff">your area</strong> — detected automatically. Estimates based on roofing industry averages, adjusted for market size.</p>
       <div class="kw-grid" id="kwGrid"></div>
       <div class="kw-total">
-        <div class="lbl">Combined monthly cost if you bid on all 8</div>
+        <div class="lbl">Combined monthly cost if you bid on all 5</div>
         <div class="amt" id="kwTotal">$0</div>
       </div>
     </div>
@@ -171,7 +171,7 @@
 
     <div class="section">
       <h2>5 money pages a month. Every month.</h2>
-      <p class="sub">We start with your highest cost-per-click keywords — the ones hurting the most — and build dedicated pages to rank for them organically. Then we keep going.</p>
+      <p class="sub">We start with your 5 highest cost-per-click keywords — the ones hurting the most — and build dedicated pages to rank for them organically. Then we keep going.</p>
       <div class="timeline">
         <div class="t-row"><div class="t-month">Month 1–2</div><div class="t-desc"><strong>10 money pages</strong> targeting your 10 most expensive keywords. Link building starts.</div></div>
         <div class="t-row"><div class="t-month">Month 3–4</div><div class="t-desc"><strong>20 money pages.</strong> First pages start ranking. Ad spend on those keywords drops.</div></div>
@@ -226,16 +226,13 @@
   <footer>© 2026 CSRA Marketing</footer>
 
   <script>
-    // Keyword data with base CPCs (national roofing averages)
+    // Top 5 keywords by CPC — aligns with 5 money pages/month promise
     const KEYWORDS = [
       { kw: "roof replacement", cpc: 48, clicks: 60 },
+      { kw: "emergency roof repair", cpc: 45, clicks: 30 },
       { kw: "roofing contractor", cpc: 42, clicks: 80 },
       { kw: "roof repair", cpc: 38, clicks: 70 },
-      { kw: "metal roofing", cpc: 35, clicks: 40 },
-      { kw: "roof installation", cpc: 33, clicks: 50 },
-      { kw: "emergency roof repair", cpc: 45, clicks: 30 },
-      { kw: "roof inspection", cpc: 22, clicks: 45 },
-      { kw: "gutter installation", cpc: 18, clicks: 35 }
+      { kw: "metal roofing", cpc: 35, clicks: 40 }
     ];
     const SEO_PRICE = 5000;
     let city = "";
@@ -294,7 +291,7 @@
 
     function renderCalculator() {
       const wrap = document.getElementById("calcKws");
-      wrap.innerHTML = KEYWORDS.slice(0, 6).map((k, i) => {
+      wrap.innerHTML = KEYWORDS.slice(0, 5).map((k, i) => {
         const cpc = adjustedCPC(k.cpc);
         return '<div class="calc-kw" data-i="' + i + '">' +
           '<div class="top"><div class="name">' + kwWithCity(k.kw) + ' <span style="color:var(--muted);font-weight:400">($' + cpc + '/click)</span></div>' +
