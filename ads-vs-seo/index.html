@@ -51,6 +51,11 @@
     .calc-section { padding: 50px 0; }
     .calc-section h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 800; text-align: center; margin: 0 0 12px; }
     .calc-section .sub { text-align: center; color: var(--muted); max-width: 650px; margin: 0 auto 36px; font-size: 17px; }
+    .calc-standout { background: linear-gradient(135deg, var(--navy) 0%, #1a3355 100%); border-radius: 20px; padding: 36px; max-width: 800px; margin: 0 auto 28px; text-align: center; color: #fff; }
+    .calc-standout .eyebrow { display: inline-block; background: var(--yellow); color: var(--navy); font-weight: 800; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 999px; margin-bottom: 16px; }
+    .calc-standout h3 { margin: 0 0 12px; font-size: clamp(20px, 3vw, 26px); }
+    .calc-standout p { color: #c8d3e0; margin: 0; font-size: 16px; max-width: 600px; margin: 0 auto; }
+    .calc-standout p strong { color: #fff; }
     .calc-box { background: var(--bg); border-radius: 20px; padding: 36px; max-width: 800px; margin: 0 auto; }
     .calc-kw { margin-bottom: 24px; }
     .calc-kw .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
@@ -149,8 +154,12 @@
     </div>
 
     <div class="calc-section">
-      <h2>Run your own numbers</h2>
-      <p class="sub">Drag the sliders to match your actual monthly clicks per keyword. Watch what you're spending versus what SEO costs.</p>
+      <div class="calc-standout">
+        <div class="eyebrow">Don't take our word for it</div>
+        <h3>Plug in your real ad numbers. See for yourself.</h3>
+        <p>Open your Google Ads account, grab your <strong>actual cost per click</strong> and <strong>monthly clicks</strong> for each keyword below, and drag the sliders to match. This is your spend — not our estimate.</p>
+      </div>
+      <p class="sub">Adjust each keyword to mirror your current campaigns. Watch what you're spending versus what it costs to own those rankings instead.</p>
       <div class="calc-box">
         <div id="calcKws"></div>
         <div class="calc-result">
@@ -181,7 +190,7 @@
       <div class="plan-box">
         <h3>Aggressive SEO Plan</h3>
         <div class="price">Starting at $5,000<span>/mo</span></div>
-        <p style="color: var(--muted); font-size: 15px;">Scoped to your keywords, your market, your competition. 6 or 12 month terms.</p>
+        <p style="color: var(--muted); font-size: 15px;">$5,000 is the floor — it's what it takes to move competitive keywords. Want to go harder? We scale up links and money pages from there. Scoped to your keywords, your market, your competition. 6 or 12 month terms.</p>
         <div class="plan-visual">
           <div class="pv-card">
             <div class="pv-icon">📄</div>
@@ -212,7 +221,7 @@
           </div>
         </div>
         <div style="margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--navy); font-size: 15px; color: var(--muted);">
-          One plan. One price. Everything it takes to replace your ad spend with rankings you own.
+          One plan. One starting price. Need more firepower? Add link budget and money pages on top — the $5,000 base is where aggressive starts.
         </div>
       </div>
     </div>
