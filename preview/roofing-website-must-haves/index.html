@@ -341,7 +341,7 @@ body{-webkit-text-size-adjust:100%;}
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var email = form.querySelector('input[name="email"]').value.trim();
-      if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
 
       var btn = form.querySelector('button');
       btn.disabled = true;
@@ -390,6 +390,7 @@ body{-webkit-text-size-adjust:100%;}
   });
 })();
 </script>
+
 
 <div class="author-box">
 <img src="/assets/kemar-lawrence.jpg" alt="Kemar Lawrence" style="width:72px;height:72px;border-radius:50%;object-fit:cover;display:block;flex:none;">
