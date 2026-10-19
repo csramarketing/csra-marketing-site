@@ -317,6 +317,78 @@ body{-webkit-text-size-adjust:100%;}
 <a href="mailto:?subject=Roofing%20Website%20Speed%3A%20How%20Slow%20Pages%20Are%20Costing%20You%20Leads&body=https%3A%2F%2Fcsramarketing.com%2Fblog%2Froofing-website-speed-costing-leads%2F" aria-label="Share by email">&#9993;</a>
 </div>
 
+<script>window.CSRA_NEWSLETTER_ENDPOINT="https://script.google.com/macros/s/AKfycbxsjD0FBuAOV2sKvgU1_L7RYkvhvJkaNCll5hsvtw5yJK4YcIgq8gYkSHe4VDhRjKvk/exec";</script>
+<!-- CSRA Newsletter Signup - Drop-in component for blog posts -->
+<!-- Requires: visitor-track.js and form-helper.js (auto-attaches visitor data) -->
+<div class="csra-newsletter-box" style="margin:40px 0;padding:32px 28px;background:#10233f;border-radius:16px;text-align:center;">
+  <h3 style="color:#fff;font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;margin:0 0 8px;">Get the Roofing Revenue Brief</h3>
+  <p style="color:#c8d0de;font-family:'Poppins',sans-serif;font-size:15px;margin:0 0 20px;line-height:1.6;">One practical marketing tip for roofers, every month. No fluff, no spam.</p>
+  <form class="csra-newsletter-form" style="display:flex;gap:10px;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center;">
+    <input type="email" name="email" placeholder="Your email address" required
+      style="flex:1;min-width:200px;padding:13px 18px;border:none;border-radius:50px;font-family:'Poppins',sans-serif;font-size:15px;outline:none;">
+    <button type="submit"
+      style="background:#ffcc00;color:#10233f;font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;padding:13px 28px;border:none;border-radius:50px;cursor:pointer;white-space:nowrap;">Subscribe</button>
+  </form>
+  <p class="csra-newsletter-success" style="display:none;color:#4ade80;font-family:'Poppins',sans-serif;font-size:15px;margin:16px 0 0;">You're in. Check your inbox for a confirmation.</p>
+  <p class="csra-newsletter-error" style="display:none;color:#ff705c;font-family:'Poppins',sans-serif;font-size:14px;margin:16px 0 0;">Something went wrong. Please try again.</p>
+</div>
+<script>
+(function(){
+  var forms = document.querySelectorAll('.csra-newsletter-form');
+  forms.forEach(function(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = form.querySelector('input[name="email"]').value.trim();
+      if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return;
+
+      var btn = form.querySelector('button');
+      btn.disabled = true;
+      btn.textContent = 'Subscribing...';
+
+      var payload = new URLSearchParams();
+      payload.append('email', email);
+      payload.append('source', 'blog_newsletter');
+      payload.append('page', window.location.pathname);
+
+      // Attach visitor data
+      if (typeof CSRAVisitor !== 'undefined') {
+        try {
+          var vs = CSRAVisitor.getSummary();
+          payload.append('visitor_id', vs.visitorId);
+          payload.append('visit_count', vs.visitCount);
+          payload.append('first_visit', vs.firstVisit);
+          payload.append('pages_viewed', vs.totalPagesViewed);
+          payload.append('top_pages', vs.topPages);
+          payload.append('funnel_breakdown', vs.funnelBreakdown);
+          payload.append('dominant_funnel', vs.dominantFunnel);
+          payload.append('time_on_site', vs.totalTimeFormatted);
+        } catch(err) {}
+      }
+
+      // Submit to newsletter endpoint (set via window.CSRA_NEWSLETTER_ENDPOINT or default)
+      var endpoint = window.CSRA_NEWSLETTER_ENDPOINT || '';
+      if (!endpoint) {
+        console.warn('Newsletter endpoint not configured');
+        return;
+      }
+
+      fetch(endpoint, {method:'POST', mode:'no-cors', body:payload})
+        .then(function(){
+          form.style.display = 'none';
+          var box = form.closest('.csra-newsletter-box');
+          box.querySelector('.csra-newsletter-success').style.display = 'block';
+        })
+        .catch(function(){
+          var box = form.closest('.csra-newsletter-box');
+          box.querySelector('.csra-newsletter-error').style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Subscribe';
+        });
+    });
+  });
+})();
+</script>
+
 <div class="author-box">
 <img src="/assets/kemar-lawrence.jpg" alt="Kemar Lawrence" style="width:144px;height:144px;border-radius:50%;object-fit:cover;flex:none;">
 <div>
