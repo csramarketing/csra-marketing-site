@@ -335,7 +335,7 @@ body{font-size:16px;}
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var email = form.querySelector('input[name="email"]').value.trim();
-      if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
 
       var btn = form.querySelector('button');
       btn.disabled = true;
@@ -384,6 +384,7 @@ body{font-size:16px;}
   });
 })();
 </script>
+
 
 <div class="author-box">
 <img src="https://csramarketing.com/assets/kemar-lawrence.jpg" alt="Kemar Lawrence" style="width:144px;height:auto;display:block;">
