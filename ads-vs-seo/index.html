@@ -111,6 +111,13 @@
     .cta-section { text-align: center; padding: 60px 20px; background: var(--bg); border-radius: 20px; margin: 40px 0 60px; }
     .cta-section h2 { margin: 0 0 12px; }
     .cta-section p { color: var(--muted); max-width: 550px; margin: 0 auto 28px; }
+    .own-section { padding: 20px 0 50px; }
+    .own-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; margin: 0 auto; }
+    .own-card { text-align: center; padding: 28px 20px; }
+    .own-card .own-icon { font-size: 40px; margin-bottom: 12px; }
+    .own-card h3 { margin: 0 0 10px; font-size: 18px; }
+    .own-card p { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.5; }
+    @media (max-width: 600px) { .own-grid { grid-template-columns: 1fr; } }
     footer { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 13px; border-top: 1px solid #eee; }
     @media (max-width: 600px) {
       .kw-section { padding: 28px 18px; }
@@ -222,6 +229,30 @@
         </div>
         <div style="margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--navy); font-size: 15px; color: var(--muted);">
           One plan. One starting price. Need more firepower? Add link budget and money pages on top — the $5,000 base is where aggressive starts.
+        </div>
+      </div>
+    </div>
+
+    <div class="own-section">
+      <div class="section">
+        <h2>We don't touch your website.</h2>
+        <p class="sub">Your site stays exactly how it is. We build you a separate engine — on your subdomain, under your brand — that you own outright.</p>
+      </div>
+      <div class="own-grid">
+        <div class="own-card">
+          <div class="own-icon">🏠</div>
+          <h3>Your subdomain, your brand</h3>
+          <p>Pages live on a subdomain of your domain (like get.yourcompany.com). Your branding, your phone number, your business. Looks like you, because it is you.</p>
+        </div>
+        <div class="own-card">
+          <div class="own-icon">🔑</div>
+          <h3>You own everything</h3>
+          <p>Every page, every word, every link we build is yours. When the campaign ends, we hand over all logins and files. Your IT person takes it from there — no strings attached.</p>
+        </div>
+        <div class="own-card">
+          <div class="own-icon">⚡</div>
+          <h3>Zero hassle to start</h3>
+          <p>One DNS record from your domain provider — takes five minutes. After that, we handle everything. No CMS logins, no developer bottlenecks, no waiting.</p>
         </div>
       </div>
     </div>
