@@ -42,6 +42,7 @@
         --ink: #1d2735;
         --muted: #5d6b7d;
         --line: #e3e9f1;
+        --field-bg: #f8fafc;
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { background: #ffffff; }
@@ -54,14 +55,43 @@
       h1 .coral { color: var(--coral); }
       .sub { color: var(--muted); font-size: 17px; text-align: center; max-width: 620px; margin: 0 auto; }
       .sub strong { color: var(--navy); }
-      .assurances { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 28px 0 8px; }
+      .assurances { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 28px 0 4px; }
       .assurances span { background: #f6f8fb; border: 1px solid var(--line); color: var(--navy); font-size: 13.5px; font-weight: 600; padding: 8px 14px; border-radius: 999px; }
       .assurances span::before { content: "\2713  "; color: var(--coral); font-weight: 800; }
-      .form-card { background: #ffffff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 40px rgba(16, 35, 63, 0.08); margin: 30px 0 8px; overflow: hidden; }
-      .form-card iframe { display: block; width: 100%; border: 0; }
-      .fallback { text-align: center; color: var(--muted); font-size: 14px; margin: 14px 0 0; }
-      .fallback a { color: var(--navy); font-weight: 600; text-decoration: underline; text-decoration-color: var(--coral); text-decoration-thickness: 2px; text-underline-offset: 3px; }
-      .next { max-width: 760px; margin: 0 auto; padding: 8px 20px 56px; }
+
+      .form-card { background: #ffffff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 12px 40px rgba(16, 35, 63, 0.08); margin: 30px 0 8px; padding: 34px 34px 30px; }
+      .q { margin-bottom: 30px; }
+      .q:last-of-type { margin-bottom: 8px; }
+      .q-label { display: block; color: var(--navy); font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+      .q-help { color: var(--muted); font-size: 13.5px; margin-bottom: 12px; }
+      .options { display: grid; gap: 10px; margin-top: 12px; }
+      .opt { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 16px; cursor: pointer; font-size: 15px; color: var(--ink); background: #ffffff; transition: border-color .15s, background .15s; }
+      .opt:hover { border-color: #b9c7d8; }
+      .opt input { position: absolute; opacity: 0; pointer-events: none; }
+      .opt .dot { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #c3cfdd; background: #ffffff; position: relative; }
+      .opt:has(input:checked) { border-color: var(--navy); background: #f2f6fb; font-weight: 600; color: var(--navy); }
+      .opt:has(input:checked) .dot { border-color: var(--coral); }
+      .opt:has(input:checked) .dot::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--coral); }
+      .opt:has(input:focus-visible) { outline: 2px solid var(--coral); outline-offset: 2px; }
+      select, input[type="email"], textarea { width: 100%; font-family: inherit; font-size: 15.5px; color: var(--ink); background: var(--field-bg); border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-top: 12px; appearance: none; }
+      select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310233f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 16px center; background-size: 18px; padding-right: 48px; }
+      select:focus, input[type="email"]:focus, textarea:focus { outline: none; border-color: var(--navy); background: #ffffff; box-shadow: 0 0 0 3px rgba(255, 112, 92, 0.18); }
+      textarea { resize: vertical; min-height: 90px; }
+      .q.invalid .q-label { color: #c22f1f; }
+      .q.invalid select, .q.invalid input[type="email"] { border-color: #c22f1f; }
+      .q.invalid .options { outline: 1.5px solid #c22f1f; outline-offset: 4px; border-radius: 14px; }
+      .hp { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 1px; width: 1px; }
+      .submit-btn { width: 100%; background: var(--yellow); color: var(--navy); border: none; border-radius: 999px; font-family: inherit; font-size: 17px; font-weight: 700; padding: 17px 24px; cursor: pointer; margin-top: 14px; transition: background .15s, transform .15s; }
+      .submit-btn:hover { background: var(--yellow-hover); transform: translateY(-1px); }
+      .submit-btn:disabled { opacity: .65; cursor: wait; transform: none; }
+      .fineprint { text-align: center; color: var(--muted); font-size: 13px; margin-top: 14px; }
+      .form-error { display: none; background: #fdf0ee; border: 1px solid #f3c1b8; color: #8f2317; border-radius: 14px; padding: 13px 16px; font-size: 14.5px; margin-top: 18px; }
+      .form-success { display: none; text-align: center; padding: 30px 10px 14px; }
+      .form-success .check { width: 64px; height: 64px; border-radius: 50%; background: var(--coral); color: #ffffff; font-size: 32px; font-weight: 800; line-height: 64px; margin: 0 auto 16px; }
+      .form-success h2 { color: var(--navy); font-size: 24px; margin-bottom: 8px; }
+      .form-success p { color: var(--muted); font-size: 15.5px; max-width: 440px; margin: 0 auto; }
+
+      .next { max-width: 760px; margin: 0 auto; padding: 26px 20px 56px; }
       .next h2 { color: var(--navy); font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 18px; }
       .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
       .next-card { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: #ffffff; }
@@ -74,6 +104,7 @@
       .site-footer-tag { color: #6b7280; font-size: 15px; margin: 0; }
       @media (max-width: 640px) {
         main { padding: 36px 14px 16px; }
+        .form-card { padding: 26px 20px 24px; border-radius: 18px; }
         .next-grid { grid-template-columns: 1fr; }
         .site-header img { height: 40px; }
       }
@@ -96,9 +127,92 @@
       </div>
 
       <div class="form-card">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdAIluoz2O9y9abQ1BmTuHT40NeevlbRxXbdyCQd8zyZe8cFA/viewform?embedded=true" height="1500" title="The 2026 Roofing Marketing Survey" loading="lazy">Loading the survey…</iframe>
+        <form id="survey-form" novalidate>
+          <div class="q" id="q-state">
+            <label class="q-label" for="f-state">What state is your company based in?</label>
+            <select id="f-state" name="state" required>
+              <option value="" selected disabled>Choose your state</option>
+              <option>AL</option><option>CA</option><option>CO</option><option>FL</option>
+              <option>GA</option><option>IL</option><option>NC</option><option>NY</option>
+              <option>OH</option><option>PA</option><option>SC</option><option>TN</option>
+              <option>TX</option><option>WA</option><option>Other</option>
+            </select>
+          </div>
+
+          <div class="q" id="q-headache">
+            <span class="q-label">What is your biggest marketing headache right now?</span>
+            <div class="options">
+              <label class="opt"><input type="radio" name="headache" value="I don't get enough leads consistently"><span class="dot"></span>I don't get enough leads consistently</label>
+              <label class="opt"><input type="radio" name="headache" value="The leads I get are too cheap or not serious buyers"><span class="dot"></span>The leads I get are too cheap or not serious buyers</label>
+              <label class="opt"><input type="radio" name="headache" value="Marketing costs too much for what I get back"><span class="dot"></span>Marketing costs too much for what I get back</label>
+              <label class="opt"><input type="radio" name="headache" value="I can't tell what's actually working"><span class="dot"></span>I can't tell what's actually working</label>
+              <label class="opt"><input type="radio" name="headache" value="My slow season is too slow"><span class="dot"></span>My slow season is too slow</label>
+              <label class="opt"><input type="radio" name="headache" value="I rely on referrals and can't control the volume"><span class="dot"></span>I rely on referrals and can't control the volume</label>
+              <label class="opt"><input type="radio" name="headache" value="My competitors are beating me online"><span class="dot"></span>My competitors are beating me online</label>
+              <label class="opt"><input type="radio" name="headache" value="Other"><span class="dot"></span>Other</label>
+            </div>
+          </div>
+
+          <div class="q" id="q-source">
+            <span class="q-label">Where do most of your jobs come from today?</span>
+            <div class="options">
+              <label class="opt"><input type="radio" name="job_source" value="Referrals and word of mouth"><span class="dot"></span>Referrals and word of mouth</label>
+              <label class="opt"><input type="radio" name="job_source" value="Google search"><span class="dot"></span>Google search</label>
+              <label class="opt"><input type="radio" name="job_source" value="Google Ads"><span class="dot"></span>Google Ads</label>
+              <label class="opt"><input type="radio" name="job_source" value="Facebook"><span class="dot"></span>Facebook</label>
+              <label class="opt"><input type="radio" name="job_source" value="Angi or HomeAdvisor"><span class="dot"></span>Angi or HomeAdvisor</label>
+              <label class="opt"><input type="radio" name="job_source" value="Insurance adjuster or storm referral network"><span class="dot"></span>Insurance adjuster or storm referral network</label>
+              <label class="opt"><input type="radio" name="job_source" value="Door knocking and yard signs"><span class="dot"></span>Door knocking and yard signs</label>
+              <label class="opt"><input type="radio" name="job_source" value="Other"><span class="dot"></span>Other</label>
+            </div>
+          </div>
+
+          <div class="q" id="q-spend">
+            <span class="q-label">About how much do you spend on marketing each month?</span>
+            <div class="options">
+              <label class="opt"><input type="radio" name="spend" value="$0 - I don't pay for marketing"><span class="dot"></span>$0 — I don't pay for marketing</label>
+              <label class="opt"><input type="radio" name="spend" value="Under $500"><span class="dot"></span>Under $500</label>
+              <label class="opt"><input type="radio" name="spend" value="$500 to $1,500"><span class="dot"></span>$500 to $1,500</label>
+              <label class="opt"><input type="radio" name="spend" value="$1,500 to $5,000"><span class="dot"></span>$1,500 to $5,000</label>
+              <label class="opt"><input type="radio" name="spend" value="Over $5,000"><span class="dot"></span>Over $5,000</label>
+              <label class="opt"><input type="radio" name="spend" value="Rather not say"><span class="dot"></span>Rather not say</label>
+            </div>
+          </div>
+
+          <div class="q" id="q-sentiment">
+            <span class="q-label">How do you feel about your current marketing results?</span>
+            <div class="options">
+              <label class="opt"><input type="radio" name="sentiment" value="I'm getting plenty of good leads and I want to grow"><span class="dot"></span>I'm getting plenty of good leads and I want to grow</label>
+              <label class="opt"><input type="radio" name="sentiment" value="It's working okay but I know I could do better"><span class="dot"></span>It's working okay but I know I could do better</label>
+              <label class="opt"><input type="radio" name="sentiment" value="I'm struggling and need more jobs"><span class="dot"></span>I'm struggling and need more jobs</label>
+              <label class="opt"><input type="radio" name="sentiment" value="I honestly don't know if my marketing is working"><span class="dot"></span>I honestly don't know if my marketing is working</label>
+            </div>
+          </div>
+
+          <div class="q" id="q-email">
+            <label class="q-label" for="f-email">Where should we send your free report?</label>
+            <p class="q-help">Your email. The full 2026 Roofing Marketing Report lands there the day it publishes.</p>
+            <input type="email" id="f-email" name="email" placeholder="you@yourroofingcompany.com" autocomplete="email" required>
+          </div>
+
+          <div class="q">
+            <label class="q-label" for="f-anything">Anything else you want to tell us? <span style="color: var(--muted); font-weight: 500;">(Optional)</span></label>
+            <textarea id="f-anything" name="anything_else" placeholder="Your biggest frustration, in your own words..."></textarea>
+          </div>
+
+          <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button type="submit" class="submit-btn" id="submit-btn">Send My Answers</button>
+          <p class="fineprint">No pitch, no spam. Your answers only go into the report data, and the report is the only email you will get about this.</p>
+          <div class="form-error" id="form-error">Something went wrong sending your answers. Please try again, or email us at kemar.csramarketing@gmail.com.</div>
+        </form>
+
+        <div class="form-success" id="form-success">
+          <div class="check">✓</div>
+          <h2>You're in.</h2>
+          <p>Thanks for adding your voice. Your answers are counted, and the full 2026 Roofing Marketing Report will land in your inbox the day it publishes.</p>
+        </div>
       </div>
-      <p class="fallback">Survey not loading? <a href="https://docs.google.com/forms/d/e/1FAIpQLSdAIluoz2O9y9abQ1BmTuHT40NeevlbRxXbdyCQd8zyZe8cFA/viewform" target="_blank" rel="noopener noreferrer">Open it in a new tab</a></p>
     </main>
 
     <section class="next">
@@ -118,5 +232,103 @@
 
     <script src="/assets/js/visitor-track.js"></script>
     <script src="/assets/js/form-helper.js"></script>
+    <script>
+      (function() {
+        var SURVEY_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBj1pDZJ1GILa4zFl_Vcy-CG9PWXwY0odLxnK5dDlp-Rms18-sdM_ARl0BPyh7qVFQ8g/exec';
+        var form = document.getElementById('survey-form');
+        var submitBtn = document.getElementById('submit-btn');
+        var errorBox = document.getElementById('form-error');
+        var successBox = document.getElementById('form-success');
+
+        function radioValue(name) {
+          var el = form.querySelector('input[name="' + name + '"]:checked');
+          return el ? el.value : '';
+        }
+        function markInvalid(id, invalid) {
+          document.getElementById(id).classList.toggle('invalid', invalid);
+        }
+
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          errorBox.style.display = 'none';
+
+          var state = document.getElementById('f-state').value;
+          var headache = radioValue('headache');
+          var jobSource = radioValue('job_source');
+          var spend = radioValue('spend');
+          var sentiment = radioValue('sentiment');
+          var email = document.getElementById('f-email').value.trim();
+
+          var firstInvalid = null;
+          [['q-state', state], ['q-headache', headache], ['q-source', jobSource], ['q-spend', spend], ['q-sentiment', sentiment], ['q-email', email]].forEach(function(pair) {
+            var bad = !pair[1];
+            if (pair[0] === 'q-email' && pair[1] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pair[1])) bad = true;
+            markInvalid(pair[0], bad);
+            if (bad && !firstInvalid) firstInvalid = pair[0];
+          });
+          if (firstInvalid) {
+            document.getElementById(firstInvalid).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+          }
+
+          var payload = new URLSearchParams();
+          payload.append('state', state);
+          payload.append('headache', headache);
+          payload.append('job_source', jobSource);
+          payload.append('spend', spend);
+          payload.append('sentiment', sentiment);
+          payload.append('email', email);
+          payload.append('anything_else', document.getElementById('f-anything').value.trim());
+          payload.append('company_website', form.querySelector('input[name="company_website"]').value);
+
+          // Visitor enrichment + Meta attribution (mirrors form-helper.js fields)
+          try {
+            if (typeof CSRAVisitor !== 'undefined') {
+              var s = CSRAVisitor.getSummary();
+              payload.append('visitor_id', s.visitorId || '');
+              payload.append('visit_count', String(s.visitCount || ''));
+              payload.append('pages_viewed', String(s.totalPagesViewed || ''));
+              payload.append('traffic_source', s.trafficSource || '');
+              payload.append('email_token', s.emailToken || '');
+              payload.append('email_src', s.emailSource || '');
+              payload.append('meta_fbp', s.metaFbp || '');
+              payload.append('meta_fbc', s.metaFbc || '');
+              payload.append('utm_source', s.utmSource || '');
+              payload.append('utm_medium', s.utmMedium || '');
+              payload.append('utm_campaign', s.utmCampaign || '');
+            }
+          } catch (e) { /* tracking unavailable, submit anyway */ }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending...';
+
+          fetch(SURVEY_FORM_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: payload.toString()
+          }).then(function(response) {
+            if (!response.ok) throw new Error('send failed');
+            return response.json();
+          }).then(function(result) {
+            if (result && result.ok === false) throw new Error(result.error || 'send failed');
+            form.style.display = 'none';
+            successBox.style.display = 'block';
+            successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: '2026 Roofing Marketing Survey' });
+            if (typeof gtag === 'function') gtag('event', 'survey_submit', { event_category: 'survey', event_label: state });
+          }).catch(function() {
+            errorBox.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send My Answers';
+          });
+        });
+
+        // Clear invalid styling as soon as a question gets answered
+        form.addEventListener('change', function(e) {
+          var q = e.target.closest('.q');
+          if (q) q.classList.remove('invalid');
+        });
+      })();
+    </script>
   </body>
 </html>
