@@ -104,6 +104,43 @@
       + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
   }
 
+  // --- Meta / ad attribution bridge ---
+  // Reads Meta's own cookies (_fbp browser ID, _fbc click ID) plus
+  // first-touch UTM/fbclid params, so the site's own data and the
+  // Meta Pixel enrich each other in both directions.
+  function readMetaCookies() {
+    return {
+      fbp: getCookie('_fbp'),
+      fbc: getCookie('_fbc')
+    };
+  }
+
+  function readQueryParams() {
+    var q = {};
+    try {
+      var s = window.location.search.substring(1).split('&');
+      for (var i = 0; i < s.length; i++) {
+        if (!s[i]) continue;
+        var kv = s[i].split('=');
+        q[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || '');
+      }
+    } catch (e) {}
+    return q;
+  }
+
+  function describeTrafficSource(profile) {
+    var utm = profile.firstUtm || {};
+    if (profile.firstFbclid) {
+      var label = 'Meta ad click';
+      if (utm.campaign) label += ' — campaign: ' + utm.campaign;
+      return label;
+    }
+    if (utm.source) {
+      return 'UTM: ' + utm.source + '/' + (utm.medium || '-') + (utm.campaign ? ' (' + utm.campaign + ')' : '');
+    }
+    return 'Direct / organic (no ad click recorded)';
+  }
+
   // --- Visitor profile ---
   function getProfile() {
     var profile = null;
@@ -165,6 +202,25 @@
     }
     profile.lastVisit = nowIso;
 
+    // --- Meta bridge: capture ad attribution (pixel -> site data) ---
+    try {
+      var metaCookies = readMetaCookies();
+      profile.meta = profile.meta || {};
+      if (metaCookies.fbp) profile.meta.fbp = metaCookies.fbp;
+      if (metaCookies.fbc) profile.meta.fbc = metaCookies.fbc;
+      // First-touch attribution (landing page + UTM + fbclid)
+      var qp = readQueryParams();
+      if (!profile.firstLanding) {
+        profile.firstLanding = window.location.pathname;
+        profile.firstUtm = {
+          source: qp.utm_source || '',
+          medium: qp.utm_medium || '',
+          campaign: qp.utm_campaign || ''
+        };
+        if (qp.fbclid) profile.firstFbclid = qp.fbclid;
+      }
+    } catch (attrErr) {}
+
     // Record time on previous page
     if (profile.pages.length > 0) {
       var lastPage = profile.pages[profile.pages.length - 1];
@@ -197,6 +253,23 @@
     }
 
     saveProfile(profile);
+
+    // --- Meta bridge: funnel stage feeds the pixel (site data -> Meta) ---
+    if (typeof fbq === 'function') {
+      try {
+        fbq('track', 'ViewContent', {
+          content_name: (document.title || window.location.pathname).substring(0, 120),
+          content_category: getFunnelStage(window.location.pathname)
+        });
+        // First BOFU page reached this session = strong retargeting signal
+        var sessRec = profile.sessions[profile.sessions.length - 1];
+        if (getFunnelStage(window.location.pathname) === 'BOFU' && sessRec && !sessRec.metaBofuFired) {
+          fbq('trackCustom', 'BOFUPageView', { page: window.location.pathname });
+          sessRec.metaBofuFired = true;
+          saveProfile(profile);
+        }
+      } catch (fbqErr) {}
+    }
 
     // Fire GA4 event if gtag exists
     if (typeof gtag === 'function') {
@@ -240,6 +313,15 @@
         return 'Session ' + (idx + 1) + ' (' + date + '): ' + dur + ', ' + (s.pagesViewed || 0) + ' pages';
       }).join('; ');
 
+      // Refresh Meta cookies at summary time (pixel may have set them
+      // after the pageview), so form submissions always carry the latest.
+      try {
+        var liveMeta = readMetaCookies();
+        profile.meta = profile.meta || {};
+        if (liveMeta.fbp) profile.meta.fbp = liveMeta.fbp;
+        if (liveMeta.fbc) profile.meta.fbc = liveMeta.fbc;
+      } catch (e) {}
+
       return {
         visitorId: profile.vid,
         visitCount: profile.visitCount,
@@ -251,7 +333,14 @@
         dominantFunnel: dominant,
         totalTimeSeconds: totalSeconds,
         totalTimeFormatted: totalTime,
-        sessionBreakdown: sessionList
+        sessionBreakdown: sessionList,
+        trafficSource: describeTrafficSource(profile),
+        metaFbp: (profile.meta && profile.meta.fbp) || '',
+        metaFbc: (profile.meta && profile.meta.fbc) || '',
+        fbclid: profile.firstFbclid || '',
+        utmSource: (profile.firstUtm && profile.firstUtm.source) || '',
+        utmMedium: (profile.firstUtm && profile.firstUtm.medium) || '',
+        utmCampaign: (profile.firstUtm && profile.firstUtm.campaign) || ''
       };
     },
 
