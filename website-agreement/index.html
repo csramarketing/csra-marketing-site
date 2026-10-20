@@ -127,6 +127,22 @@
       .sign-section { margin-top: 36px; padding-top: 30px; border-top: 2px solid var(--line); }
       .sign-section h2 { font-size: 20px; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
       .sign-section .hint { font-size: 14px; color: var(--muted); margin: 0 0 22px; }
+      .what-you-get {
+        margin-top: 36px; background: #fffdf6; border: 2px solid #f3e3b3;
+        border-radius: 16px; padding: 22px 24px;
+      }
+      .what-you-get h2 { font-size: 18px; font-weight: 800; color: var(--navy); margin: 0 0 12px; }
+      .what-you-get ul { list-style: none; padding: 0; margin: 0; }
+      .what-you-get li {
+        display: flex; gap: 10px; align-items: flex-start;
+        font-size: 15px; color: var(--ink); line-height: 1.5; margin: 0 0 10px;
+      }
+      .what-you-get li:last-child { margin-bottom: 0; }
+      .what-you-get .check {
+        flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--coral); color: #fff; font-size: 13px; font-weight: 700;
+        display: inline-flex; align-items: center; justify-content: center; margin-top: 1px;
+      }
       .field { margin-bottom: 18px; }
       .field label { display: block; font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 7px; }
       .field input[type="text"],
@@ -216,7 +232,7 @@
             <p>Your website will be designed, built, and delivered within 7 days of receiving all required content from you (logo, photos, service descriptions, and contact details). The 7-day clock starts when we confirm we have everything we need. If content is delayed, the timeline shifts by the same number of days.</p>
 
             <h2><span class="num">3</span>Payment</h2>
-            <p>The total project fee is $2,500, due as follows: 50% ($1,250) to begin work, and the remaining 50% ($1,250) on delivery before the site goes live. We accept payment via the Stripe link in your proposal. Work begins when the deposit clears.</p>
+            <p>The total project fee is $2,500, due as follows: 60% ($1,500) to begin work, and the remaining 40% ($1,000) on delivery before the site goes live. We accept payment via the Stripe link in your proposal. Work begins when the deposit clears.</p>
 
             <h2><span class="num">4</span>Revision Rounds</h2>
             <p>Your project includes 2 revision rounds after the initial design is presented. A revision round means one consolidated list of changes from you, which we implement together. Additional revision rounds are $250 each. Structural changes requested after approval (new pages beyond the 9 included, full redesigns, new features) are quoted separately.</p>
@@ -228,10 +244,21 @@
             <p>Once the final payment clears, you own everything: the website design, all content we created for it, and any accounts set up on your behalf. If you cancel before completion, you own all work completed up to the cancellation date, and the deposit is non-refundable.</p>
 
             <h2><span class="num">7</span>Domain and Hosting</h2>
-            <p>You are responsible for your own domain registration and hosting costs (typically $15-20/year for the domain; hosting varies). We will connect your new site to your domain at no extra charge and recommend reliable, affordable hosting options if you do not have one.</p>
+            <p>You are responsible for your own domain registration and hosting costs. We will connect your new site to your domain at no extra charge and recommend reliable, affordable hosting options if you do not have one. We do not offer hosting as a standalone service. Managed hosting is available exclusively through our Website Care Plan ($65/month, includes managed hosting, SSL, performance monitoring, and 3 change credits per month). If you cancel the Care Plan or no longer want us to manage your site, we will help you move your site to your preferred hosting provider at no extra charge.</p>
 
             <h2><span class="num">8</span>Limitation of Liability</h2>
             <p>Our total liability under this agreement is limited to the fees paid. We are not liable for indirect, incidental, or consequential damages, including lost profits or business interruption.</p>
+          </div>
+
+          <div class="what-you-get" id="what-you-get">
+            <h2>What you get</h2>
+            <ul>
+              <li><span class="check">&#10003;</span><span id="wyg-website">Website Design &#8212; 9 pages</span></li>
+              <li><span class="check">&#10003;</span><span id="wyg-delivery">Delivery in 7 days</span></li>
+              <li><span class="check">&#10003;</span><span id="wyg-revisions">2 revision rounds included</span></li>
+              <li><span class="check">&#10003;</span><span id="wyg-price">$2,500 one-time</span></li>
+              <li id="wyg-extras-row" hidden><span class="check">&#10003;</span><span id="wyg-extras"></span></li>
+            </ul>
           </div>
 
           <div class="sign-section">
@@ -261,7 +288,7 @@
               </div>
               <label class="check-row">
                 <input type="checkbox" id="agree" required />
-                <span>I have read the Website Design Agreement above and agree to its terms ($2,500 one-time, 9 pages, delivered in 7 days).</span>
+                <span>I have read the Website Design Agreement above and agree to its terms.</span>
               </label>
               <div class="field">
                 <label for="signature">Type your full name as your electronic signature</label>
@@ -289,6 +316,116 @@
       <p class="site-footer-tag">Contractor Search &amp; Revenue Agency</p>
     </footer>
 
+    <script>
+      // Dynamic quote params: ?client=&price=&pages=&revisions=&extras=&billing=
+      // Applied before the form script below so all fields stay wired.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var priceParam = params.get("price");
+        var pagesParam = params.get("pages");
+        var revisionsParam = params.get("revisions");
+        var extrasParam = params.get("extras");
+        var billingParam = params.get("billing");
+        var view = document.getElementById("agreement-view");
+        if (!view) return;
+        function esc(s) {
+          return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+        function fmt(n) { return "$" + n.toLocaleString("en-US"); }
+        // Parse the quoted price once.
+        var priceVal = 0;
+        if (priceParam) {
+          var _pv = parseFloat(String(priceParam).replace(/[^0-9.]/g, ""));
+          if (!isNaN(_pv) && _pv > 0) priceVal = _pv;
+        }
+        // The Sign Agreement button always shows the dollar amount being signed for.
+        var btnPrice = priceVal > 0 ? priceVal : 2500;
+        var btnLabel = "Sign Agreement - " + fmt(btnPrice) + (billingParam === "recurring" ? "/mo" : "");
+        var hasParams = priceParam || pagesParam || revisionsParam || extrasParam || billingParam;
+        var html = view.innerHTML;
+        if (priceVal > 0) {
+          html = html.split("$2,500").join(fmt(priceVal));
+          var _dep = Math.round(priceVal * 0.6);
+          var _rem = priceVal - _dep;
+          html = html.split("$1,500").join(fmt(_dep));
+          html = html.split("$1,000").join(fmt(_rem));
+        }
+        if (pagesParam) {
+          var n = parseInt(pagesParam, 10);
+          if (!isNaN(n) && n > 0) {
+            // Single-pass replacement (longest match first): split/join in sequence
+            // would match inside its own output ("9 pages" -> "29 pages" contains
+            // "9 pages", producing "229 pages").
+            html = html.replace(/9-page|9 pages|9 page/g, function (m) {
+              return m === "9-page" ? n + "-page" : m === "9 pages" ? n + " pages" : n + " page";
+            });
+            html = html.split("the 9 included").join("the " + n + " included");
+            if (n !== 9) {
+              html = html.split("plus 3 additional pages of your choice")
+                .join("plus " + (n - 6) + " additional pages of your choice");
+            }
+            var extraPages = n - 9;
+            if (extraPages > 0) {
+              var days = 7 + extraPages * 2;
+              html = html.split("7 days").join(days + " days");
+              html = html.split("7-day").join(days + "-day");
+            }
+          }
+        }
+        if (revisionsParam) {
+          var rv = parseInt(revisionsParam, 10);
+          if (!isNaN(rv) && rv > 0 && rv !== 2) {
+            var rvLabel = rv === 1 ? "1 revision round" : rv + " revision rounds";
+            html = html.split("2 revision rounds").join(rvLabel);
+            html = html.replace(
+              /delivered in (\d+ days?)\)\./,
+              function (m, d) { return "delivered in " + d + ", " + rvLabel + ")."; }
+            );
+          }
+        }
+        if (extrasParam) {
+          html = html.replace(
+            '<div class="key-facts">',
+            '<div class="key-facts">\n            <span class="extra-scope">Plus: ' + esc(extrasParam) + '</span>'
+          );
+        }
+        if (billingParam === "recurring") {
+          html = html.split(" one time</span>").join("/month</span>");
+          html = html.split(" one-time,").join("/month,");
+          html = html.replace(
+            /<p>The total project fee is \$[^<]*due as follows: 60%[^<]*<\/p>/,
+            "<p>The fee is " + (priceVal > 0 ? fmt(priceVal) : "as quoted") + " per month, billed monthly. The first month is due when you sign, and work begins when payment clears. You may cancel with 30 days written notice.</p>"
+          );
+        }
+        if (hasParams) view.innerHTML = html;
+        // Populate the "What you get" summary from the quoted values.
+        var pagesVal = 9, daysVal = 7, revVal = 2;
+        if (pagesParam) { var _pg = parseInt(pagesParam, 10); if (!isNaN(_pg) && _pg > 0) pagesVal = _pg; }
+        if (pagesVal > 9) daysVal = 7 + (pagesVal - 9) * 2;
+        if (revisionsParam) { var _rv = parseInt(revisionsParam, 10); if (!isNaN(_rv) && _rv > 0) revVal = _rv; }
+        var wygPrice = priceVal > 0 ? fmt(priceVal) : "$2,500";
+        var wygBill = billingParam === "recurring" ? "/mo" : " total";
+        var wWebsite = document.getElementById("wyg-website");
+        var wDelivery = document.getElementById("wyg-delivery");
+        var wRevisions = document.getElementById("wyg-revisions");
+        var wPrice = document.getElementById("wyg-price");
+        var wExtrasRow = document.getElementById("wyg-extras-row");
+        var wExtras = document.getElementById("wyg-extras");
+        if (wWebsite) wWebsite.textContent = "Website Design \u2014 " + pagesVal + " pages";
+        if (wDelivery) wDelivery.textContent = "Delivery in " + daysVal + " days";
+        if (wRevisions) wRevisions.textContent = (revVal === 1 ? "1 revision round" : revVal + " revision rounds") + " included";
+        if (wPrice) wPrice.textContent = wygPrice + wygBill;
+        if (wExtrasRow && wExtras) {
+          if (extrasParam) { wExtras.textContent = "Plus: " + extrasParam.replace(/\$300 each/g, "$350 each"); wExtrasRow.hidden = false; }
+          else { wExtrasRow.hidden = true; }
+        }
+        var submitBtn = document.getElementById("submit-btn");
+        if (submitBtn) {
+          submitBtn.textContent = btnLabel;
+          submitBtn.dataset.signLabel = btnLabel;
+        }
+      })();
+    </script>
     <script>
       (function () {
         var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfcs_CGyneMU6ADcmeFQIfrfXkhgEAEpOOG5EEJ6ND-VzIdew/formResponse";
@@ -352,11 +489,13 @@
             window.scrollTo(0, 0);
           }).catch(function () {
             btn.disabled = false;
-            btn.textContent = "Sign Agreement";
+            btn.textContent = btn.dataset.signLabel || "Sign Agreement";
             alert("Something went wrong. Please check your connection and try again.");
           });
         });
       })();
     </script>
-  </body>
+  <script src="/assets/js/visitor-track.js" defer></script>
+<script src="/assets/js/form-helper.js" defer></script>
+</body>
 </html>
