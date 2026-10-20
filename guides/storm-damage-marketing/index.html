@@ -26,6 +26,15 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DWV0LCRRJS');
 </script>
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('dataProcessingOptions', ['LDU'], 0, 0);
+    fbq('init', '1388103953307209');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1388103953307209&ev=PageView&noscript=1" /></noscript>
+  <!-- End Meta Pixel Code -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -596,14 +605,11 @@ gtag('config', 'G-DWV0LCRRJS');
     </nav>
     <nav class="site-footer-col" aria-label="Resources">
       <p class="site-footer-col-title">Resources</p>
-      <a href="/blog/">Blog</a>
-      <a href="/learning-hub/">Learning Hub</a>
       <a href="/website-audit/">Website Audit</a>
       <a href="/tools/roofing-marketing-glossary/">Roofing Marketing Glossary</a>
       <a href="/service-areas/">Service Areas</a>
       <a href="/guides/roofer-google-reviews/">Roofer Google Reviews Guide</a>
       <a href="/guides/storm-damage-marketing/">Storm Damage Marketing Guide</a>
-      <a href="/ads-vs-seo/">SEO vs PPC for Roofers</a>
     </nav>
     <nav class="site-footer-col" aria-label="Company">
       <p class="site-footer-col-title">Company</p>
@@ -620,7 +626,7 @@ gtag('config', 'G-DWV0LCRRJS');
 
 <script>
 (function() {
-  function trackEvent(name, params) { if (typeof gtag === 'function') { gtag('event', name, params || {}); } }
+  function trackEvent(name, params) { if (typeof gtag === 'function') { gtag('event', name, params || {}); } if (typeof fbq === 'function') { if (name === 'form_submit') fbq('track', 'Lead'); else if (name === 'book_call') fbq('track', 'Schedule'); else if (name === 'click' && params && params.click_category === 'booking') fbq('track', 'Schedule'); } }
   function cleanText(el) { var t = (el.innerText || el.textContent || '').trim().replace(/\s+/g, ' '); return t.substring(0, 80); }
   document.addEventListener('click', function(e) {
     var link = e.target.closest('a'); var btn = e.target.closest('button'); var el = link || btn; if (!el) return;
