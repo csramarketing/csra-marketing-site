@@ -286,6 +286,72 @@
     </footer>
 
     <script>
+      // Dynamic quote params: ?client=&price=&term=&extras=&billing=
+      // Applied before the form script below so all fields stay wired.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var priceParam = params.get("price");
+        var termParam = params.get("term");
+        var extrasParam = params.get("extras");
+        var billingParam = params.get("billing");
+        var view = document.getElementById("agreement-view");
+        if (!view) return;
+        function esc(s) {
+          return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+        function fmt(n) { return "$" + n.toLocaleString("en-US"); }
+        // Parse the quoted price once.
+        var priceVal = 0;
+        if (priceParam) {
+          var _pv = parseFloat(String(priceParam).replace(/[^0-9.]/g, ""));
+          if (!isNaN(_pv) && _pv > 0) priceVal = _pv;
+        }
+        // The Sign Agreement button always shows the dollar amount being signed for.
+        var btnPrice = priceVal > 0 ? priceVal : 1500;
+        var btnLabel = "Sign Agreement - " + fmt(btnPrice) + (billingParam === "onetime" ? "" : "/mo");
+        var hasParams = priceParam || termParam || extrasParam || billingParam;
+        var html = view.innerHTML;
+        if (priceVal > 0) {
+          html = html.split("$1,500 / month").join(fmt(priceVal) + " / month");
+          html = html.split("$1,500 per month").join(fmt(priceVal) + " per month");
+          html = html.split("$1,500/month").join(fmt(priceVal) + "/month");
+        }
+        if (termParam) {
+          var t = parseInt(termParam, 10);
+          if (!isNaN(t) && t > 0 && t !== 6) {
+            html = html.split("6-month").join(t + "-month");
+            html = html.split("6 month").join(t + " month");
+          }
+        }
+        if (extrasParam) {
+          html = html.replace(
+            '<div class="key-facts">',
+            '<div class="key-facts">\n            <span class="extra-scope">Plus: ' + esc(extrasParam) + '</span>'
+          );
+        }
+        if (billingParam === "onetime") {
+          html = html.split(" / month</span>").join(" one-time</span>");
+          html = html.split("/month,").join(" one-time,");
+          html = html.replace(
+            /<p>This agreement covers a [^<]*<\/p>/,
+            "<p>This agreement covers a one-time payment of " + (priceVal > 0 ? fmt(priceVal) : "as quoted") + ". Payment is due in full on the start date below. Work begins when payment clears.</p>"
+          );
+        }
+        if (extrasParam) {
+          html = html.replace(
+            /(agree to its terms \([^)]*)\)\./,
+            function (m, g1) { return g1 + ", plus " + esc(extrasParam) + ")."; }
+          );
+        }
+        if (hasParams) view.innerHTML = html;
+        var submitBtn = document.getElementById("submit-btn");
+        if (submitBtn) {
+          submitBtn.textContent = btnLabel;
+          submitBtn.dataset.signLabel = btnLabel;
+        }
+      })();
+    </script>
+    <script>
       (function () {
         var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd8ZtPBOdXCDOybilG1ws63cKuGbPUDaDHHSgibteJnK16isg/formResponse";
         var E = {
@@ -348,11 +414,13 @@
             window.scrollTo(0, 0);
           }).catch(function () {
             btn.disabled = false;
-            btn.textContent = "Sign Agreement";
+            btn.textContent = btn.dataset.signLabel || "Sign Agreement";
             alert("Something went wrong. Please check your connection and try again.");
           });
         });
       })();
     </script>
-  </body>
+  <script src="/assets/js/visitor-track.js" defer></script>
+<script src="/assets/js/form-helper.js" defer></script>
+</body>
 </html>
