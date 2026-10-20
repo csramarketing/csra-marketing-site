@@ -28,7 +28,14 @@
         'funnel_breakdown': summary.funnelBreakdown,
         'dominant_funnel': summary.dominantFunnel,
         'time_on_site': summary.totalTimeFormatted,
-        'session_breakdown': summary.sessionBreakdown
+        'session_breakdown': summary.sessionBreakdown,
+        'traffic_source': summary.trafficSource || '',
+        'meta_fbp': summary.metaFbp || '',
+        'meta_fbc': summary.metaFbc || '',
+        'meta_fbclid': summary.fbclid || '',
+        'utm_source': summary.utmSource || '',
+        'utm_medium': summary.utmMedium || '',
+        'utm_campaign': summary.utmCampaign || ''
       };
 
       Object.keys(fields).forEach(function(name) {
