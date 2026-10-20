@@ -135,10 +135,40 @@
       if (utm.campaign) label += ' — campaign: ' + utm.campaign;
       return label;
     }
+    if (profile.emailRef && profile.emailRef.token) {
+      return 'Email campaign click (token ' + profile.emailRef.token + ')';
+    }
     if (utm.source) {
       return 'UTM: ' + utm.source + '/' + (utm.medium || '-') + (utm.campaign ? ' (' + utm.campaign + ')' : '');
     }
     return 'Direct / organic (no ad click recorded)';
+  }
+
+  // --- Identified-visit beacon ---
+  // When a visitor lands from one of our own outreach links (cid param),
+  // tell the lead backend who showed up — even if they never fill a form.
+  var IDENT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxsjD0FBuAOV2sKvgU1_L7RYkvhvJkaNCll5hsvtw5yJK4YcIgq8gYkSHe4VDhRjKvk/exec';
+
+  function sendVisitBeacon(profile) {
+    try {
+      var payload = new URLSearchParams();
+      payload.append('event', 'email_visit');
+      payload.append('token', profile.emailRef.token);
+      payload.append('src', profile.emailRef.source || 'email');
+      payload.append('page', window.location.pathname);
+      payload.append('visitor_id', profile.vid);
+      payload.append('visit_count', String(profile.visitCount || 1));
+      payload.append('pages_viewed', String(profile.pages.length || 1));
+      payload.append('landing', profile.firstLanding || window.location.pathname);
+      var sent = false;
+      if (navigator.sendBeacon) {
+        var blob = new Blob([payload.toString()], { type: 'application/x-www-form-urlencoded' });
+        sent = navigator.sendBeacon(IDENT_ENDPOINT, blob);
+      }
+      if (!sent && window.fetch) {
+        fetch(IDENT_ENDPOINT, { method: 'POST', mode: 'no-cors', body: payload, keepalive: true }).catch(function() {});
+      }
+    } catch (e) {}
   }
 
   // --- Visitor profile ---
@@ -203,6 +233,7 @@
     profile.lastVisit = nowIso;
 
     // --- Meta bridge: capture ad attribution (pixel -> site data) ---
+    var arrivedWithCid = false;
     try {
       var metaCookies = readMetaCookies();
       profile.meta = profile.meta || {};
@@ -210,6 +241,18 @@
       if (metaCookies.fbc) profile.meta.fbc = metaCookies.fbc;
       // First-touch attribution (landing page + UTM + fbclid)
       var qp = readQueryParams();
+      if (qp.cid) {
+        arrivedWithCid = true;
+        var prevRef = profile.emailRef || {};
+        profile.emailRef = {
+          token: qp.cid,
+          source: qp.src || 'email',
+          firstSeen: prevRef.firstSeen || nowIso,
+          lastSeen: nowIso
+        };
+      } else if (profile.emailRef) {
+        profile.emailRef.lastSeen = nowIso;
+      }
       if (!profile.firstLanding) {
         profile.firstLanding = window.location.pathname;
         profile.firstUtm = {
@@ -269,6 +312,19 @@
           saveProfile(profile);
         }
       } catch (fbqErr) {}
+    }
+
+    // --- Identified visit beacon (outreach link arrival -> lead backend) ---
+    if (arrivedWithCid && profile.emailRef) {
+      try {
+        var todayStr = nowIso.split('T')[0];
+        var lb = profile.lastBeacon || {};
+        if (lb.date !== todayStr || lb.token !== profile.emailRef.token) {
+          profile.lastBeacon = { date: todayStr, token: profile.emailRef.token };
+          saveProfile(profile);
+          sendVisitBeacon(profile);
+        }
+      } catch (bcnErr) {}
     }
 
     // Fire GA4 event if gtag exists
@@ -335,6 +391,8 @@
         totalTimeFormatted: totalTime,
         sessionBreakdown: sessionList,
         trafficSource: describeTrafficSource(profile),
+        emailToken: (profile.emailRef && profile.emailRef.token) || '',
+        emailSource: (profile.emailRef && profile.emailRef.source) || '',
         metaFbp: (profile.meta && profile.meta.fbp) || '',
         metaFbc: (profile.meta && profile.meta.fbc) || '',
         fbclid: profile.firstFbclid || '',
