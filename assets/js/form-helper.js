@@ -30,6 +30,8 @@
         'time_on_site': summary.totalTimeFormatted,
         'session_breakdown': summary.sessionBreakdown,
         'traffic_source': summary.trafficSource || '',
+        'email_token': summary.emailToken || '',
+        'email_src': summary.emailSource || '',
         'meta_fbp': summary.metaFbp || '',
         'meta_fbc': summary.metaFbc || '',
         'meta_fbclid': summary.fbclid || '',
