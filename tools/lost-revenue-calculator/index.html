@@ -280,6 +280,16 @@
       .results-cta{margin-top:20px;}
       .results-cta .btn{width:100%;}
       .results-cta p{font-size:0.82rem;color:#9fb2c7;text-align:center;margin:10px 0 0;}
+      .breakdown-form{margin-top:22px;border-top:1px solid rgba(255,255,255,0.15);padding-top:20px;text-align:left;}
+      .breakdown-form h3{color:#fff;font-size:1.05rem;margin:0 0 6px;font-weight:700;}
+      .breakdown-form p{font-size:0.9rem;color:#d7e1ee;margin:0 0 14px;}
+      .breakdown-form .bf-row{display:flex;gap:10px;flex-wrap:wrap;}
+      .breakdown-form input{flex:1 1 160px;background:#fff;border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:12px 14px;font-size:0.95rem;font-family:inherit;color:#10233f;}
+      .breakdown-form button{flex:0 0 auto;background:#ffcc00;color:#10233f;font-weight:700;border:none;border-radius:999px;padding:12px 24px;font-size:0.95rem;font-family:inherit;cursor:pointer;}
+      .breakdown-form button:disabled{opacity:0.6;cursor:default;}
+      .breakdown-form .bf-note{font-size:0.78rem;color:#9fb2c7;margin:10px 0 0;}
+      .breakdown-form .bf-success{color:#fff;font-weight:600;font-size:0.98rem;}
+      .breakdown-form .bf-error{color:#ffb3a7;font-size:0.85rem;margin:10px 0 0;display:none;}
 
       /* Sections */
       section.block{padding:52px 0 8px;}
@@ -515,6 +525,18 @@
               <a class="btn big" href="https://csramarketing.com/website-audit/">Get My Website Audit</a>
               <p>We will pull your real numbers and show you exactly where the leaks are and how we would fix them.</p>
             </div>
+
+            <form class="breakdown-form" id="breakdownForm" name="breakdown-form">
+              <h3>Want this breakdown in your inbox?</h3>
+              <p>I will send your numbers, what they mean, and the three fixes I would make first. Short emails over the next two weeks, no spam, unsubscribe any time.</p>
+              <div class="bf-row">
+                <input type="text" id="bfName" name="name" placeholder="First name (optional)" autocomplete="given-name">
+                <input type="email" id="bfEmail" name="email" placeholder="Email" required autocomplete="email">
+                <button type="submit" id="bfSubmit">Email my breakdown</button>
+              </div>
+              <p class="bf-error" id="bfError">Something went wrong sending that. Try again, or grab the audit above and I will walk you through your numbers live.</p>
+              <p class="bf-note">Your numbers from this page are sent with it, so the first email is your actual breakdown, not a generic one.</p>
+            </form>
           </div>
         </div>
       </section>
@@ -815,6 +837,57 @@
         calculate();
       })();
     </script>
+<script>
+(function() {
+  var TOOL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxsjD0FBuAOV2sKvgU1_L7RYkvhvJkaNCll5hsvtw5yJK4YcIgq8gYkSHe4VDhRjKvk/exec';
+  var form = document.getElementById('breakdownForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var email = document.getElementById('bfEmail').value.trim();
+    var name = document.getElementById('bfName').value.trim();
+    if (!email) return;
+    var btn = document.getElementById('bfSubmit');
+    var err = document.getElementById('bfError');
+    err.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Sending...';
+    function txt(id) { var el = document.getElementById(id); return el ? el.textContent.trim() : ''; }
+    function val(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+    var payload = new URLSearchParams();
+    payload.append('source', 'tool_followup');
+    payload.append('tool', 'Lost Revenue Calculator');
+    payload.append('name', name);
+    payload.append('email', email);
+    payload.append('visitors', val('visitorsNum'));
+    payload.append('job_value', '$' + val('jobNum'));
+    payload.append('conversion_rate', val('rateNum') + '%');
+    payload.append('lost_revenue_year', txt('lostYear'));
+    payload.append('lost_jobs_year', txt('lostJobsYear'));
+    try {
+      if (typeof CSRAVisitor !== 'undefined') {
+        var s = CSRAVisitor.getSummary();
+        payload.append('visitor_id', s.visitorId || '');
+        payload.append('traffic_source', s.trafficSource || '');
+        payload.append('meta_fbp', s.metaFbp || '');
+        payload.append('meta_fbc', s.metaFbc || '');
+      }
+    } catch (e2) { /* tracking unavailable, submit anyway */ }
+    fetch(TOOL_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: payload.toString()
+    }).then(function(r) { return r.json(); }).then(function(result) {
+      if (result && result.ok === false) throw new Error(result.error || 'send failed');
+      if (typeof gtag === 'function') gtag('event', 'tool_complete', { tool_name: 'Lost Revenue Calculator' });
+      if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'Lost Revenue Calculator Breakdown' });
+      form.innerHTML = '<p class="bf-success">Check your inbox. Your breakdown is on its way.</p>';
+    }).catch(function() {
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Email my breakdown';
+    });
+  });
+})();
+</script>
 <script>
 (function() {
   function trackEvent(name, params) {
