@@ -1,7 +1,9 @@
 {
   "name": "csra-marketing-site",
+  "main": "_worker.js",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS"
   }
 }
