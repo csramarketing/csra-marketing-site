@@ -408,7 +408,7 @@
         <div class="wrap">
           <h1>Lost Revenue Calculator for Roofers: <span class="hl">What Is Your Website Costing You?</span></h1>
           <p class="lede">Homeowners in your service area are searching for a roofer every day. Some call you. Most call someone else. Enter three simple numbers and see what that is costing your company every year in lost jobs and lost revenue.</p>
-          <p class="free-note">Free to use. No email required. Your real number takes about 20 seconds.</p>
+          <p class="free-note">No email required. Your real number takes about 20 seconds.</p>
           <div class="hero-stats">
             <div class="hero-stat"><strong>5%</strong><span>of visitors should turn into leads on a healthy roofing website built to convert</span></div>
             <div class="hero-stat"><strong>53%</strong><span>of phone visitors leave a site that takes over 3 seconds to load, per Google research</span></div>
@@ -420,8 +420,8 @@
       <section class="calc-section" id="calculator">
         <div class="wrap calc-grid">
           <div class="card" aria-label="Calculator inputs">
-            <h2>Your numbers, CSRA roofer edition</h2>
-            <p class="sub">Drag the sliders or type your own numbers. Not sure about one? The starting numbers match a typical roofing company serving Augusta, Evans, Martinez and Grovetown, so you can leave them as they are.</p>
+            <h2>Your numbers, <span data-geo-slot="edition">roofer edition</span></h2>
+            <p class="sub">Drag the sliders or type your own numbers. Not sure about one? The starting numbers match a typical roofing company <span data-geo-slot="towns-serving">serving your area</span>, so you can leave them as they are.</p>
 
             <div class="field">
               <div class="field-head">
@@ -430,7 +430,7 @@
                   <input type="number" id="visitorsNum" min="10" max="20000" step="10" value="300" inputmode="numeric" aria-label="Monthly website visitors" />
                 </div>
               </div>
-              <p class="help">How many people land on your website in a typical month. You can find this in Google Analytics. No Analytics? A CSRA roofing company usually sees 300 to 800 visitors a month, and that number climbs fast when local SEO puts you in front of Augusta area searches.</p>
+              <p class="help">How many people land on your website in a typical month. You can find this in Google Analytics. No Analytics? <span data-geo-slot="typical-company">A typical roofing company</span> usually sees 300 to 800 visitors a month, and that number climbs fast when local SEO puts you in front of <span data-geo-slot="city-searches">local searches</span>.</p>
               <input type="range" id="visitorsRange" min="10" max="5000" step="10" value="300" aria-hidden="true" tabindex="-1" />
               <div class="range-scale"><span>10</span><span>5,000</span></div>
             </div>
@@ -443,7 +443,7 @@
                   <input type="number" id="jobNum" min="500" max="100000" step="100" value="10000" inputmode="numeric" aria-label="Average job value in dollars" />
                 </div>
               </div>
-              <p class="help">What one average job is worth to you. Add up a few recent invoices in the CSRA, big roof replacements and small repairs together, and take the middle number. A full replacement in the Augusta area often runs $10,000 to $15,000.</p>
+              <p class="help">What one average job is worth to you. Add up a few recent invoices<span data-geo-slot="in-city-area-lead"></span>, big roof replacements and small repairs together, and take the middle number. A full replacement <span data-geo-slot="in-city-area">in your area</span> often runs $10,000 to $15,000.</p>
               <input type="range" id="jobRange" min="1000" max="40000" step="250" value="10000" aria-hidden="true" tabindex="-1" />
               <div class="range-scale"><span>$1,000</span><span>$40,000</span></div>
             </div>
@@ -456,7 +456,7 @@
                   <span class="suffix">%</span>
                 </div>
               </div>
-              <p class="help">Out of every 100 visitors, how many call you or fill out your form? If you get about 10 calls and form fills from 500 visitors, that is 2%. Most roofing sites sit between 1% and 3%. A professionally designed site built to convert CSRA homeowners hits 5%.</p>
+              <p class="help">Out of every 100 visitors, how many call you or fill out your form? If you get about 10 calls and form fills from 500 visitors, that is 2%. Most roofing sites sit between 1% and 3%. A professionally designed site built to convert <span data-geo-slot="homeowners">homeowners</span> hits 5%.</p>
               <input type="range" id="rateRange" min="0.5" max="10" step="0.1" value="2" aria-hidden="true" tabindex="-1" />
               <div class="range-scale"><span>0.5%</span><span>10%</span></div>
             </div>
@@ -466,17 +466,17 @@
             <h2>What your website is costing you</h2>
             <p class="sub">Based on a healthy conversion rate of 5%. Same traffic, same crew, just professional website design and strong local SEO doing their job.</p>
 
-            <div class="good-news" id="goodNews">Good news. Your site already converts at or above the healthy 5% mark, so this leak is plugged. An audit can still show you where stronger local SEO would bring you more CSRA traffic.</div>
+            <div class="good-news" id="goodNews">Good news. Your site already converts at or above the healthy 5% mark, so this leak is plugged. An audit can still show you where stronger local SEO would bring you more <span data-geo-slot="city-traffic">traffic in your area</span>.</div>
 
             <div class="big-loss">
               <div class="amount" id="lostYear">$1,080,000</div>
               <div class="per">in lost roofing revenue every year</div>
             </div>
-            <p class="monthly-loss">That is <strong id="lostMonth">$90,000</strong> walking out the door every single month to another roofer in the CSRA.</p>
+            <p class="monthly-loss">That is <strong id="lostMonth">$90,000</strong> walking out the door every single month to another roofer <span data-geo-slot="in-city-area">in your area</span>.</p>
 
             <div class="jobs-impact">
               <span class="jobs-num"><span id="lostJobsYear">108</span> lost jobs</span>
-              <p>per year at your average job value. That is work your crew could have been on in Augusta, Evans, Martinez and Grovetown instead of a competitor getting the call.</p>
+              <p>per year at your average job value. That is work your crew could have been on <span data-geo-slot="in-city-area">in your service area</span> instead of a competitor getting the call.</p>
             </div>
 
             <div class="bars">
@@ -496,7 +496,7 @@
               <div class="cell leak"><strong id="fLeadsLost">9</strong><span>leads lost every month</span></div>
             </div>
 
-            <p class="equiv" id="equivText">That works out to about <strong>108 lost leads a year</strong>. Those are real CSRA homeowners who needed a roofer, landed on your site, and called somebody else.</p>
+            <p class="equiv" id="equivText">That works out to about <strong>108 lost leads a year</strong>. Those are real <span data-geo-slot="homeowners">homeowners in your area</span> who needed a roofer, landed on your site, and called somebody else.</p>
 
             <div class="compare-mini">
               <h3>Your business, side by side</h3>
@@ -518,7 +518,7 @@
                   </ul>
                 </div>
               </div>
-              <p style="font-size:0.88rem;color:#b9c7d8;margin:12px 0 0;">Same service area. Same crew. The difference is a website built to convert and local SEO that puts you first when CSRA homeowners search.</p>
+              <p style="font-size:0.88rem;color:#b9c7d8;margin:12px 0 0;">Same service area. Same crew. The difference is a website built to convert and local SEO that puts you first when <span data-geo-slot="homeowners">homeowners in your area</span> search.</p>
             </div>
 
             <div class="results-cta">
@@ -543,31 +543,31 @@
 
       <section class="block">
         <div class="wrap">
-          <h2>Why CSRA Roofing Websites Leak Money, and How We Fix Each Leak</h2>
-          <p class="intro">Most Augusta area roofers do not have a traffic problem first. They have a visibility problem and a conversion problem. Homeowners in Evans, Martinez and Grovetown are searching. If they never find you, or they find you and leave, that job goes to a competitor. Here are the four leaks we find most often, and exactly how our two core services fix them.</p>
+          <h2>Why Roofing Websites<span data-geo-slot="h2-in-city"></span> Leak Money, and How We Fix Each Leak</h2>
+          <p class="intro">Most <span data-geo-slot="city-area-roofers">roofers</span> do not have a traffic problem first. They have a visibility problem and a conversion problem. Homeowners <span data-geo-slot="in-city">in your area</span> are searching. If they never find you, or they find you and leave, that job goes to a competitor. Here are the four leaks we find most often, and exactly how our two core services fix them.</p>
           <div class="leak-grid">
             <div class="leak-item">
               <span class="num">1</span>
               <h3>Homeowners cannot find you on Google</h3>
-              <p>When a CSRA homeowner types "roof repair augusta ga", "roof replacement evans ga" or "roofer near me", Google shows the map pack and the top results first. If your Google Business Profile is thin, your service pages do not mention the towns you serve, and your reviews are quiet, you are invisible for the searches that bring in the best jobs.</p>
-              <p class="fix-line"><strong>How <a href="https://csramarketing.com/local-seo/">local SEO</a> fixes it:</strong> We build out your Google Business Profile, create pages for Augusta, Evans, Martinez, Grovetown and the rest of your service area, and earn the local signals that move you up in the map pack and in regular search. More of the right CSRA traffic finds you first.</p>
+              <p>When <span data-geo-slot="a-city-homeowner">a homeowner</span> types "<span data-geo-slot="search-repair">roof repair near me</span>", "<span data-geo-slot="search-replacement">roof replacement near me</span>" or "roofer near me", Google shows the map pack and the top results first. If your Google Business Profile is thin, your service pages do not mention the towns you serve, and your reviews are quiet, you are invisible for the searches that bring in the best jobs.</p>
+              <p class="fix-line"><strong>How <a href="https://csramarketing.com/local-seo/">local SEO</a> fixes it:</strong> We build out your Google Business Profile, create pages <span data-geo-slot="towns-pages">for your service area</span>, and earn the local signals that move you up in the map pack and in regular search. More of the right <span data-geo-slot="city-traffic">local traffic</span> finds you first.</p>
             </div>
             <div class="leak-item">
               <span class="num">2</span>
               <h3>The site loads too slowly</h3>
-              <p>A homeowner in Grovetown with water dripping through the ceiling is not waiting around. Google research found that 53% of phone visits are abandoned when a page takes over 3 seconds to load. Every extra second sends callers straight to the next roofer on the list.</p>
+              <p>A homeowner<span data-geo-slot="in-city-lead"></span> with water dripping through the ceiling is not waiting around. Google research found that 53% of phone visits are abandoned when a page takes over 3 seconds to load. Every extra second sends callers straight to the next roofer on the list.</p>
               <p class="fix-line"><strong>How <a href="https://csramarketing.com/web-design/">website design</a> fixes it:</strong> We rebuild the site to load fast on phones first, with clean code, properly sized images and no clutter slowing it down. Fast pages keep the visitor you already earned through local SEO on your site long enough to call.</p>
             </div>
             <div class="leak-item">
               <span class="num">3</span>
               <h3>The phone number is hard to find and nothing builds trust</h3>
-              <p>Most roofing searches in the CSRA happen on a phone. If your number is buried in a footer instead of a tap to call button at the top, and the page shows no reviews, no photos of your crews and finished roofs in local neighborhoods, and no license or insurance mention, a homeowner handing over five figures has no reason to pick you.</p>
+              <p>Most roofing searches <span data-geo-slot="in-city-area">in your area</span> happen on a phone. If your number is buried in a footer instead of a tap to call button at the top, and the page shows no reviews, no photos of your crews and finished roofs in local neighborhoods, and no license or insurance mention, a homeowner handing over five figures has no reason to pick you.</p>
               <p class="fix-line"><strong>How website design and local SEO fix it together:</strong> Website design puts your number, reviews and real job photos where a visitor sees them in seconds. Local SEO brings in more reviews on Google and keeps them visible in search, so trust starts building before the homeowner even lands on your site.</p>
             </div>
             <div class="leak-item">
               <span class="num">4</span>
               <h3>The next step is unclear</h3>
-              <p>Long forms, pages that never ask for the call, buttons that blend into the background. If a Martinez homeowner has to think about what to do next, most will not do it. They back out and call the next company Google showed them.</p>
+              <p>Long forms, pages that never ask for the call, buttons that blend into the background. If <span data-geo-slot="a-city-homeowner">a homeowner</span> has to think about what to do next, most will not do it. They back out and call the next company Google showed them.</p>
               <p class="fix-line"><strong>How <a href="https://csramarketing.com/web-design/">website design</a> fixes it:</strong> One clear ask on every page, call now or request a free inspection, placed where thumbs actually reach on a phone. Short forms, clear buttons and a simple path from landing to calling. That is how a 2% site becomes a 5% site.</p>
             </div>
           </div>
@@ -577,7 +577,7 @@
       <section class="block">
         <div class="wrap">
           <h2>What Changes With Proper Website Design and Local SEO in Place</h2>
-          <p class="intro">This is the same business, serving the same CSRA towns, with the same crew. The only change is a website built to convert and local SEO that keeps you visible when homeowners search. Based on the numbers you entered above.</p>
+          <p class="intro">This is the same business, serving <span data-geo-slot="same-towns">the same towns</span>, with the same crew. The only change is a website built to convert and local SEO that keeps you visible when homeowners search. Based on the numbers you entered above.</p>
           <div class="compare-wrap">
             <table class="compare-table">
               <thead>
@@ -588,7 +588,7 @@
                 <tr><td>Leads per month</td><td id="tblLeadsNow">6</td><td id="tblLeadsFixed">15</td></tr>
                 <tr><td>Jobs per year</td><td id="tblJobsNow">72</td><td id="tblJobsFixed">180</td></tr>
                 <tr><td>Revenue per year</td><td id="tblRevNow">$720,000</td><td id="tblRevFixed">$1,800,000</td></tr>
-                <tr><td>Where CSRA homeowners find you</td><td>Beyond the top results for searches like "roof repair augusta ga"</td><td>In the map pack and top results across Augusta, Evans, Martinez and Grovetown</td></tr>
+                <tr><td>Where <span data-geo-slot="homeowners">homeowners in your area</span> find you</td><td>Beyond the top results for searches like "<span data-geo-slot="search-repair">roof repair near me</span>"</td><td>In the map pack and top results <span data-geo-slot="towns-across">across your service area</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -607,26 +607,26 @@
               <li><strong>The gap:</strong> the difference between those two lead counts is the work leaking away each month.</li>
               <li><strong>The dollar figure:</strong> that gap multiplied by your average job value, then multiplied by 12 months.</li>
             </ol>
-            <p class="note">One honest note: this calculator counts every lead at your full average job value, which is how we translate lost revenue into lost jobs per year. If you usually close one in three leads, your true cash loss is closer to a third of the headline number. Even cut down like that, the leak is real money, real jobs in the CSRA, and it repeats every single month.</p>
+            <p class="note">One honest note: this calculator counts every lead at your full average job value, which is how we translate lost revenue into lost jobs per year. If you usually close one in three leads, your true cash loss is closer to a third of the headline number. Even cut down like that, the leak is real money, real jobs <span data-geo-slot="in-city-area">in your area</span>, and it repeats every single month.</p>
           </div>
         </div>
       </section>
 
       <section class="block faq">
         <div class="wrap">
-          <h2>Questions CSRA Roofers Ask Us</h2>
+          <h2>Questions<span data-geo-slot="city-prefix"> </span>Roofers Ask Us</h2>
           <p class="intro">Straight answers, no jargon.</p>
           <details>
             <summary>What is a good conversion rate for a roofing website?</summary>
-            <p>A healthy roofing website turns about 5 out of every 100 visitors into a call or a form lead. Many roofing sites in the Augusta area sit closer to 1 or 2 percent, which means most of their traffic leaves without ever picking up the phone. Professional website design is what closes that gap.</p>
+            <p>A healthy roofing website turns about 5 out of every 100 visitors into a call or a form lead. Many roofing sites<span data-geo-slot="in-city-area-lead"></span> sit closer to 1 or 2 percent, which means most of their traffic leaves without ever picking up the phone. Professional website design is what closes that gap.</p>
           </details>
           <details>
             <summary>Where do I find my monthly website visitors?</summary>
-            <p>Your visitor count lives in Google Analytics under Reports, then Acquisition. If you do not have Analytics set up, or you are not sure, use the default in this calculator. It matches a typical CSRA roofing company, and a website audit will pull your real numbers for you.</p>
+            <p>Your visitor count lives in Google Analytics under Reports, then Acquisition. If you do not have Analytics set up, or you are not sure, use the default in this calculator. It matches <span data-geo-slot="faq-company">a typical local roofing company</span>, and a website audit will pull your real numbers for you.</p>
           </details>
           <details>
             <summary>Why does my website lose me roofing jobs?</summary>
-            <p>Most CSRA homeowners shop for a roofer on their phone, often right after a storm rolls through Augusta, Evans or Grovetown. If your site loads slowly, hides your phone number, or makes the next step confusing, they tap the back button and call the next company on Google. And if local SEO is weak, many never find you in the first place. Every one of those exits is a job you never got the chance to bid.</p>
+            <p>Most <span data-geo-slot="homeowners">homeowners in your area</span> shop for a roofer on their phone, often right after a storm rolls <span data-geo-slot="towns-through">through your area</span>. If your site loads slowly, hides your phone number, or makes the next step confusing, they tap the back button and call the next company on Google. And if local SEO is weak, many never find you in the first place. Every one of those exits is a job you never got the chance to bid.</p>
           </details>
           <details>
             <summary>How is the lost revenue number calculated?</summary>
@@ -634,15 +634,15 @@
           </details>
           <details>
             <summary>What happens in a website audit?</summary>
-            <p>In a <a href="https://csramarketing.com/website-audit/">website audit</a>, we check your site speed, how it looks and works on phones, your Google rankings for Augusta area searches like "roof repair augusta ga", your reviews, and every spot where visitors drop off. You get a plain English report covering both website design and local SEO, showing exactly what to fix and what each fix is worth, with no obligation to hire us.</p>
+            <p>In a <a href="https://csramarketing.com/website-audit/">website audit</a>, we check your site speed, how it looks and works on phones, your Google rankings for <span data-geo-slot="city-searches">searches in your area</span> like "<span data-geo-slot="search-repair">roof repair near me</span>", your reviews, and every spot where visitors drop off. You get a plain English report covering both website design and local SEO, showing exactly what to fix and what each fix is worth, with no obligation to hire us.</p>
           </details>
         </div>
       </section>
 
       <div class="wrap">
         <section class="final-cta">
-          <h2>Your Number Is an Estimate. Your Audit Uses Your Real CSRA Numbers.</h2>
-          <p>Book a website audit and we will pull your actual traffic, your actual conversion rate, and every leak in your site. We will show you how you show up for Augusta, Evans, Martinez and Grovetown searches, and exactly what fixing your website design and local SEO is worth in jobs and revenue.</p>
+          <h2>Your Number Is an Estimate. Your Audit Uses Your <span data-geo-slot="closing-numbers">Real Local Numbers</span>.</h2>
+          <p>Book a website audit and we will pull your actual traffic, your actual conversion rate, and every leak in your site. We will show you how you show up <span data-geo-slot="for-city-searches">for searches in your area</span>, and exactly what fixing your website design and local SEO is worth in jobs and revenue.</p>
           <ul class="audit-list">
             <li>Site speed check</li>
             <li>Phone and mobile review</li>
@@ -803,7 +803,7 @@
 
           var lostYearLeads = Math.round(leadsLost * 12);
           if (leadsLost > 0) {
-            els.equiv.innerHTML = 'That works out to about <strong>' + fmtNum(lostYearLeads) + ' lost leads a year, which is ' + fmtNum(jobsLostYear) + ' lost jobs a year</strong> at your average job value. Those are real CSRA homeowners who needed a roofer, landed on your site, and called somebody else in Augusta, Evans, Martinez or Grovetown.';
+            els.equiv.innerHTML = 'That works out to about <strong>' + fmtNum(lostYearLeads) + ' lost leads a year, which is ' + fmtNum(jobsLostYear) + ' lost jobs a year</strong> at your average job value. Those are real ' + ((window.__CSRA_GEO__ && window.__CSRA_GEO__.homeowners) || 'homeowners in your area') + ' who needed a roofer, landed on your site, and called somebody else ' + ((window.__CSRA_GEO__ && window.__CSRA_GEO__.inArea) || 'in your service area') + '.';
           } else {
             els.equiv.innerHTML = 'No leads are leaking at this conversion rate. The next win for a site like yours is more traffic from local SEO, and an audit shows where it would come from.';
           }
