@@ -248,6 +248,16 @@ export default {
   },
 };
 
+
+function stampGeo(response, cf) {
+  const city = cf && typeof cf.city === "string" && cf.city.trim() ? cf.city.trim() : "none";
+  const region = cf && cf.regionCode ? cf.regionCode : "none";
+  const country = cf && cf.country ? cf.country : "none";
+  const res = new Response(response.body, response);
+  res.headers.set("X-CSRA-Geo", `city=${city}; region=${region}; country=${country}`);
+  return res;
+}
+
 async function handle(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
@@ -257,14 +267,14 @@ async function handle(request, env) {
   }
 
   const response = await env.ASSETS.fetch(request);
+  const cf = request.cf || {};
 
   try {
     const ua = request.headers.get("user-agent") || "";
-    if (BOT_RE.test(ua)) return response;
+    if (BOT_RE.test(ua)) return stampGeo(response, cf);
 
-    const cf = request.cf || {};
     const city = typeof cf.city === "string" ? cf.city.trim() : "";
-    if (!city) return response;
+    if (!city) return stampGeo(response, cf);
 
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) return response;
@@ -332,8 +342,9 @@ async function handle(request, env) {
 
     const transformed = rewriter.transform(response);
     transformed.headers.set("Cache-Control", "private, no-store");
+    transformed.headers.set("X-CSRA-Geo", `city=${city}; region=${geo.regionCode || "none"}; country=${cf.country || "none"}`);
     return transformed;
   } catch (err) {
-    return response;
+    return stampGeo(response, cf);
   }
 }
