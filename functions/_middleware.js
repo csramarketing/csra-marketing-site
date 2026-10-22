@@ -203,16 +203,13 @@ export async function onRequest(context) {
   }
 
   const response = await next();
-  const _dbg = `city=${(request.cf && request.cf.city) || ""}|region=${(request.cf && request.cf.region) || ""}|rc=${(request.cf && request.cf.regionCode) || ""}|country=${(request.cf && request.cf.country) || ""}`;
-  const _out = (resp) => { try { const r = new Response(resp.body, resp); r.headers.set("X-Geo-Debug", _dbg); return r; } catch (e) { return resp; } };
-
   try {
     const ua = request.headers.get("user-agent") || "";
-    if (BOT_RE.test(ua)) return _out(response);
+    if (BOT_RE.test(ua)) return response;
 
     const cf = request.cf || {};
     const city = typeof cf.city === "string" ? cf.city.trim() : "";
-    if (!city) return _out(response);
+    if (!city) return response;
 
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) return response;
@@ -280,7 +277,7 @@ export async function onRequest(context) {
 
     const transformed = rewriter.transform(response);
     transformed.headers.set("Cache-Control", "private, no-store");
-    return _out(transformed);
+    return transformed;
   } catch (err) {
     return response;
   }
