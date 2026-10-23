@@ -112,6 +112,13 @@
         .next-grid { grid-template-columns: 1fr; }
         .site-header img { height: 40px; }
       }
+    
+      .survey-open { margin-bottom: 26px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+      .survey-open h2 { color: var(--navy); font-size: 24px; font-weight: 800; line-height: 1.25; margin: 0 0 10px; }
+      .survey-open p { color: var(--muted); font-size: 15.5px; line-height: 1.6; margin: 0 0 8px; }
+      .survey-open p:last-child { margin-bottom: 0; }
+      .q-step { font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--coral); margin: 0 0 8px; }
+      #q-email .fineprint { margin-top: 12px; text-align: left; }
     </style>
   </head>
   <body>
@@ -132,7 +139,13 @@
 
       <div class="form-card">
         <form id="survey-form" novalidate>
+        <div class="survey-open">
+          <h2>Help build the 2027 Roofing Marketing Report.</h2>
+          <p>Five short questions about getting roofing jobs right now. About two minutes, start to finish. When the report publishes, your copy goes straight to your inbox, free.</p>
+          <p>Your answers shape what goes in it. The more roofers answer, the clearer the picture gets.</p>
+        </div>
           <div class="q" id="q-state">
+            <p class="q-step">Question 1 of 5</p>
             <label class="q-label" for="f-state">What state is your company based in?</label>
             <select id="f-state" name="state" required>
               <option value="" selected disabled>Choose your state</option>
@@ -191,6 +204,7 @@
           </div>
 
           <div class="q" id="q-headache">
+            <p class="q-step">Question 2 of 5</p>
             <span class="q-label">What is your biggest marketing headache right now?</span>
             <div class="options">
               <label class="opt"><input type="radio" name="headache" value="I don't get enough leads consistently"><span class="dot"></span>I don't get enough leads consistently</label>
@@ -205,6 +219,7 @@
           </div>
 
           <div class="q" id="q-source">
+            <p class="q-step">Question 3 of 5</p>
             <span class="q-label">Where do most of your jobs come from today?</span>
             <div class="options">
               <label class="opt"><input type="radio" name="job_source" value="Referrals and word of mouth"><span class="dot"></span>Referrals and word of mouth</label>
@@ -219,6 +234,7 @@
           </div>
 
           <div class="q" id="q-spend">
+            <p class="q-step">Question 4 of 5</p>
             <span class="q-label">About how much do you spend on marketing each month?</span>
             <div class="options">
               <label class="opt"><input type="radio" name="spend" value="$0 - I don't pay for marketing"><span class="dot"></span>$0 - I don't pay for marketing</label>
@@ -231,6 +247,7 @@
           </div>
 
           <div class="q" id="q-sentiment">
+            <p class="q-step">Question 5 of 5</p>
             <span class="q-label">How do you feel about your current marketing results?</span>
             <div class="options">
               <label class="opt"><input type="radio" name="sentiment" value="I'm getting plenty of good leads and I want to grow"><span class="dot"></span>I'm getting plenty of good leads and I want to grow</label>
@@ -241,9 +258,11 @@
           </div>
 
           <div class="q" id="q-email">
+            <p class="q-step">Last step: where the report goes.</p>
             <label class="q-label" for="f-email">Where should we send your free report?</label>
             <p class="q-help">Your email. The full 2027 Roofing Marketing Report lands there the day it publishes.</p>
             <input type="email" id="f-email" name="email" placeholder="you@yourroofingcompany.com" autocomplete="email" required>
+            <p class="fineprint">No pitch, no spam. Your answers only go into the report data, and the report is the only email you will get about this.</p>
           </div>
 
           <div class="q">
@@ -254,7 +273,6 @@
           <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
           <button type="submit" class="submit-btn" id="submit-btn">Send My Answers</button>
-          <p class="fineprint">No pitch, no spam. Your answers only go into the report data, and the report is the only email you will get about this.</p>
           <div class="form-error" id="form-error">Something went wrong sending your answers. Please try again, or email us at kemar.csramarketing@gmail.com.</div>
         </form>
 
