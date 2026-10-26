@@ -1272,8 +1272,9 @@
      Light-only color scheme. Copyright line on the panel, per brand rules.
      Links, all verified: review call /website-audit/, survey /survey/,
      contact form /contact/#contact-form. Never bare "audit". Never "free audit".
-     Behavior: panel auto-opens shortly after load; exit intent (mouse to the
-     top of the window, once per page view) re-opens it with a goodbye nudge.
+     Behavior: panel auto-opens shortly after load; exit intent (desktop: mouse
+     to the top of the window; mobile touch only: one fast upward scroll of
+     300px or more) re-opens it once per page view with a goodbye nudge.
 -->
 <style>
   #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35)}
@@ -1313,14 +1314,34 @@
     close.addEventListener('click',function(){panel.classList.remove('open');});
     setTimeout(function(){panel.classList.add('open');},1200);
     var exitFired=false;
-    document.addEventListener('mouseout',function(e){
+    function fireExitIntent(){
       if(exitFired){return;}
-      if(!e.relatedTarget && e.clientY<=0){
-        exitFired=true;
-        if(greet){greet.textContent='Before you go: need anything before you leave?';}
-        panel.classList.add('open');
-      }
+      exitFired=true;
+      if(greet){greet.textContent='Before you go: need anything before you leave?';}
+      panel.classList.add('open');
+    }
+    document.addEventListener('mouseout',function(e){
+      if(!e.relatedTarget && e.clientY<=0){fireExitIntent();}
     });
+    if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){
+      var lastY=window.scrollY||0;
+      var upRun=0;
+      var upStart=0;
+      window.addEventListener('scroll',function(){
+        var y=window.scrollY||0;
+        var now=Date.now();
+        var up=lastY-y;
+        if(up>0){
+          if(now-upStart>500){upRun=0;upStart=now;}
+          upRun+=up;
+          if(upRun>300){fireExitIntent();}
+        } else {
+          upRun=0;
+          upStart=now;
+        }
+        lastY=y;
+      },{passive:true});
+    }
   })();
 </script>
 <!-- END INGRID WEBSITE WIDGET DRAFT -->
