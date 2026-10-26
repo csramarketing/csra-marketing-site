@@ -1259,5 +1259,58 @@
   } catch(e){}
 })();
 </script>
+<!-- INGRID WEBSITE WIDGET - INSTALLED ON HOMEPAGE ONLY, 2026-10-26
+     Status: LIVE on index.html only, at Kemar's named "install it on the home page".
+     What this is: a buttons-only greeting panel. It is HONEST about what it is:
+     no fake chat box, no pretend live brain. A visitor taps one of three verified
+     paths. A live chat brain is a later build, not claimed here.
+     Install scope, when Kemar approves it by name: paste this whole block just
+     before </body> on the homepage (index.html) ONLY, first. No other page, no
+     existing copy changed, no backend, no data collected by the widget itself.
+     Brand: Poppins (already loaded sitewide), Navy #10233F, Coral #FF705C accent
+     only, CTA Yellow #FACC15 for the booking button only, white-forward panel.
+     Light-only color scheme. Copyright line on the panel, per brand rules.
+     Links, all verified: review call /website-audit/, survey /survey/,
+     contact form /contact/. Never bare "audit". Never "free audit".
+-->
+<style>
+  #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;font-family:Poppins,sans-serif;font-size:28px;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35)}
+  #ingrid-widget-panel{display:none;position:fixed;right:20px;bottom:96px;z-index:9999;width:320px;max-width:calc(100vw - 40px);background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 12px 32px rgba(16,35,63,.25);font-family:Poppins,sans-serif;color-scheme:light;overflow:hidden}
+  #ingrid-widget-panel.open{display:block}
+  #ingrid-widget-head{background:#10233F;color:#fff;padding:14px 16px;font-weight:700;font-size:15px}
+  #ingrid-widget-head span{display:block;font-weight:400;font-size:12px;opacity:.85;margin-top:2px}
+  #ingrid-widget-body{padding:16px}
+  #ingrid-widget-body p{margin:0 0 12px;font-size:14px;line-height:1.5;color:#10233F}
+  #ingrid-widget-body a{display:block;text-align:center;text-decoration:none;border-radius:10px;padding:12px;margin:0 0 10px;font-weight:700;font-size:14px}
+  #ingrid-widget-book{background:#FACC15;color:#10233F}
+  #ingrid-widget-survey,#ingrid-widget-contact{background:#fff;color:#10233F;border:2px solid #10233F}
+  #ingrid-widget-foot{padding:0 16px 12px;font-size:11px;color:#6b7280;text-align:center}
+  #ingrid-widget-close{position:absolute;top:8px;right:10px;background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
+</style>
+<button id="ingrid-widget-btn" aria-label="Chat with CSRA Marketing">💬</button>
+<div id="ingrid-widget-panel" role="dialog" aria-label="CSRA Marketing help">
+  <div id="ingrid-widget-head">Hi, I'm Ingrid
+    <span>CSRA Marketing's AI assistant</span>
+    <button id="ingrid-widget-close" aria-label="Close">×</button>
+  </div>
+  <div id="ingrid-widget-body">
+    <p>Thanks for visiting CSRA Marketing. What brings you here today?</p>
+    <a id="ingrid-widget-book" href="/website-audit/">Book a 30-minute website review call</a>
+    <a id="ingrid-widget-survey" href="/survey/">Take the 2027 Roofing Marketing Survey</a>
+    <a id="ingrid-widget-contact" href="/contact/">Send us a message</a>
+  </div>
+  <div id="ingrid-widget-foot">© 2026 CSRA Marketing</div>
+</div>
+<script>
+  (function(){
+    var btn=document.getElementById('ingrid-widget-btn');
+    var panel=document.getElementById('ingrid-widget-panel');
+    var close=document.getElementById('ingrid-widget-close');
+    btn.addEventListener('click',function(){panel.classList.toggle('open');});
+    close.addEventListener('click',function(){panel.classList.remove('open');});
+  })();
+</script>
+<!-- END INGRID WEBSITE WIDGET DRAFT -->
+
 </body>
 </html>
