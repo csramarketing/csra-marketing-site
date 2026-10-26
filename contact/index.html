@@ -167,6 +167,7 @@
     .cal-embed{display:block;width:100%;height:700px;min-height:600px;border:0}
     .contact-split{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:stretch}
     .contact-card{padding:44px;background:var(--soft);box-shadow:inset 0 6px 0 var(--ink);border-radius:var(--radius-lg);display:flex;flex-direction:column;align-items:flex-start}
+    #contact-form{scroll-margin-top:96px}
     .contact-card.coral{box-shadow:inset 0 6px 0 var(--coral)}
     .contact-card h2{font-size:clamp(28px,3.6vw,38px);line-height:1.15;letter-spacing:-.025em;margin:0 0 16px;font-weight:800}
     .contact-card p{color:var(--muted);margin:0 0 26px}
@@ -417,7 +418,7 @@
   <section class="page-section">
     <div class="wrap">
       <div class="contact-split">
-        <article class="contact-card reveal-target">
+        <article class="contact-card reveal-target" id="contact-form">
           <h2>Send us a message</h2>
           <p>Prefer email? Send us a note about your roofing company and what you want your website and SEO to do. We read every message ourselves and reply within one business day.</p>
           <form class="lead-form" id="leadForm" novalidate>
