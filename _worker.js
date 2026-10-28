@@ -380,7 +380,7 @@ async function pageSpeedSeconds(url, strategy, key) {
   }
 }
 
-async function knowledgeGraphFound(name, key) {
+async function knowledgeGraphSearch(name, key) {
   try {
     const api = "https://kgsearch.googleapis.com/v1/entities:search"
       + "?query=" + encodeURIComponent(name)
@@ -389,7 +389,15 @@ async function knowledgeGraphFound(name, key) {
     if (!res.ok) return null;
     const data = await res.json();
     const items = data?.itemListElement || [];
-    return items.length > 0;
+    if (items.length === 0) return { found: false };
+    const r = items[0].result || {};
+    const t = r["@type"];
+    const type = Array.isArray(t) ? t[t.length - 1] : (typeof t === "string" ? t : null);
+    return {
+      found: true,
+      name: (typeof r.name === "string" && r.name) || null,
+      type: type || null,
+    };
   } catch {
     return null;
   }
@@ -470,8 +478,12 @@ async function handleRoofingWebsiteScore(request, env) {
   if (stage === "google") {
     const out = {};
     if (env.KG_API_KEY) {
-      const found = await knowledgeGraphFound(business, env.KG_API_KEY);
-      if (found !== null) out.googleFound = found;
+      const kg = await knowledgeGraphSearch(business, env.KG_API_KEY);
+      if (kg !== null) {
+        out.googleFound = kg.found;
+        if (kg.name) out.kgName = kg.name;
+        if (kg.type) out.kgType = kg.type;
+      }
     }
     return json(out);
   }
@@ -503,8 +515,12 @@ async function handleRoofingWebsiteScore(request, env) {
 
   // Google listing: only when the Knowledge Graph secret exists.
   if (env.KG_API_KEY) {
-    const found = await knowledgeGraphFound(business, env.KG_API_KEY);
-    if (found !== null) out.googleFound = found;
+    const kg = await knowledgeGraphSearch(business, env.KG_API_KEY);
+    if (kg !== null) {
+      out.googleFound = kg.found;
+      if (kg.name) out.kgName = kg.name;
+      if (kg.type) out.kgType = kg.type;
+    }
   }
 
   return json(out);
