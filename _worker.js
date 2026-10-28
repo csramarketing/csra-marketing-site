@@ -397,15 +397,15 @@ async function knowledgeGraphFound(name, key) {
 
 function pageFields(html) {
   const out = {};
-  // Phone view: viewport meta tag present.
-  out.phoneReady = /<meta[^>]+name=["']viewport["']/i.test(html);
+  // Phone view: viewport meta tag present (quoted or unquoted value).
+  out.phoneReady = /<meta[^>]+name=["']?viewport["'\s>\/=]/i.test(html);
   if (!out.phoneReady) out.phoneIssues = ["the page is not set up to fit a phone screen"];
 
   // Contact path: tap-to-call, email link, or a contact form/link.
-  const hasTel = /href=["']tel:/i.test(html);
-  const hasMailto = /href=["']mailto:/i.test(html);
+  const hasTel = /href=["']?tel:/i.test(html);
+  const hasMailto = /href=["']?mailto:/i.test(html);
   const hasForm = /<form/i.test(html);
-  const hasContactLink = /href=["'][^"']*contact[^"']*["']/i.test(html);
+  const hasContactLink = /href=["']?[^"'\s>]*contact/i.test(html);
   out.contactFound = hasTel || hasMailto || hasForm || hasContactLink;
   if (!out.contactFound) out.contactMissing = "a tap-to-call button, an email link, or a contact form";
   out.contactSteps = { call: hasTel, email: hasMailto, form: hasForm || hasContactLink };
@@ -416,9 +416,10 @@ function pageFields(html) {
   let descriptionFound = false;
   const metaTags = html.match(/<meta[^>]*>/gi) || [];
   for (const tag of metaTags) {
-    if (/name=["']description["']/i.test(tag)) {
-      const content = tag.match(/content=["']([^"']*)["']/i);
-      if (content && content[1].trim()) descriptionFound = true;
+    if (/name=["']?description["'\s>\/=]/i.test(tag)) {
+      const content = tag.match(/content\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+      const value = content ? (content[1] ?? content[2] ?? content[3] ?? "") : "";
+      if (value.trim()) descriptionFound = true;
     }
   }
   out.pageDescription = descriptionFound;
