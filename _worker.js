@@ -249,9 +249,178 @@ export default {
 };
 
 
+const FETCH_TIMEOUT_MS = 15000;
+const MAX_BODY_BYTES = 2 * 1024 * 1024;
+
+// Closed-list slow-down mapping: measured PageSpeed findings ONLY, in
+// plain words. Nothing outside this list may appear as a slow-down line.
+const SLOWDOWN_MAP = [
+  ["render-blocking-resources", "Some files hold up the first paint of the page."],
+  ["unused-css-rules", "The page loads styling it does not use."],
+  ["unminified-css", "Some styling files are larger than they need to be."],
+  ["unminified-javascript", "Some scripts are larger than they need to be."],
+  ["uses-optimized-images", "Some images are larger than they need to be."],
+  ["uses-responsive-images", "Some images are bigger than the phone screen needs."],
+  ["server-response-time", "The server is slow to answer."],
+];
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+  });
+}
+
+function normalizeUrl(raw) {
+  let u = String(raw || "").trim();
+  if (!u) return null;
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  try {
+    const parsed = new URL(u);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
+async function fetchCapped(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      redirect: "follow",
+      headers: { "User-Agent": "CSRA-Marketing-Website-Check" },
+    });
+    if (!res.ok) return null;
+    const reader = res.body.getReader();
+    const chunks = [];
+    let total = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_BODY_BYTES) {
+        try { await reader.cancel(); } catch {}
+        return null;
+      }
+      chunks.push(value);
+    }
+    const merged = new Uint8Array(total);
+    let off = 0;
+    for (const c of chunks) { merged.set(c, off); off += c.byteLength; }
+    return new TextDecoder().decode(merged);
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function pageSpeedSeconds(url, strategy, key) {
+  try {
+    const api = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
+      + "?url=" + encodeURIComponent(url)
+      + "&strategy=" + strategy
+      + "&category=performance"
+      + "&key=" + encodeURIComponent(key);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
+    let res;
+    try {
+      res = await fetch(api, { signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+    if (!res.ok) return null;
+    const data = await res.json();
+    const interactive = data?.lighthouseResult?.audits?.interactive;
+    const ms = interactive?.numericValue;
+    if (typeof ms !== "number") return null;
+    const audits = data.lighthouseResult.audits || {};
+    const slowdowns = [];
+    for (const [id, line] of SLOWDOWN_MAP) {
+      const a = audits[id];
+      if (a && typeof a.score === "number" && a.score < 0.9) slowdowns.push(line);
+    }
+    return { seconds: Math.round((ms / 1000) * 10) / 10, slowdowns };
+  } catch {
+    return null;
+  }
+}
+
+async function knowledgeGraphFound(name, key) {
+  try {
+    const api = "https://kgsearch.googleapis.com/v1/entities:search"
+      + "?query=" + encodeURIComponent(name)
+      + "&limit=1&key=" + encodeURIComponent(key);
+    const res = await fetch(api);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const items = data?.itemListElement || [];
+    return items.length > 0;
+  } catch {
+    return null;
+  }
+}
+
+async function handleRoofingWebsiteScore(request, env) {
+  if (request.method !== "POST") return json({ error: "method" }, 405);
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "bad-body" }, 400);
+  }
+  const url = normalizeUrl(body.website);
+  const business = String(body.business || "").trim();
+  if (!url || !business) return json({ error: "missing" }, 400);
+
+  const out = {};
+  const html = await fetchCapped(url);
+  if (html === null) {
+    // Homepage unreachable: every section honestly reports could-not-check.
+    return json(out);
+  }
+
+  // Phone view: viewport meta tag present.
+  out.phoneReady = /<meta[^>]+name=["']viewport["']/i.test(html);
+  if (!out.phoneReady) out.phoneIssues = ["the page is not set up to fit a phone screen"];
+
+  // Contact path: tap-to-call, email link, or a contact form/link.
+  const hasTel = /href=["']tel:/i.test(html);
+  const hasMailto = /href=["']mailto:/i.test(html);
+  const hasForm = /<form/i.test(html);
+  const hasContactLink = /href=["'][^"']*contact[^"']*["']/i.test(html);
+  out.contactFound = hasTel || hasMailto || hasForm || hasContactLink;
+  if (!out.contactFound) out.contactMissing = "a tap-to-call button, an email link, or a contact form";
+
+  // Speed: only when the PageSpeed secret exists.
+  if (env.PAGESPEED_API_KEY) {
+    const [mobile, desktop] = await Promise.all([
+      pageSpeedSeconds(url, "mobile", env.PAGESPEED_API_KEY),
+      pageSpeedSeconds(url, "desktop", env.PAGESPEED_API_KEY),
+    ]);
+    if (mobile) { out.speedPhones = mobile.seconds; out.slowdowns = mobile.slowdowns.slice(0, 3); }
+    if (desktop) out.speedComputers = desktop.seconds;
+  }
+
+  // Google listing: only when the Knowledge Graph secret exists.
+  if (env.KG_API_KEY) {
+    const found = await knowledgeGraphFound(business, env.KG_API_KEY);
+    if (found !== null) out.googleFound = found;
+  }
+
+  return json(out);
+}
+
 async function handle(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
+  if (path === "/api/roofing-website-score") {
+    return handleRoofingWebsiteScore(request, env);
+  }
 
   if (!SPAN_PATHS.has(path) && !SCHEMA_PATHS.has(path)) {
     return env.ASSETS.fetch(request);
