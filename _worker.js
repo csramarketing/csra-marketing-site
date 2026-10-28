@@ -362,7 +362,19 @@ async function pageSpeedSeconds(url, strategy, key) {
       const a = audits[id];
       if (a && typeof a.score === "number" && a.score < 0.9) slowdowns.push(line);
     }
-    return { seconds: Math.round((ms / 1000) * 10) / 10, slowdowns };
+    const out = { seconds: Math.round((ms / 1000) * 10) / 10, slowdowns };
+    // Phone screenshot: the mobile test's own screenshot of the top of
+    // the page. Pass-through only, never stored. Dropped when absent,
+    // not a JPEG data string, or oversized, so no empty frame can ship.
+    const shot = audits["final-screenshot"]?.details?.data;
+    if (typeof shot === "string" && shot.startsWith("data:image/jpeg;base64,") && shot.length <= 1500000) {
+      out.screenshot = shot;
+    }
+    const tap = audits["tap-targets"];
+    if (tap && typeof tap.score === "number") out.tapTargetsPass = tap.score === 1;
+    const font = audits["font-size"];
+    if (font && typeof font.score === "number") out.fontSizePass = font.score === 1;
+    return out;
   } catch {
     return null;
   }
@@ -383,25 +395,8 @@ async function knowledgeGraphFound(name, key) {
   }
 }
 
-async function handleRoofingWebsiteScore(request, env) {
-  if (request.method !== "POST") return json({ error: "method" }, 405);
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return json({ error: "bad-body" }, 400);
-  }
-  const url = normalizeUrl(body.website);
-  const business = String(body.business || "").trim();
-  if (!url || !business) return json({ error: "missing" }, 400);
-
+function pageFields(html) {
   const out = {};
-  const html = await fetchCapped(url, env);
-  if (html === null) {
-    // Homepage unreachable: every section honestly reports could-not-check.
-    return json(out);
-  }
-
   // Phone view: viewport meta tag present.
   out.phoneReady = /<meta[^>]+name=["']viewport["']/i.test(html);
   if (!out.phoneReady) out.phoneIssues = ["the page is not set up to fit a phone screen"];
@@ -413,6 +408,81 @@ async function handleRoofingWebsiteScore(request, env) {
   const hasContactLink = /href=["'][^"']*contact[^"']*["']/i.test(html);
   out.contactFound = hasTel || hasMailto || hasForm || hasContactLink;
   if (!out.contactFound) out.contactMissing = "a tap-to-call button, an email link, or a contact form";
+  out.contactSteps = { call: hasTel, email: hasMailto, form: hasForm || hasContactLink };
+
+  // Search basics: title, description, main heading, from the same page.
+  const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  out.pageTitle = !!(titleMatch && titleMatch[1].trim());
+  let descriptionFound = false;
+  const metaTags = html.match(/<meta[^>]*>/gi) || [];
+  for (const tag of metaTags) {
+    if (/name=["']description["']/i.test(tag)) {
+      const content = tag.match(/content=["']([^"']*)["']/i);
+      if (content && content[1].trim()) descriptionFound = true;
+    }
+  }
+  out.pageDescription = descriptionFound;
+  out.pageHeading = /<h1[\s>]/i.test(html);
+  return out;
+}
+
+async function handleRoofingWebsiteScore(request, env) {
+  if (request.method !== "POST") return json({ error: "method" }, 405);
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "bad-body" }, 400);
+  }
+  const url = normalizeUrl(body.website);
+  const business = String(body.business || "").trim();
+  if (!url || !business) return json({ error: "missing" }, 400);
+  const stage = typeof body.stage === "string" ? body.stage : "";
+
+  // Staged runs: each stage fails independently to could-not-check, so
+  // one slow or failed stage never blocks the others.
+  if (stage === "page") {
+    const html = await fetchCapped(url, env);
+    if (html === null) return json({});
+    return json(pageFields(html));
+  }
+
+  if (stage === "speed") {
+    const out = {};
+    if (env.PAGESPEED_API_KEY) {
+      const [mobile, desktop] = await Promise.all([
+        pageSpeedSeconds(url, "mobile", env.PAGESPEED_API_KEY),
+        pageSpeedSeconds(url, "desktop", env.PAGESPEED_API_KEY),
+      ]);
+      if (mobile) {
+        out.speedPhones = mobile.seconds;
+        out.slowdowns = mobile.slowdowns.slice(0, 3);
+        if (mobile.screenshot) out.phoneScreenshot = mobile.screenshot;
+        if (typeof mobile.tapTargetsPass === "boolean") out.tapTargetsPass = mobile.tapTargetsPass;
+        if (typeof mobile.fontSizePass === "boolean") out.fontSizePass = mobile.fontSizePass;
+      }
+      if (desktop) out.speedComputers = desktop.seconds;
+    }
+    return json(out);
+  }
+
+  if (stage === "google") {
+    const out = {};
+    if (env.KG_API_KEY) {
+      const found = await knowledgeGraphFound(business, env.KG_API_KEY);
+      if (found !== null) out.googleFound = found;
+    }
+    return json(out);
+  }
+
+  // No stage: the original all-in-one run, kept for safety.
+  const out = {};
+  const html = await fetchCapped(url, env);
+  if (html === null) {
+    // Homepage unreachable: every section honestly reports could-not-check.
+    return json(out);
+  }
+  Object.assign(out, pageFields(html));
 
   // Speed: only when the PageSpeed secret exists.
   if (env.PAGESPEED_API_KEY) {
@@ -420,7 +490,13 @@ async function handleRoofingWebsiteScore(request, env) {
       pageSpeedSeconds(url, "mobile", env.PAGESPEED_API_KEY),
       pageSpeedSeconds(url, "desktop", env.PAGESPEED_API_KEY),
     ]);
-    if (mobile) { out.speedPhones = mobile.seconds; out.slowdowns = mobile.slowdowns.slice(0, 3); }
+    if (mobile) {
+      out.speedPhones = mobile.seconds;
+      out.slowdowns = mobile.slowdowns.slice(0, 3);
+      if (mobile.screenshot) out.phoneScreenshot = mobile.screenshot;
+      if (typeof mobile.tapTargetsPass === "boolean") out.tapTargetsPass = mobile.tapTargetsPass;
+      if (typeof mobile.fontSizePass === "boolean") out.fontSizePass = mobile.fontSizePass;
+    }
     if (desktop) out.speedComputers = desktop.seconds;
   }
 
