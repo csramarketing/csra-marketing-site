@@ -183,7 +183,7 @@
           <p class="phone-label" id="phoneShotLabel" hidden>Top of your site on a phone.</p>
           <ul class="route-steps" id="phoneRows" hidden>
             <li id="row-fits"><span class="mark"></span>Fits a phone screen.</li>
-            <li id="row-sized"><span class="mark"></span>Buttons and text sized for a phone.</li>
+            <li id="row-sized"><span class="mark"></span>Buttons and text sized for a phone.<span id="row-sized-note"></span></li>
           </ul>
           <p class="benefit">If it looks wrong on a phone, a visitor leaves.</p>
         </div>
@@ -203,7 +203,9 @@
           <h3>Google</h3>
           <p class="result">Checking now.</p>
           <div class="gcard" id="googleCard" hidden>
-            <p>No Google knowledge listing found.</p>
+            <p id="googleNotFound">No Google knowledge listing found.</p>
+            <p id="googleFoundName" hidden></p>
+            <p id="googleFoundType" hidden></p>
           </div>
           <p class="benefit">A Google listing helps a visitor find your business.</p>
         </div>
@@ -389,8 +391,15 @@
       var rowSized = document.getElementById('row-sized');
       if (typeof speed.tapTargetsPass === 'boolean' && typeof speed.fontSizePass === 'boolean') {
         rowSized.hidden = false;
+        document.getElementById('row-sized-note').textContent = '';
         setRouteRow('row-sized', speed.tapTargetsPass && speed.fontSizePass);
-      } else { rowSized.hidden = true; }
+      } else {
+        rowSized.hidden = false;
+        rowSized.classList.remove('ok', 'gap');
+        var sizedMark = rowSized.querySelector('.mark');
+        if (sizedMark) sizedMark.textContent = '?';
+        document.getElementById('row-sized-note').textContent = ' Could not check.';
+      }
       if (speed.phoneScreenshot) {
         var shot = document.getElementById('phoneShot');
         shot.src = speed.phoneScreenshot;
@@ -420,13 +429,28 @@
     }
 
     if (typeof google.googleFound === 'boolean') {
-      if (google.googleFound) { setResult('sec-google', 'Google holds a listing for ' + business + '.', false); }
-      else {
+      var gCard = document.getElementById('googleCard');
+      if (google.googleFound) {
+        var kgName = google.kgName || business;
+        setResult('sec-google', 'Google holds a listing for ' + kgName + '.', false);
+        document.getElementById('googleNotFound').hidden = true;
+        var gName = document.getElementById('googleFoundName');
+        gName.textContent = kgName;
+        gName.hidden = false;
+        var gType = document.getElementById('googleFoundType');
+        if (google.kgType) { gType.textContent = google.kgType; gType.hidden = false; }
+        else { gType.hidden = true; }
+        gCard.hidden = false;
+      } else {
         setResult('sec-google', 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND, false);
-        document.getElementById('googleCard').hidden = false;
+        document.getElementById('googleNotFound').hidden = false;
+        document.getElementById('googleFoundName').hidden = true;
+        document.getElementById('googleFoundType').hidden = true;
+        gCard.hidden = false;
       }
     } else {
       failSection('sec-google', 'We could not check your Google listing. Try again.');
+      document.getElementById('googleCard').hidden = true;
     }
 
     var diveItems = [];
@@ -492,7 +516,7 @@
     else { sContact.textContent = 'We could not check your contact path. Try again.'; }
 
     if (typeof data.googleFound === 'boolean') {
-      sGoogle.textContent = data.googleFound ? 'Google holds a listing for ' + business + '.' : 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND;
+      sGoogle.textContent = data.googleFound ? 'Google holds a listing for ' + (data.kgName || business) + '.' : 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND;
     } else { sGoogle.textContent = 'We could not check your Google listing. Try again.'; }
 
     if (!data.speedPhones || typeof data.phoneReady !== 'boolean' || typeof data.contactFound !== 'boolean' || typeof data.googleFound !== 'boolean') { retryBtn.hidden = false; }
