@@ -49,6 +49,52 @@
   @media (max-width: 640px) { .layout { display: block; } .formcol { margin-top: 20px; } }
   .progress { display: none; border: 1px solid #dbe2ec; border-radius: 12px; padding: 20px; margin: 20px 0; }
   .progress.on { display: block; }
+  .steps { list-style: none; padding: 0; margin: 0 0 12px; }
+  .steps li { padding: 8px 0; color: #44546e; }
+  .steps li.current { color: #10233F; font-weight: 600; }
+  .steps li.done { color: #10233F; }
+  .step-mark { display: inline-block; width: 20px; text-align: center; margin-right: 6px; }
+  .steps li.current .step-mark { color: #FF705C; animation: pulse 1.2s ease-in-out infinite; }
+  .steps li.done .step-mark { color: #FF705C; animation: none; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .benefit { font-size: 15px; color: #44546e; }
+  .bars { margin: 12px 0; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .bar-label { width: 92px; flex: none; font-weight: 600; }
+  .bar-track { flex: 1 1 0; height: 14px; background: #eef2f7; border-radius: 7px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #10233F; border-radius: 7px; }
+  .bar-fill.slower { background: #FF705C; }
+  .bar-value { width: 72px; flex: none; font-weight: 600; white-space: nowrap; }
+  .phone-frame { border: 2px solid #10233F; border-radius: 24px; padding: 10px 10px 12px; max-width: 300px; background: #ffffff; margin: 12px 0; }
+  .phone-top { width: 60px; height: 6px; background: #10233F; border-radius: 3px; margin: 0 auto 8px; }
+  .phone-frame img { width: 100%; display: block; border-radius: 12px; border: 1px solid #dbe2ec; }
+  .phone-label { font-size: 14px; color: #44546e; margin: 8px 0 0; text-align: center; }
+  .route-steps { list-style: none; padding: 0; margin: 12px 0; }
+  .route-steps li { padding: 6px 0; }
+  .route-steps .mark { display: inline-block; width: 22px; text-align: center; font-weight: 700; }
+  .route-steps li.ok .mark { color: #10233F; }
+  .route-steps li.gap .mark { color: #8a2a1f; }
+  .route-steps li.gap { color: #8a2a1f; }
+  .gcard { border: 1px solid #dbe2ec; border-radius: 12px; padding: 12px 16px; margin: 12px 0; }
+  .gcard p { margin: 4px 0; }
+  .dive-items { margin: 12px 0; padding-left: 22px; }
+  .dive-items li { margin: 6px 0; }
+  .basics p { margin: 4px 0; font-size: 15px; }
+  .recheck { font-size: 14px; }
+  .modal { position: fixed; inset: 0; z-index: 100; background: rgba(16, 35, 63, 0.6); display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal-box { background: #ffffff; border-radius: 12px; width: 100%; max-width: 720px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #dbe2ec; flex: none; }
+  .modal-head h2 { margin: 0; font-size: 20px; }
+  .modal-close { flex: none; min-height: 44px; min-width: 88px; padding: 10px 16px; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; color: #10233F; background: #ffffff; border: 2px solid #10233F; border-radius: 999px; cursor: pointer; }
+  .modal-frame { flex: 1 1 0; width: 100%; min-height: 0; height: 660px; border: none; }
+  @media (max-width: 640px) {
+    .modal { padding: 0; }
+    .modal-box { max-width: none; max-height: none; height: 100%; border-radius: 0; }
+    .modal-head { position: sticky; top: 0; background: #ffffff; z-index: 1; }
+    .modal-frame { height: auto; flex: 1 1 0; }
+    .bar-label { width: 84px; }
+    .bar-value { width: 64px; }
+  }
   .report { display: none; margin: 20px 0; }
   .report.on { display: block; }
   .section { border-top: 1px solid #dbe2ec; padding: 12px 0; }
@@ -95,7 +141,12 @@
     </div>
 
     <div id="progress" class="progress" aria-live="polite">
-      <p><strong>Checking your site, this takes about 30 seconds</strong></p>
+      <ol class="steps">
+        <li id="step1"><span class="step-mark"></span>Step 1 of 3: Checking phone view and contact path</li>
+        <li id="step2"><span class="step-mark"></span>Step 2 of 3: Checking speed</li>
+        <li id="step3"><span class="step-mark"></span>Step 3 of 3: Checking Google listing</li>
+      </ol>
+      <p>This takes about 30 seconds.</p>
     </div>
 
     <div id="report" class="report">
@@ -113,28 +164,64 @@
         <div class="section" id="sec-speed">
           <h3>Speed</h3>
           <p class="result">Checking now.</p>
+          <div class="bars" id="speedBars" hidden>
+            <div class="bar-row"><span class="bar-label">Phones.</span><div class="bar-track"><div class="bar-fill" id="barPhones"></div></div><span class="bar-value" id="barPhonesVal"></span></div>
+            <div class="bar-row"><span class="bar-label">Computers.</span><div class="bar-track"><div class="bar-fill" id="barComputers"></div></div><span class="bar-value" id="barComputersVal"></span></div>
+          </div>
           <ol class="slowdowns" hidden></ol>
+          <p class="benefit">A slow site loses a visitor before they ever reach you.</p>
         </div>
 
         <div class="section" id="sec-phone">
           <h3>Phone view</h3>
           <p class="result">Checking now.</p>
+          <div class="phone-frame" id="phoneFrame" hidden>
+            <div class="phone-top"></div>
+            <img id="phoneShot" src="" alt="">
+          </div>
+          <p class="phone-label" id="phoneShotLabel" hidden>Top of your site on a phone.</p>
+          <ul class="route-steps" id="phoneRows" hidden>
+            <li id="row-fits"><span class="mark"></span>Fits a phone screen.</li>
+            <li id="row-sized"><span class="mark"></span>Buttons and text sized for a phone.</li>
+          </ul>
+          <p class="benefit">If it looks wrong on a phone, a visitor leaves.</p>
         </div>
 
         <div class="section" id="sec-contact">
           <h3>Contact path</h3>
           <p class="result">Checking now.</p>
+          <ul class="route-steps" id="contactSteps" hidden>
+            <li id="route-call"><span class="mark"></span>Call button.</li>
+            <li id="route-email"><span class="mark"></span>Email link.</li>
+            <li id="route-form"><span class="mark"></span>Contact form.</li>
+          </ul>
+          <p class="benefit">If a visitor cannot reach you in one tap, the job goes elsewhere.</p>
         </div>
 
         <div class="section" id="sec-google">
           <h3>Google</h3>
           <p class="result">Checking now.</p>
+          <div class="gcard" id="googleCard" hidden>
+            <p>No Google knowledge listing found.</p>
+          </div>
+          <p class="benefit">A Google listing helps a visitor find your business.</p>
+        </div>
+
+        <div class="section" id="sec-dive" hidden>
+          <h3 id="diveHeader" hidden>Start here.</h3>
+          <ul class="dive-items" id="diveItems" hidden></ul>
+          <p id="diveAll" hidden>These four checks found no big gaps.</p>
+          <div class="basics" id="diveBasics" hidden>
+            <p id="basicTitle"></p>
+            <p id="basicDescription"></p>
+            <p id="basicHeading"></p>
+          </div>
         </div>
 
         <div class="section" id="sec-next">
           <h3>Next step</h3>
           <p>Not happy with what the check found? Book a 30-minute audit call and we will walk through what to fix.</p>
-          <a class="cta" href="/website-audit/">Book a 30-minute audit call</a>
+          <button class="cta" id="bookBtn" type="button">Book a 30-minute audit call</button>
         </div>
       </div>
 
@@ -159,6 +246,7 @@
       </div>
 
       <button id="retryBtn" class="cta secondary" type="button" hidden>Try again</button>
+      <p class="recheck"><a href="#" id="recheckLink">Check another website</a></p>
       <p class="note">&copy; 2026 CSRA Marketing</p>
     </div>
   </main>
@@ -169,37 +257,35 @@
   </footer>
 </div>
 
-<!--
-  DRAFT ONLY. Backend pending. This page is not live and must not be pushed
-  until Kemar gives a final yes on the live page.
-  Planned backend: the site's existing Cloudflare Workers setup on its
-  no-cost tier. The function behind /api/roofing-website-score is NOT
-  deployed yet, so checks below fail in this draft and show the
-  "could not check" state. No API key of any kind is stored in this page,
-  and none may be added here.
-  Lead storage is pending CRO wiring (intake-first: a dedicated intake
-  sheet, same pattern as survey responses). When the backend lands, each
-  check writes one intake row: website, business name, email, check
-  date, leaks found, source = leak-check. The source tag stays
-  leak-check by CRO decision: it is an internal key defined in the spec,
-  and the public rename to Roofing Website Score does not change it.
-  Page copy follows the Copywriter draft (files/leak-check-tool-copy-draft-
-  2026-10-28.md). One flagged conflict for QA: the draft's next-step
-  button reads "Book a 30-minute audit call", while the site-wide button
-  standard reads "Book a 30-minute review". This draft follows the
-  Copywriter draft; QA to rule before anything goes live.
--->
+<div id="bookModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="bookModalTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="bookModalTitle">Book a 30-minute audit call.</h2>
+      <button id="modalClose" class="modal-close" type="button">Close &times;</button>
+    </div>
+    <iframe id="bookFrame" class="modal-frame" title="Book a 30-minute audit call" loading="lazy"></iframe>
+  </div>
+</div>
+
 <script>
 (function () {
   var form = document.getElementById('scoreForm');
+  var layout = document.querySelector('.layout');
   var progress = document.getElementById('progress');
   var report = document.getElementById('report');
   var reportIntro = document.getElementById('reportIntro');
   var stamp = document.getElementById('stamp');
   var retryBtn = document.getElementById('retryBtn');
+  var recheckLink = document.getElementById('recheckLink');
   var timeoutNote = document.getElementById('timeoutNote');
   var fullSections = document.getElementById('fullSections');
   var shortSections = document.getElementById('shortSections');
+  var bookBtn = document.getElementById('bookBtn');
+  var bookModal = document.getElementById('bookModal');
+  var modalClose = document.getElementById('modalClose');
+  var bookFrame = document.getElementById('bookFrame');
+  var frameLoaded = false;
+  var savedScroll = 0;
 
   var GOOGLE_NOT_FOUND = 'That does not mean you are invisible on Google. It means Google holds no knowledge listing under that name, and a visitor searching for you may not see a full business panel.';
 
@@ -219,7 +305,213 @@
     setResult(id, line, true);
   }
 
-  function failAll() {
+  function setStep(n, state) {
+    var li = document.getElementById('step' + n);
+    if (!li) return;
+    var mark = li.querySelector('.step-mark');
+    li.classList.remove('current', 'done');
+    if (state === 'current') { li.classList.add('current'); if (mark) mark.textContent = '\u25CF'; }
+    else if (state === 'done') { li.classList.add('done'); if (mark) mark.textContent = '\u2713'; }
+    else { if (mark) mark.textContent = ''; }
+  }
+
+  function resetSteps() {
+    setStep(1, 'idle'); setStep(2, 'idle'); setStep(3, 'idle');
+  }
+
+  function resetVisuals() {
+    var ids = ['speedBars', 'phoneFrame', 'phoneShotLabel', 'phoneRows', 'contactSteps', 'googleCard', 'sec-dive', 'diveHeader', 'diveItems', 'diveAll', 'diveBasics'];
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = true;
+    });
+    var shot = document.getElementById('phoneShot');
+    if (shot) shot.removeAttribute('src');
+  }
+
+  function barWidth(seconds) {
+    return Math.min(seconds, 10) / 10 * 100;
+  }
+
+  function setRouteRow(id, found) {
+    var li = document.getElementById(id);
+    if (!li) return;
+    var mark = li.querySelector('.mark');
+    li.classList.remove('ok', 'gap');
+    li.classList.add(found ? 'ok' : 'gap');
+    if (mark) mark.textContent = found ? '\u2713' : '\u2717';
+  }
+
+  function renderFull(page, speed, google, website, business) {
+    reportIntro.textContent = 'Here is what we found on ' + website + '.';
+    fullSections.hidden = false;
+    shortSections.hidden = true;
+
+    if (speed.speedPhones && speed.speedComputers) {
+      setResult('sec-speed', 'Your site loads in ' + speed.speedPhones + ' seconds on phones and ' + speed.speedComputers + ' seconds on computers.', false);
+      var bars = document.getElementById('speedBars');
+      var barP = document.getElementById('barPhones');
+      var barC = document.getElementById('barComputers');
+      barP.style.width = barWidth(speed.speedPhones) + '%';
+      barC.style.width = barWidth(speed.speedComputers) + '%';
+      barP.classList.remove('slower');
+      barC.classList.remove('slower');
+      if (speed.speedPhones > speed.speedComputers) barP.classList.add('slower');
+      else if (speed.speedComputers > speed.speedPhones) barC.classList.add('slower');
+      document.getElementById('barPhonesVal').textContent = speed.speedPhones + ' seconds';
+      document.getElementById('barComputersVal').textContent = speed.speedComputers + ' seconds';
+      bars.hidden = false;
+      var list = document.querySelector('#sec-speed .slowdowns');
+      if (speed.slowdowns && speed.slowdowns.length) {
+        list.innerHTML = '';
+        speed.slowdowns.slice(0, 3).forEach(function (item) {
+          var li = document.createElement('li');
+          li.textContent = item;
+          list.appendChild(li);
+        });
+        list.hidden = false;
+      } else { list.hidden = true; }
+    } else {
+      failSection('sec-speed', 'We could not check your site speed. Try again.');
+      document.getElementById('speedBars').hidden = true;
+    }
+
+    if (typeof page.phoneReady === 'boolean') {
+      if (page.phoneReady) { setResult('sec-phone', 'Your site is set up for phones.', false); }
+      else {
+        var issues = (page.phoneIssues && page.phoneIssues.length) ? ' Here is what is off: ' + page.phoneIssues.join(', ') + '.' : '';
+        setResult('sec-phone', 'Your site is not set up for phones yet.' + issues, false);
+      }
+      var rows = document.getElementById('phoneRows');
+      rows.hidden = false;
+      setRouteRow('row-fits', page.phoneReady);
+      var rowSized = document.getElementById('row-sized');
+      if (typeof speed.tapTargetsPass === 'boolean' && typeof speed.fontSizePass === 'boolean') {
+        rowSized.hidden = false;
+        setRouteRow('row-sized', speed.tapTargetsPass && speed.fontSizePass);
+      } else { rowSized.hidden = true; }
+      if (speed.phoneScreenshot) {
+        var shot = document.getElementById('phoneShot');
+        shot.src = speed.phoneScreenshot;
+        document.getElementById('phoneFrame').hidden = false;
+        document.getElementById('phoneShotLabel').hidden = false;
+      }
+    } else {
+      failSection('sec-phone', 'We could not check your phone view. Try again.');
+      document.getElementById('phoneRows').hidden = true;
+    }
+
+    if (typeof page.contactFound === 'boolean') {
+      if (page.contactFound) { setResult('sec-contact', 'A visitor can reach you in one tap or click.', false); }
+      else {
+        var missing = page.contactMissing ? ' What is missing: ' + page.contactMissing + '.' : '';
+        setResult('sec-contact', 'A visitor cannot reach you in one tap or click yet.' + missing, false);
+      }
+      if (page.contactSteps) {
+        document.getElementById('contactSteps').hidden = false;
+        setRouteRow('route-call', !!page.contactSteps.call);
+        setRouteRow('route-email', !!page.contactSteps.email);
+        setRouteRow('route-form', !!page.contactSteps.form);
+      }
+    } else {
+      failSection('sec-contact', 'We could not check your contact path. Try again.');
+      document.getElementById('contactSteps').hidden = true;
+    }
+
+    if (typeof google.googleFound === 'boolean') {
+      if (google.googleFound) { setResult('sec-google', 'Google holds a listing for ' + business + '.', false); }
+      else {
+        setResult('sec-google', 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND, false);
+        document.getElementById('googleCard').hidden = false;
+      }
+    } else {
+      failSection('sec-google', 'We could not check your Google listing. Try again.');
+    }
+
+    var diveItems = [];
+    if (speed.speedPhones && speed.speedPhones > 3.0) diveItems.push('Slow loading on phones.');
+    if (page.phoneReady === false) diveItems.push('Not set up for phones.');
+    if (page.contactFound === false) diveItems.push('No one tap contact route.');
+    if (google.googleFound === false) diveItems.push('No Google knowledge listing.');
+    diveItems = diveItems.slice(0, 3);
+    var hasBasics = typeof page.pageTitle === 'boolean' && typeof page.pageDescription === 'boolean' && typeof page.pageHeading === 'boolean';
+    var allHaveData = !!(speed.speedPhones && typeof page.phoneReady === 'boolean' && typeof page.contactFound === 'boolean' && typeof google.googleFound === 'boolean');
+    var dive = document.getElementById('sec-dive');
+    var itemsEl = document.getElementById('diveItems');
+    var allEl = document.getElementById('diveAll');
+    var headerEl = document.getElementById('diveHeader');
+    var basicsEl = document.getElementById('diveBasics');
+    if (diveItems.length) {
+      itemsEl.innerHTML = '';
+      diveItems.forEach(function (item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        itemsEl.appendChild(li);
+      });
+      itemsEl.hidden = false;
+      headerEl.hidden = false;
+      allEl.hidden = true;
+    } else if (allHaveData) {
+      itemsEl.hidden = true;
+      headerEl.hidden = true;
+      allEl.hidden = false;
+    } else {
+      itemsEl.hidden = true;
+      headerEl.hidden = true;
+      allEl.hidden = true;
+    }
+    if (hasBasics) {
+      document.getElementById('basicTitle').textContent = page.pageTitle ? 'Title: found.' : 'Title: missing.';
+      document.getElementById('basicDescription').textContent = page.pageDescription ? 'Description: found.' : 'Description: missing.';
+      document.getElementById('basicHeading').textContent = page.pageHeading ? 'Main heading: found.' : 'Main heading: missing.';
+      basicsEl.hidden = false;
+    } else { basicsEl.hidden = true; }
+    dive.hidden = !(diveItems.length || (!diveItems.length && allHaveData) || hasBasics);
+
+    if (!speed.speedPhones || typeof page.phoneReady !== 'boolean' || typeof page.contactFound !== 'boolean' || typeof google.googleFound !== 'boolean') { retryBtn.hidden = false; }
+  }
+
+  function renderShort(data, website, business) {
+    reportIntro.textContent = 'Here is a short summary for ' + website + '.';
+    fullSections.hidden = true;
+    shortSections.hidden = false;
+
+    var sSpeed = document.getElementById('short-speed');
+    var sPhone = document.getElementById('short-phone');
+    var sContact = document.getElementById('short-contact');
+    var sGoogle = document.getElementById('short-google');
+
+    if (data.speedPhones && data.speedComputers) { sSpeed.textContent = 'Your site loads in ' + data.speedPhones + ' seconds on phones and ' + data.speedComputers + ' seconds on computers.'; }
+    else { sSpeed.textContent = 'We could not check your site speed. Try again.'; }
+
+    if (typeof data.phoneReady === 'boolean') { sPhone.textContent = data.phoneReady ? 'Your site is set up for phones.' : 'Your site is not set up for phones yet.'; }
+    else { sPhone.textContent = 'We could not check your phone view. Try again.'; }
+
+    if (typeof data.contactFound === 'boolean') { sContact.textContent = data.contactFound ? 'A visitor can reach you in one tap or click.' : 'A visitor cannot reach you in one tap or click yet.'; }
+    else { sContact.textContent = 'We could not check your contact path. Try again.'; }
+
+    if (typeof data.googleFound === 'boolean') {
+      sGoogle.textContent = data.googleFound ? 'Google holds a listing for ' + business + '.' : 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND;
+    } else { sGoogle.textContent = 'We could not check your Google listing. Try again.'; }
+
+    if (!data.speedPhones || typeof data.phoneReady !== 'boolean' || typeof data.contactFound !== 'boolean' || typeof data.googleFound !== 'boolean') { retryBtn.hidden = false; }
+  }
+
+  function failAllShort(website, business) {
+    reportIntro.textContent = 'Here is a short summary for ' + website + '.';
+    fullSections.hidden = true;
+    shortSections.hidden = false;
+    document.getElementById('short-speed').textContent = 'We could not check your site speed. Try again.';
+    document.getElementById('short-phone').textContent = 'We could not check your phone view. Try again.';
+    document.getElementById('short-contact').textContent = 'We could not check your contact path. Try again.';
+    document.getElementById('short-google').textContent = 'We could not check your Google listing. Try again.';
+    retryBtn.hidden = false;
+  }
+
+  function failAllFull(website) {
+    reportIntro.textContent = 'Here is what we found on ' + website + '.';
+    fullSections.hidden = false;
+    shortSections.hidden = true;
     failSection('sec-speed', 'We could not check your site speed. Try again.');
     failSection('sec-phone', 'We could not check your phone view. Try again.');
     failSection('sec-contact', 'We could not check your contact path. Try again.');
@@ -227,74 +519,31 @@
     retryBtn.hidden = false;
   }
 
-  function render(data, isRoofer, website, business) {
-    stamp.textContent = easternStamp();
-    if (isRoofer) {
-      reportIntro.textContent = 'Here is what we found on ' + website + '.';
-      fullSections.hidden = false;
-      shortSections.hidden = true;
+  function postStage(stage, payload, timeoutMs) {
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, timeoutMs);
+    var body = { website: payload.website, email: payload.email, business: payload.business, roofer: payload.roofer, stage: stage };
+    return fetch('/api/roofing-website-score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    })
+    .then(function (res) {
+      clearTimeout(timer);
+      if (!res.ok) return { data: null, timedOut: false };
+      return res.json().then(function (data) { return { data: data, timedOut: false }; });
+    })
+    .catch(function (err) {
+      clearTimeout(timer);
+      return { data: null, timedOut: !!(err && err.name === 'AbortError') };
+    });
+  }
 
-      if (data.speedPhones && data.speedComputers) {
-        setResult('sec-speed', 'Your site loads in ' + data.speedPhones + ' seconds on phones and ' + data.speedComputers + ' seconds on computers.', false);
-        var list = document.querySelector('#sec-speed .slowdowns');
-        if (data.slowdowns && data.slowdowns.length) {
-          list.innerHTML = '';
-          data.slowdowns.slice(0, 3).forEach(function (item) {
-            var li = document.createElement('li');
-            li.textContent = item;
-            list.appendChild(li);
-          });
-          list.hidden = false;
-        } else { list.hidden = true; }
-      } else { failSection('sec-speed', 'We could not check your site speed. Try again.'); }
-
-      if (typeof data.phoneReady === 'boolean') {
-        if (data.phoneReady) { setResult('sec-phone', 'Your site is set up for phones.', false); }
-        else {
-          var issues = (data.phoneIssues && data.phoneIssues.length) ? ' Here is what is off: ' + data.phoneIssues.join(', ') + '.' : '';
-          setResult('sec-phone', 'Your site is not set up for phones yet.' + issues, false);
-        }
-      } else { failSection('sec-phone', 'We could not check your phone view. Try again.'); }
-
-      if (typeof data.contactFound === 'boolean') {
-        if (data.contactFound) { setResult('sec-contact', 'A visitor can reach you in one tap or click.', false); }
-        else {
-          var missing = data.contactMissing ? ' What is missing: ' + data.contactMissing + '.' : '';
-          setResult('sec-contact', 'A visitor cannot reach you in one tap or click yet.' + missing, false);
-        }
-      } else { failSection('sec-contact', 'We could not check your contact path. Try again.'); }
-
-      if (typeof data.googleFound === 'boolean') {
-        if (data.googleFound) { setResult('sec-google', 'Google holds a listing for ' + business + '.', false); }
-        else { setResult('sec-google', 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND, false); }
-      } else { failSection('sec-google', 'We could not check your Google listing. Try again.'); }
-
-      if (!data.speedPhones || typeof data.phoneReady !== 'boolean' || typeof data.contactFound !== 'boolean' || typeof data.googleFound !== 'boolean') { retryBtn.hidden = false; }
-    } else {
-      reportIntro.textContent = 'Here is a short summary for ' + website + '.';
-      fullSections.hidden = true;
-      shortSections.hidden = false;
-
-      var sSpeed = document.getElementById('short-speed');
-      var sPhone = document.getElementById('short-phone');
-      var sContact = document.getElementById('short-contact');
-      var sGoogle = document.getElementById('short-google');
-
-      if (data.speedPhones && data.speedComputers) { sSpeed.textContent = 'Your site loads in ' + data.speedPhones + ' seconds on phones and ' + data.speedComputers + ' seconds on computers.'; }
-      else { sSpeed.textContent = 'We could not check your site speed. Try again.'; }
-
-      if (typeof data.phoneReady === 'boolean') { sPhone.textContent = data.phoneReady ? 'Your site is set up for phones.' : 'Your site is not set up for phones yet.'; }
-      else { sPhone.textContent = 'We could not check your phone view. Try again.'; }
-
-      if (typeof data.contactFound === 'boolean') { sContact.textContent = data.contactFound ? 'A visitor can reach you in one tap or click.' : 'A visitor cannot reach you in one tap or click yet.'; }
-      else { sContact.textContent = 'We could not check your contact path. Try again.'; }
-
-      if (typeof data.googleFound === 'boolean') {
-        sGoogle.textContent = data.googleFound ? 'Google holds a listing for ' + business + '.' : 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND;
-      } else { sGoogle.textContent = 'We could not check your Google listing. Try again.'; }
-
-      if (!data.speedPhones || typeof data.phoneReady !== 'boolean' || typeof data.contactFound !== 'boolean' || typeof data.googleFound !== 'boolean') { retryBtn.hidden = false; }
-    }
+  function showForm() {
+    layout.hidden = false;
+    progress.classList.remove('on');
+    report.classList.remove('on');
   }
 
   function runCheck() {
@@ -304,64 +553,81 @@
     var isRoofer = document.getElementById('roofer').checked;
     document.getElementById('reportName').textContent = business || website;
 
-    progress.classList.add('on');
+    layout.hidden = true;
     report.classList.remove('on');
+    progress.classList.add('on');
+    resetSteps();
+    resetVisuals();
     retryBtn.hidden = true;
     timeoutNote.hidden = true;
 
-    var controller = new AbortController();
-    var timer = setTimeout(function () { controller.abort(); }, 60000);
+    var payload = { website: website, email: email, business: business, roofer: isRoofer };
+    var page = {};
+    var speed = {};
+    var google = {};
+    var anyTimedOut = false;
+    var anyData = false;
 
-    fetch('/api/roofing-website-score', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ website: website, email: email, business: business, roofer: isRoofer }),
-      signal: controller.signal
+    function stageDone(n) { setStep(n, 'done'); }
+
+    setStep(1, 'current');
+    postStage('page', payload, 30000)
+    .then(function (r) {
+      if (r.data && !r.data.error) { page = r.data; anyData = true; }
+      if (r.timedOut) anyTimedOut = true;
+      stageDone(1);
+      setStep(2, 'current');
+      return postStage('speed', payload, 75000);
     })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      clearTimeout(timer);
-      progress.classList.remove('on');
-      report.classList.add('on');
-      if (!data || data.error) { failAll(); return; }
-      render(data, isRoofer, website, business);
+    .then(function (r) {
+      if (r.data && !r.data.error) { speed = r.data; anyData = true; }
+      if (r.timedOut) anyTimedOut = true;
+      stageDone(2);
+      setStep(3, 'current');
+      return postStage('google', payload, 30000);
     })
-    .catch(function (err) {
-      clearTimeout(timer);
+    .then(function (r) {
+      if (r.data && !r.data.error) { google = r.data; anyData = true; }
+      if (r.timedOut) anyTimedOut = true;
+      stageDone(3);
       progress.classList.remove('on');
       report.classList.add('on');
       stamp.textContent = easternStamp();
-      if (err && err.name === 'AbortError') {
-        timeoutNote.hidden = false;
-        if (isRoofer) {
-          fullSections.hidden = false; shortSections.hidden = true;
-          reportIntro.textContent = 'Here is what we found on ' + website + '.';
-          failAll();
-        } else {
-          fullSections.hidden = true; shortSections.hidden = false;
-          reportIntro.textContent = 'Here is a short summary for ' + website + '.';
-          document.getElementById('short-speed').textContent = 'We could not check your site speed. Try again.';
-          document.getElementById('short-phone').textContent = 'We could not check your phone view. Try again.';
-          document.getElementById('short-contact').textContent = 'We could not check your contact path. Try again.';
-          document.getElementById('short-google').textContent = 'We could not check your Google listing. Try again.';
-          retryBtn.hidden = false;
-        }
-      } else if (isRoofer) {
-        fullSections.hidden = false;
-        shortSections.hidden = true;
-        reportIntro.textContent = 'Here is what we found on ' + website + '.';
-        failAll();
-      } else {
-        fullSections.hidden = true;
-        shortSections.hidden = false;
-        reportIntro.textContent = 'Here is a short summary for ' + website + '.';
-        document.getElementById('short-speed').textContent = 'We could not check your site speed. Try again.';
-        document.getElementById('short-phone').textContent = 'We could not check your phone view. Try again.';
-        document.getElementById('short-contact').textContent = 'We could not check your contact path. Try again.';
-        document.getElementById('short-google').textContent = 'We could not check your Google listing. Try again.';
-        retryBtn.hidden = false;
+      if (anyTimedOut) timeoutNote.hidden = false;
+      if (!anyData) {
+        if (isRoofer) { failAllFull(website); }
+        else { failAllShort(website, business); }
+        return;
+      }
+      if (isRoofer) { renderFull(page, speed, google, website, business); }
+      else {
+        var merged = {};
+        [page, speed, google].forEach(function (part) {
+          Object.keys(part).forEach(function (k) { merged[k] = part[k]; });
+        });
+        renderShort(merged, website, business);
       }
     });
+  }
+
+  function openModal() {
+    if (!bookFrame) return;
+    if (!frameLoaded) {
+      bookFrame.src = 'https://cal.com/csramarketing/30min?embed=true';
+      frameLoaded = true;
+    }
+    savedScroll = window.scrollY || document.documentElement.scrollTop || 0;
+    bookModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (modalClose) modalClose.focus();
+  }
+
+  function closeModal() {
+    if (!bookModal) return;
+    bookModal.hidden = true;
+    document.body.style.overflow = '';
+    window.scrollTo(0, savedScroll);
+    if (bookBtn) bookBtn.focus();
   }
 
   form.addEventListener('submit', function (e) {
@@ -372,7 +638,31 @@
   retryBtn.addEventListener('click', function () {
     runCheck();
   });
+
+  recheckLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    showForm();
+  });
+
+  if (bookBtn) {
+    bookBtn.addEventListener('click', function () {
+      openModal();
+    });
+  }
+
+  if (modalClose) {
+    modalClose.addEventListener('click', function () {
+      closeModal();
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && bookModal && !bookModal.hidden) {
+      closeModal();
+    }
+  });
 })();
+
 </script>
 </body>
 </html>
