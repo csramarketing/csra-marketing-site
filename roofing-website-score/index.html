@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
+<title>Roofing Website Score | CSRA Marketing</title>
+<meta name="description" content="Enter your website address and get a short report in plain words: speed, phone view, contact path, and Google listing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Poppins', sans-serif; color: #10233F; background: #ffffff; line-height: 1.6; }
+  a { color: #10233F; text-decoration: underline; text-decoration-color: #FF705C; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { color: #FF705C; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 20px 48px; }
+  header { display: flex; align-items: center; gap: 16px; padding: 8px 0 24px; }
+  header img { height: 44px; width: auto; }
+  header .brand { font-weight: 700; font-size: 18px; }
+  h1 { font-size: 34px; line-height: 1.25; margin: 8px 0 12px; }
+  h2 { font-size: 22px; margin: 32px 0 8px; }
+  h3 { font-size: 18px; margin: 20px 0 4px; }
+  p { margin: 8px 0; }
+  .lead { font-size: 18px; }
+  .card { border: 1px solid #dbe2ec; border-radius: 12px; padding: 20px; margin: 20px 0; }
+  label { display: block; font-weight: 600; margin: 14px 0 4px; }
+  input[type="text"], input[type="email"] { width: 100%; padding: 12px; font-family: 'Poppins', sans-serif; font-size: 16px; border: 1px solid #8b98ad; border-radius: 8px; color: #10233F; background: #ffffff; }
+  .checkrow { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; }
+  .checkrow input { margin-top: 5px; }
+  .hint { font-size: 14px; color: #44546e; margin: 4px 0 0; }
+  .cta { display: block; width: fit-content; background: #FACC15; color: #10233F; font-weight: 700; font-size: 17px; padding: 14px 26px; border: none; border-radius: 999px; cursor: pointer; text-decoration: none; margin: 18px auto 0; text-align: center; }
+  .cta:hover { color: #10233F; }
+  .cta.secondary { background: #10233F; color: #ffffff; }
+  .u { text-decoration: underline; text-decoration-color: #FF705C; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .eyebrow { font-size: 15px; font-weight: 700; color: #10233F; margin: 8px 0 4px; }
+  .anchor { font-size: 18px; font-weight: 600; margin: 24px 0 8px; }
+  .report-name { font-size: 24px; font-weight: 700; line-height: 1.3; margin: 12px 0 4px; }
+  .report-logo { height: 36px; width: auto; }
+  .report .rule { height: 3px; background: #FF705C; border: none; margin: 12px 0 4px; }
+  .report h3 { text-decoration: underline; text-decoration-color: #FF705C; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .report .section { border-top: 1px solid #FF705C; }
+  .layout { display: flex; gap: 32px; align-items: flex-start; }
+  .copycol { flex: 1 1 0; }
+  .formcol { flex: 1 1 0; }
+  .formcol .card { margin: 8px 0 20px; }
+  @media (max-width: 640px) { .layout { display: block; } .formcol { margin-top: 20px; } }
+  .progress { display: none; border: 1px solid #dbe2ec; border-radius: 12px; padding: 20px; margin: 20px 0; }
+  .progress.on { display: block; }
+  .report { display: none; margin: 20px 0; }
+  .report.on { display: block; }
+  .section { border-top: 1px solid #dbe2ec; padding: 12px 0; }
+  .fail { color: #8a2a1f; }
+  .stamp { font-size: 14px; color: #44546e; }
+  .note { font-size: 14px; color: #44546e; }
+  footer { border-top: 1px solid #dbe2ec; margin-top: 40px; padding-top: 16px; font-size: 14px; color: #44546e; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="/"><img src="../assets/csra-logo.png" alt="CSRA Marketing logo"></a>
+  </header>
+
+  <main>
+    <div class="layout">
+    <div class="copycol">
+    <p class="eyebrow">For roofing companies</p>
+    <h1>Find where your website is <span class="u">losing jobs</span>.</h1>
+    <p class="lead">Enter your website address and get a <span class="u">short report</span> in <span class="u">plain words</span>. It shows your site speed, your phone view, your contact path, and your Google listing.</p>
+    <p class="anchor">Four checks. One clear report.</p>
+    </div>
+
+    <div class="formcol">
+    <form id="scoreForm" class="card">
+      <label for="website">Website</label>
+      <input id="website" name="website" type="text" inputmode="url" required placeholder="www.yourcompany.com" autocomplete="url">
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required placeholder="you@yourcompany.com" autocomplete="email">
+
+      <label for="business">Business name</label>
+      <input id="business" name="business" type="text" required placeholder="Acme Roofing" autocomplete="organization">
+
+      <div class="checkrow">
+        <input id="roofer" name="roofer" type="checkbox">
+        <label for="roofer" style="margin:0; font-weight:400;">I own a roofing company</label>
+      </div>
+
+      <button class="cta" type="submit">Check my website</button>
+    </form>
+    </div>
+    </div>
+
+    <div id="progress" class="progress" aria-live="polite">
+      <p><strong>Checking your site, this takes about 30 seconds</strong></p>
+    </div>
+
+    <div id="report" class="report">
+      <img class="report-logo" src="../assets/csra-logo.png" alt="CSRA Marketing logo">
+      <p class="report-name" id="reportName"></p>
+      <hr class="rule">
+      <h2 id="reportIntro">Here is what we found.</h2>
+      <p id="stamp" class="stamp"></p>
+
+      <div id="timeoutNote" class="section" hidden>
+        <p class="fail">The check timed out. Your site may be slow to answer, or the check may have hit a limit. Try again.</p>
+      </div>
+
+      <div id="fullSections">
+        <div class="section" id="sec-speed">
+          <h3>Speed</h3>
+          <p class="result">Checking now.</p>
+          <ol class="slowdowns" hidden></ol>
+        </div>
+
+        <div class="section" id="sec-phone">
+          <h3>Phone view</h3>
+          <p class="result">Checking now.</p>
+        </div>
+
+        <div class="section" id="sec-contact">
+          <h3>Contact path</h3>
+          <p class="result">Checking now.</p>
+        </div>
+
+        <div class="section" id="sec-google">
+          <h3>Google</h3>
+          <p class="result">Checking now.</p>
+        </div>
+
+        <div class="section" id="sec-next">
+          <h3>Next step</h3>
+          <p>Not happy with what the check found? Book a 30-minute audit call and we will walk through what to fix.</p>
+          <a class="cta" href="/website-audit/">Book a 30-minute audit call</a>
+        </div>
+      </div>
+
+      <div id="shortSections" hidden>
+        <div class="section">
+          <h3>Speed</h3>
+          <p class="result" id="short-speed">Checking now.</p>
+        </div>
+        <div class="section">
+          <h3>Phone view</h3>
+          <p class="result" id="short-phone">Checking now.</p>
+        </div>
+        <div class="section">
+          <h3>Contact path</h3>
+          <p class="result" id="short-contact">Checking now.</p>
+        </div>
+        <div class="section">
+          <h3>Google</h3>
+          <p class="result" id="short-google">Checking now.</p>
+        </div>
+        <p class="note">This check is built for roofing companies, so this is the short version.</p>
+      </div>
+
+      <button id="retryBtn" class="cta secondary" type="button" hidden>Try again</button>
+      <p class="note">&copy; 2026 CSRA Marketing</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 CSRA Marketing</p>
+    <p><a href="/privacy/">Privacy</a> &middot; <a href="/terms/">Terms</a></p>
+  </footer>
+</div>
+
+<!--
+  DRAFT ONLY. Backend pending. This page is not live and must not be pushed
+  until Kemar gives a final yes on the live page.
+  Planned backend: the site's existing Cloudflare Workers setup on its
+  no-cost tier. The function behind /api/roofing-website-score is NOT
+  deployed yet, so checks below fail in this draft and show the
+  "could not check" state. No API key of any kind is stored in this page,
+  and none may be added here.
+  Lead storage is pending CRO wiring (intake-first: a dedicated intake
+  sheet, same pattern as survey responses). When the backend lands, each
+  check writes one intake row: website, business name, email, check
+  date, leaks found, source = leak-check. The source tag stays
+  leak-check by CRO decision: it is an internal key defined in the spec,
+  and the public rename to Roofing Website Score does not change it.
+  Page copy follows the Copywriter draft (files/leak-check-tool-copy-draft-
+  2026-10-28.md). One flagged conflict for QA: the draft's next-step
+  button reads "Book a 30-minute audit call", while the site-wide button
+  standard reads "Book a 30-minute review". This draft follows the
+  Copywriter draft; QA to rule before anything goes live.
+-->
+<script>
+(function () {
+  var form = document.getElementById('scoreForm');
+  var progress = document.getElementById('progress');
+  var report = document.getElementById('report');
+  var reportIntro = document.getElementById('reportIntro');
+  var stamp = document.getElementById('stamp');
+  var retryBtn = document.getElementById('retryBtn');
+  var timeoutNote = document.getElementById('timeoutNote');
+  var fullSections = document.getElementById('fullSections');
+  var shortSections = document.getElementById('shortSections');
+
+  var GOOGLE_NOT_FOUND = 'That does not mean you are invisible on Google. It means Google holds no knowledge listing under that name, and a visitor searching for you may not see a full business panel.';
+
+  function easternStamp() {
+    var now = new Date();
+    var date = now.toLocaleDateString('en-US', { timeZone: 'America/New_York' });
+    var time = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' });
+    return 'Checked just now on ' + date + ' at ' + time + ' Eastern.';
+  }
+
+  function setResult(id, text, failed) {
+    var el = document.querySelector('#' + id + ' .result');
+    if (el) { el.textContent = text; el.className = failed ? 'result fail' : 'result'; }
+  }
+
+  function failSection(id, line) {
+    setResult(id, line, true);
+  }
+
+  function failAll() {
+    failSection('sec-speed', 'We could not check your site speed. Try again.');
+    failSection('sec-phone', 'We could not check your phone view. Try again.');
+    failSection('sec-contact', 'We could not check your contact path. Try again.');
+    failSection('sec-google', 'We could not check your Google listing. Try again.');
+    retryBtn.hidden = false;
+  }
+
+  function render(data, isRoofer, website, business) {
+    stamp.textContent = easternStamp();
+    if (isRoofer) {
+      reportIntro.textContent = 'Here is what we found on ' + website + '.';
+      fullSections.hidden = false;
+      shortSections.hidden = true;
+
+      if (data.speedPhones && data.speedComputers) {
+        setResult('sec-speed', 'Your site loads in ' + data.speedPhones + ' seconds on phones and ' + data.speedComputers + ' seconds on computers.', false);
+        var list = document.querySelector('#sec-speed .slowdowns');
+        if (data.slowdowns && data.slowdowns.length) {
+          list.innerHTML = '';
+          data.slowdowns.slice(0, 3).forEach(function (item) {
+            var li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+          });
+          list.hidden = false;
+        } else { list.hidden = true; }
+      } else { failSection('sec-speed', 'We could not check your site speed. Try again.'); }
+
+      if (typeof data.phoneReady === 'boolean') {
+        if (data.phoneReady) { setResult('sec-phone', 'Your site is set up for phones.', false); }
+        else {
+          var issues = (data.phoneIssues && data.phoneIssues.length) ? ' Here is what is off: ' + data.phoneIssues.join(', ') + '.' : '';
+          setResult('sec-phone', 'Your site is not set up for phones yet.' + issues, false);
+        }
+      } else { failSection('sec-phone', 'We could not check your phone view. Try again.'); }
+
+      if (typeof data.contactFound === 'boolean') {
+        if (data.contactFound) { setResult('sec-contact', 'A visitor can reach you in one tap or click.', false); }
+        else {
+          var missing = data.contactMissing ? ' What is missing: ' + data.contactMissing + '.' : '';
+          setResult('sec-contact', 'A visitor cannot reach you in one tap or click yet.' + missing, false);
+        }
+      } else { failSection('sec-contact', 'We could not check your contact path. Try again.'); }
+
+      if (typeof data.googleFound === 'boolean') {
+        if (data.googleFound) { setResult('sec-google', 'Google holds a listing for ' + business + '.', false); }
+        else { setResult('sec-google', 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND, false); }
+      } else { failSection('sec-google', 'We could not check your Google listing. Try again.'); }
+
+      if (!data.speedPhones || typeof data.phoneReady !== 'boolean' || typeof data.contactFound !== 'boolean' || typeof data.googleFound !== 'boolean') { retryBtn.hidden = false; }
+    } else {
+      reportIntro.textContent = 'Here is a short summary for ' + website + '.';
+      fullSections.hidden = true;
+      shortSections.hidden = false;
+
+      var sSpeed = document.getElementById('short-speed');
+      var sPhone = document.getElementById('short-phone');
+      var sContact = document.getElementById('short-contact');
+      var sGoogle = document.getElementById('short-google');
+
+      if (data.speedPhones && data.speedComputers) { sSpeed.textContent = 'Your site loads in ' + data.speedPhones + ' seconds on phones and ' + data.speedComputers + ' seconds on computers.'; }
+      else { sSpeed.textContent = 'We could not check your site speed. Try again.'; }
+
+      if (typeof data.phoneReady === 'boolean') { sPhone.textContent = data.phoneReady ? 'Your site is set up for phones.' : 'Your site is not set up for phones yet.'; }
+      else { sPhone.textContent = 'We could not check your phone view. Try again.'; }
+
+      if (typeof data.contactFound === 'boolean') { sContact.textContent = data.contactFound ? 'A visitor can reach you in one tap or click.' : 'A visitor cannot reach you in one tap or click yet.'; }
+      else { sContact.textContent = 'We could not check your contact path. Try again.'; }
+
+      if (typeof data.googleFound === 'boolean') {
+        sGoogle.textContent = data.googleFound ? 'Google holds a listing for ' + business + '.' : 'Google holds no knowledge listing for ' + business + '. ' + GOOGLE_NOT_FOUND;
+      } else { sGoogle.textContent = 'We could not check your Google listing. Try again.'; }
+
+      if (!data.speedPhones || typeof data.phoneReady !== 'boolean' || typeof data.contactFound !== 'boolean' || typeof data.googleFound !== 'boolean') { retryBtn.hidden = false; }
+    }
+  }
+
+  function runCheck() {
+    var website = document.getElementById('website').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var business = document.getElementById('business').value.trim();
+    var isRoofer = document.getElementById('roofer').checked;
+    document.getElementById('reportName').textContent = business || website;
+
+    progress.classList.add('on');
+    report.classList.remove('on');
+    retryBtn.hidden = true;
+    timeoutNote.hidden = true;
+
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, 60000);
+
+    fetch('/api/roofing-website-score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ website: website, email: email, business: business, roofer: isRoofer }),
+      signal: controller.signal
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      clearTimeout(timer);
+      progress.classList.remove('on');
+      report.classList.add('on');
+      if (!data || data.error) { failAll(); return; }
+      render(data, isRoofer, website, business);
+    })
+    .catch(function (err) {
+      clearTimeout(timer);
+      progress.classList.remove('on');
+      report.classList.add('on');
+      stamp.textContent = easternStamp();
+      if (err && err.name === 'AbortError') {
+        timeoutNote.hidden = false;
+        if (isRoofer) {
+          fullSections.hidden = false; shortSections.hidden = true;
+          reportIntro.textContent = 'Here is what we found on ' + website + '.';
+          failAll();
+        } else {
+          fullSections.hidden = true; shortSections.hidden = false;
+          reportIntro.textContent = 'Here is a short summary for ' + website + '.';
+          document.getElementById('short-speed').textContent = 'We could not check your site speed. Try again.';
+          document.getElementById('short-phone').textContent = 'We could not check your phone view. Try again.';
+          document.getElementById('short-contact').textContent = 'We could not check your contact path. Try again.';
+          document.getElementById('short-google').textContent = 'We could not check your Google listing. Try again.';
+          retryBtn.hidden = false;
+        }
+      } else if (isRoofer) {
+        fullSections.hidden = false;
+        shortSections.hidden = true;
+        reportIntro.textContent = 'Here is what we found on ' + website + '.';
+        failAll();
+      } else {
+        fullSections.hidden = true;
+        shortSections.hidden = false;
+        reportIntro.textContent = 'Here is a short summary for ' + website + '.';
+        document.getElementById('short-speed').textContent = 'We could not check your site speed. Try again.';
+        document.getElementById('short-phone').textContent = 'We could not check your phone view. Try again.';
+        document.getElementById('short-contact').textContent = 'We could not check your contact path. Try again.';
+        document.getElementById('short-google').textContent = 'We could not check your Google listing. Try again.';
+        retryBtn.hidden = false;
+      }
+    });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    runCheck();
+  });
+
+  retryBtn.addEventListener('click', function () {
+    runCheck();
+  });
+})();
+</script>
+</body>
+</html>
