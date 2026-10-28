@@ -284,7 +284,25 @@ function normalizeUrl(raw) {
   }
 }
 
-async function fetchCapped(url) {
+const OWN_HOSTS = new Set(["csramarketing.com", "www.csramarketing.com"]);
+
+async function fetchCapped(url, env) {
+  // Own-host pages come from the Worker's own static assets, not a
+  // network subrequest back into the same Worker: the self-fetch path
+  // fails on this host (bot challenge / route loop), while outside
+  // hosts fetch fine. ASSETS returns the same page a visitor gets.
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    if (OWN_HOSTS.has(host) && env && env.ASSETS) {
+      const res = await env.ASSETS.fetch(new Request(url));
+      if (!res.ok) return null;
+      const text = await res.text();
+      if (text.length > MAX_BODY_BYTES) return null;
+      return text;
+    }
+  } catch {
+    return null;
+  }
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
@@ -378,7 +396,7 @@ async function handleRoofingWebsiteScore(request, env) {
   if (!url || !business) return json({ error: "missing" }, 400);
 
   const out = {};
-  const html = await fetchCapped(url);
+  const html = await fetchCapped(url, env);
   if (html === null) {
     // Homepage unreachable: every section honestly reports could-not-check.
     return json(out);
