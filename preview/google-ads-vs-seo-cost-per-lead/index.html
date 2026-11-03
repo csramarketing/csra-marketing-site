@@ -423,5 +423,166 @@ body{-webkit-text-size-adjust:100%;}
 </footer>
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
+<!-- INGRID WEBSITE WIDGET - CONVERSATIONAL, LIVE (Step 9 launch yes 2026-11-03)
+     Status: LIVE on ALL pages including the survey page (launch yes named the scope).
+     What this is: a conversational greeting panel with a typing box. It greets,
+     routes to one path, and closes. It NEVER states a time (no live calendar read
+     in this static widget; the booking page link is offered instead), NEVER claims
+     a booking, NEVER writes to the CRM, NEVER sends email, and collects no data:
+     no fetch, no beacon, no storage. Calendar read and CRM write hooks ride the
+     Muse platform connection (owed work, flagged to QA); nothing is silently
+     substituted. Approved lines only (Step 3 + D1-D6, D3 "at this link", Path 3
+     contact-form destination). The verified-time line (D4) does NOT fire in this
+     static widget: it fires only when a same-session live calendar read returns
+     a verified-free time. Icon: navy circle + coral SVG (live rule); the
+     speech-bubble emoji is TEST-ONLY and never goes live.
+     Brand: Poppins, Navy #10233F, Coral #FF705C accent only, CTA Yellow #FACC15
+     for the booking button and Send only, white-forward panel, full-color logo
+     in panel body. Light-only color scheme. Copyright line on the panel, per
+     brand rules.
+     Links, all verified: review call /website-audit/, survey /survey/,
+     contact form /contact/#contact-form. Never bare "audit". Never "free audit".
+     Behavior: panel auto-opens shortly after load; exit intent (desktop: mouse
+     to the top of the window; mobile touch only: one fast upward scroll of
+     300px or more) re-opens it once per page view with a goodbye nudge.
+     Fallback buttons stay visible at all times and navigate to their pages.
+-->
+<style>
+  #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35)}
+  #ingrid-widget-panel{display:none;position:fixed;right:20px;bottom:96px;z-index:9999;width:320px;max-width:calc(100vw - 40px);background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 12px 32px rgba(16,35,63,.25);font-family:Poppins,sans-serif;color-scheme:light;overflow:hidden}
+  #ingrid-widget-panel.open{display:block}
+  #ingrid-widget-head{background:#10233F;color:#fff;padding:14px 16px;font-weight:700;font-size:15px}
+  #ingrid-widget-head span{display:block;font-weight:400;font-size:12px;opacity:.85;margin-top:2px}
+  #ingrid-widget-body{padding:16px}
+  #ingrid-widget-body p{margin:0 0 12px;font-size:14px;line-height:1.5;color:#10233F}
+  #ingrid-widget-logo{display:block;width:120px;height:auto;margin:0 0 10px}
+  #ingrid-widget-body a{display:block;text-align:center;text-decoration:none;border-radius:10px;padding:12px;margin:0 0 10px;font-weight:700;font-size:14px}
+  #ingrid-widget-book{background:#FACC15;color:#10233F}
+  #ingrid-widget-survey,#ingrid-widget-contact{background:#fff;color:#10233F;border:2px solid #10233F}
+  #ingrid-widget-foot{padding:0 16px 12px;font-size:11px;color:#6b7280;text-align:center}
+  #ingrid-widget-close{position:absolute;top:8px;right:10px;background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
+  #ingrid-widget-messages{max-height:280px;overflow-y:auto;margin-bottom:12px}
+  #ingrid-widget-messages p{margin:0 0 10px;font-size:14px;line-height:1.5;color:#10233F}
+  #ingrid-widget-messages p.visitor{text-align:right;color:#334155}
+  #ingrid-widget-form{display:flex;gap:8px;margin-top:4px}
+  #ingrid-widget-input{flex:1;min-width:0;border:2px solid #10233F;border-radius:10px;padding:10px;font-family:Poppins,sans-serif;font-size:14px;color:#10233F}
+  #ingrid-widget-send{background:#FACC15;color:#10233F;border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-family:Poppins,sans-serif;font-size:14px;cursor:pointer}
+</style>
+<button id="ingrid-widget-btn" aria-label="Chat with CSRA Marketing"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="7" fill="#FF705C"/><path d="M8 17 5 21l7-3.5z" fill="#FF705C"/></svg></button>
+<div id="ingrid-widget-panel" role="dialog" aria-label="CSRA Marketing help">
+  <div id="ingrid-widget-head">Hi, I'm Ingrid
+    <span>CSRA Marketing's AI assistant</span>
+    <button id="ingrid-widget-close" aria-label="Close">×</button>
+  </div>
+  <div id="ingrid-widget-body">
+    <img id="ingrid-widget-logo" src="/assets/csra-logo.png" alt="CSRA Marketing">
+    <p id="ingrid-widget-greet">Thanks for visiting CSRA Marketing. What brings you here today?</p>
+    <div id="ingrid-widget-messages"></div>
+    <a id="ingrid-widget-book" href="/website-audit/">Book a 30-minute audit call</a>
+    <a id="ingrid-widget-survey" href="/survey/">Take the 2027 Roofing Marketing Survey</a>
+    <a id="ingrid-widget-contact" href="/contact/#contact-form">Send us a message</a>
+    <form id="ingrid-widget-form">
+      <input id="ingrid-widget-input" type="text" placeholder="Type your message" aria-label="Type your message" autocomplete="off">
+      <button id="ingrid-widget-send" type="submit">Send</button>
+    </form>
+  </div>
+  <div id="ingrid-widget-foot">&copy; 2026 CSRA Marketing</div>
+</div>
+<script>
+  (function(){
+    var btn=document.getElementById('ingrid-widget-btn');
+    var panel=document.getElementById('ingrid-widget-panel');
+    var close=document.getElementById('ingrid-widget-close');
+    var greet=document.getElementById('ingrid-widget-greet');
+    btn.addEventListener('click',function(){panel.classList.toggle('open');});
+    close.addEventListener('click',function(){panel.classList.remove('open');});
+    setTimeout(function(){panel.classList.add('open');},1200);
+    var exitFired=false;
+    function fireExitIntent(){
+      if(exitFired){return;}
+      exitFired=true;
+      if(greet){greet.textContent='Before you go: need anything before you leave?';}
+      panel.classList.add('open');
+    }
+    document.addEventListener('mouseout',function(e){
+      if(!e.relatedTarget && e.clientY<=0){fireExitIntent();}
+    });
+    if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){
+      var lastY=window.scrollY||0;
+      var upRun=0;
+      var upStart=0;
+      window.addEventListener('scroll',function(){
+        var y=window.scrollY||0;
+        var now=Date.now();
+        var up=lastY-y;
+        if(up>0){
+          if(now-upStart>500){upRun=0;upStart=now;}
+          upRun+=up;
+          if(upRun>300){fireExitIntent();}
+        } else {
+          upRun=0;
+          upStart=now;
+        }
+        lastY=y;
+      },{passive:true});
+    }
+    var box=document.getElementById('ingrid-widget-messages');
+    var form=document.getElementById('ingrid-widget-form');
+    var input=document.getElementById('ingrid-widget-input');
+    var discovered=false, closed=false, recoveryUsed=false;
+    function say(text, cls){
+      var p=document.createElement('p');
+      if(cls){p.className=cls;}
+      p.textContent=text;
+      box.appendChild(p);
+      box.scrollTop=box.scrollHeight;
+    }
+    function offer(text){
+      say('Here is the best next step based on what you shared.');
+      say(text);
+    }
+    function decline(){
+      closed=true;
+      say('No problem at all. The buttons below stay here if you change your mind.');
+    }
+    function optOut(){
+      closed=true;
+      say('Got it. I have noted that and will stop here.');
+    }
+    function escalate(){
+      say('That is a good question for the team. I will pass it on, and you will hear back within one business day.');
+    }
+    function handle(raw){
+      var text=raw.trim();
+      if(!text){return;}
+      say(text, 'visitor');
+      var low=text.toLowerCase();
+      if(low.indexOf('stop')!==-1 || low.indexOf('unsubscribe')!==-1 || low.indexOf('do not contact')!==-1 || low.indexOf('remove me')!==-1){ optOut(); return; }
+      if(closed){
+        if(!recoveryUsed && low.indexOf('no')!==0 && low.indexOf('not now')===-1 && low.indexOf('not interested')===-1 && low.indexOf('no thanks')===-1){
+          recoveryUsed=true;
+          say('If anything changes, the buttons below are still here for you.');
+          return;
+        }
+        say('Thanks for stopping by. The buttons below stay here if you need them.');
+        return;
+      }
+      if(low.indexOf('no')===0 || low.indexOf('not now')!==-1 || low.indexOf('not interested')!==-1 || low.indexOf('no thanks')!==-1){ decline(); return; }
+      if(low.indexOf('price')!==-1 || low.indexOf('cost')!==-1 || low.indexOf('discount')!==-1 || low.indexOf('guarantee')!==-1){ escalate(); return; }
+      if(low.indexOf('book')!==-1 || low.indexOf('review')!==-1 || low.indexOf('website')!==-1 || low.indexOf('call')!==-1 || low.indexOf('schedule')!==-1 || low.indexOf('appointment')!==-1){ offer('You can pick a time for a 30-minute audit call at this link: https://csramarketing.com/website-audit/'); return; }
+      if(low.indexOf('survey')!==-1 || low.indexOf('report')!==-1 || low.indexOf('explor')!==-1 || low.indexOf('learn')!==-1 || low.indexOf('ideas')!==-1){ offer('Finish the survey and you will get the 2027 Roofing Marketing Report in your inbox on publish day.'); return; }
+      if(low.indexOf('message')!==-1 || low.indexOf('contact')!==-1 || low.indexOf('email')!==-1){ offer('You can send your message to the team here: https://csramarketing.com/contact/#contact-form'); return; }
+      if(!discovered){ discovered=true; say('What brings you here today, a review of your website, or ideas for getting more jobs?'); return; }
+      offer('You can send your message to the team here: https://csramarketing.com/contact/#contact-form');
+    }
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v=input.value;
+      input.value='';
+      handle(v);
+    });
+  })();
+</script>
+<!-- END INGRID WEBSITE WIDGET -->
 </body>
 </html>
