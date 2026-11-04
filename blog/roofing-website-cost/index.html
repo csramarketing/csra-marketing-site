@@ -501,31 +501,17 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
 </script>
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
-<!-- INGRID WEBSITE WIDGET - CONVERSATIONAL, LIVE (Step 9 launch yes 2026-11-03)
-     Status: LIVE on ALL pages including the survey page (launch yes named the scope).
-     What this is: a conversational greeting panel with a typing box. It greets,
-     routes to one path, and closes. It NEVER states a time (no live calendar read
-     in this static widget; the booking page link is offered instead), NEVER claims
-     a booking, NEVER writes to the CRM, NEVER sends email, and collects no data:
-     no fetch, no beacon, no storage. Calendar read and CRM write hooks ride the
-     Muse platform connection (owed work, flagged to QA); nothing is silently
-     substituted. Approved lines only (Step 3 + D1-D6, D3 "at this link", Path 3
-     contact-form destination). The verified-time line (D4) does NOT fire in this
-     static widget: it fires only when a same-session live calendar read returns
-     a verified-free time. Icon: navy circle + coral SVG (live rule); the
-     speech-bubble emoji is TEST-ONLY and never goes live.
-     Brand: Poppins, Navy #10233F, Coral #FF705C accent only, CTA Yellow #FACC15
-     for the booking button and Send only, white-forward panel, full-color logo
-     in panel body. Light-only color scheme. Copyright line on the panel, per
-     brand rules.
-     Links, all verified: review call /website-audit/, survey /survey/,
-     contact form /contact/#contact-form. Never bare "audit". Never "free audit".
-     Behavior: panel auto-opens 10 seconds after load; manual open or
-     manual close before 10 seconds cancels the auto-open timer, so the
-     panel does not pop after a manual close. Exit intent (desktop: mouse
-     to the top of the window; mobile touch only: one fast upward scroll of
-     300px or more) re-opens it once per page view with a goodbye nudge.
-     Fallback buttons stay visible at all times and navigate to their pages.
+<!-- INGRID WEBSITE WIDGET - LIVE v1 (2026-11-04, Phase 1 live)
+     LIVE. Separate live worker ingrid-chat-carrier + NEW live D1.
+     Send + 15-second checks, 10-second auto-open + open/close guards,
+     greeting/header/buttons/logo/colors unchanged from v3.
+     Static lines verbatim, Claude PASS no fixes: waiting line +
+     business-hours line with plain hyphen in Monday-Friday.
+     No TEST prefix on live messages. No staging hook. Team replies
+     arrive through the store; system rows are never shown.
+     Brand: Poppins, Navy #10233F, Coral #FF705C accent only,
+     CTA Yellow #FACC15 for booking + Send only, white-forward,
+     light-only color scheme, copyright line.
 -->
 <style>
   #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35)}
@@ -570,19 +556,23 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
 </div>
 <script>
   (function(){
+    var BASE='https://ingrid-chat-carrier.kemar-csramarketing.workers.dev';
+    var WAITING_LINE='Thanks. Your message is saved. Replies appear here.';
+    var HOURS_LINE='Our team replies during business hours (Monday-Friday, 8 AM-6 PM Eastern).';
     var btn=document.getElementById('ingrid-widget-btn');
     var panel=document.getElementById('ingrid-widget-panel');
     var close=document.getElementById('ingrid-widget-close');
     var greet=document.getElementById('ingrid-widget-greet');
-    var autoTimer=setTimeout(function(){panel.classList.add('open');},10000);
-    btn.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.toggle('open');});
-    close.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.remove('open');});
+    var autoTimer=setTimeout(function(){panel.classList.add('open');onOpen();},10000);
+    btn.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.toggle('open');if(panel.classList.contains('open')){onOpen();}else{stopPoll();}});
+    close.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.remove('open');stopPoll();});
     var exitFired=false;
     function fireExitIntent(){
       if(exitFired){return;}
       exitFired=true;
       if(greet){greet.textContent='Before you go: need anything before you leave?';}
       panel.classList.add('open');
+      onOpen();
     }
     document.addEventListener('mouseout',function(e){
       if(!e.relatedTarget && e.clientY<=0){fireExitIntent();}
@@ -606,10 +596,33 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
         lastY=y;
       },{passive:true});
     }
+    function isBusinessHours(d){
+      try{
+        var parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',hour12:false}).formatToParts(d);
+        var wd='',hr=0;
+        parts.forEach(function(p){if(p.type==='weekday'){wd=p.value;}if(p.type==='hour'){hr=parseInt(p.value,10);}});
+        if(wd==='Sat'||wd==='Sun'){return false;}
+        if(hr===24){hr=0;}
+        return hr>=8 && hr<18;
+      }catch(e){return true;}
+    }
     var box=document.getElementById('ingrid-widget-messages');
     var form=document.getElementById('ingrid-widget-form');
     var input=document.getElementById('ingrid-widget-input');
-    var discovered=false, closed=false, recoveryUsed=false;
+    var sessionId=null;
+    try{
+      sessionId=window.localStorage.getItem('csra-ingrid-session');
+      if(!sessionId){
+        sessionId=Date.now() + '-' + Math.floor(Math.random()*1000000);
+        window.localStorage.setItem('csra-ingrid-session',sessionId);
+      }
+    }catch(e){
+      sessionId=Date.now() + '-' + Math.floor(Math.random()*1000000);
+    }
+    var afterId=0;
+    var pollTimer=null;
+    var hoursShown=false;
+    var openedOnce=false;
     function say(text, cls){
       var p=document.createElement('p');
       if(cls){p.className=cls;}
@@ -617,52 +630,65 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
       box.appendChild(p);
       box.scrollTop=box.scrollHeight;
     }
-    function offer(text){
-      say('Here is the best next step based on what you shared.');
-      say(text);
+    function poll(){
+      fetch(BASE + '/messages?session_id=' + encodeURIComponent(sessionId) + '&after_id=' + afterId)
+        .then(function(r){return r.json();})
+        .then(function(d){
+          (d.messages||[]).forEach(function(m){
+            if(m.id>afterId){afterId=m.id;}
+            if(m.sender==='visitor'){say(m.text, 'visitor');}
+            else if(m.sender==='Ingrid'){say('Ingrid: ' + m.text);}
+            else if(m.sender==='team'){say('Team: ' + m.text);}
+          });
+        })
+        .catch(function(){});
     }
-    function decline(){
-      closed=true;
-      say('No problem at all. The buttons below stay here if you change your mind.');
+    function startPoll(){
+      if(pollTimer){return;}
+      poll();
+      pollTimer=setInterval(poll,15000);
     }
-    function optOut(){
-      closed=true;
-      say('Got it. I have noted that and will stop here.');
+    function stopPoll(){
+      if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
     }
-    function escalate(){
-      say('That is a good question for the team. I will pass it on, and you will hear back within one business day.');
-    }
-    function handle(raw){
-      var text=raw.trim();
-      if(!text){return;}
-      say(text, 'visitor');
-      var low=text.toLowerCase();
-      if(low.indexOf('stop')!==-1 || low.indexOf('unsubscribe')!==-1 || low.indexOf('do not contact')!==-1 || low.indexOf('remove me')!==-1){ optOut(); return; }
-      if(closed){
-        if(!recoveryUsed && low.indexOf('no')!==0 && low.indexOf('not now')===-1 && low.indexOf('not interested')===-1 && low.indexOf('no thanks')===-1){
-          recoveryUsed=true;
-          say('If anything changes, the buttons below are still here for you.');
-          return;
+    function onOpen(){
+      if(!openedOnce){
+        openedOnce=true;
+        if(!isBusinessHours(new Date()) && !hoursShown){
+          hoursShown=true;
+          say(HOURS_LINE);
         }
-        say('Thanks for stopping by. The buttons below stay here if you need them.');
-        return;
       }
-      if(low.indexOf('no')===0 || low.indexOf('not now')!==-1 || low.indexOf('not interested')!==-1 || low.indexOf('no thanks')!==-1){ decline(); return; }
-      if(low.indexOf('price')!==-1 || low.indexOf('cost')!==-1 || low.indexOf('discount')!==-1 || low.indexOf('guarantee')!==-1){ escalate(); return; }
-      if(low.indexOf('book')!==-1 || low.indexOf('review')!==-1 || low.indexOf('website')!==-1 || low.indexOf('call')!==-1 || low.indexOf('schedule')!==-1 || low.indexOf('appointment')!==-1){ offer('You can pick a time for a 30-minute audit call at this link: https://csramarketing.com/website-audit/'); return; }
-      if(low.indexOf('survey')!==-1 || low.indexOf('report')!==-1 || low.indexOf('explor')!==-1 || low.indexOf('learn')!==-1 || low.indexOf('ideas')!==-1){ offer('Finish the survey and you will get the 2027 Roofing Marketing Report in your inbox on publish day.'); return; }
-      if(low.indexOf('message')!==-1 || low.indexOf('contact')!==-1 || low.indexOf('email')!==-1){ offer('You can send your message to the team here: https://csramarketing.com/contact/#contact-form'); return; }
-      if(!discovered){ discovered=true; say('What brings you here today, a review of your website, or ideas for getting more jobs?'); return; }
-      offer('You can send your message to the team here: https://csramarketing.com/contact/#contact-form');
+      startPoll();
     }
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var v=input.value;
       input.value='';
-      handle(v);
+      var text=v.trim();
+      if(!text){return;}
+      var text=v.trim();
+      if(!text){return;}
+      var low=text.toLowerCase();
+      var isOptOut=(low.indexOf('stop')!==-1 || low.indexOf('unsubscribe')!==-1 || low.indexOf('do not contact')!==-1 || low.indexOf('remove me')!==-1);
+      fetch(BASE + '/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({session_id: sessionId, sender:'visitor', text: text})
+      }).then(function(r){return r.json();}).then(function(d){
+        if(d && d.id){
+          if(isOptOut){
+            say('Got it. I have noted that and will stop here.');
+          } else {
+            say(WAITING_LINE);
+          }
+          poll();
+        }
+      }).catch(function(){});
     });
   })();
 </script>
 <!-- END INGRID WEBSITE WIDGET -->
+
 </body>
 </html>
