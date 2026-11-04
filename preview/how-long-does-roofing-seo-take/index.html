@@ -405,7 +405,9 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
      brand rules.
      Links, all verified: review call /website-audit/, survey /survey/,
      contact form /contact/#contact-form. Never bare "audit". Never "free audit".
-     Behavior: panel auto-opens shortly after load; exit intent (desktop: mouse
+     Behavior: panel auto-opens 10 seconds after load; manual open or
+     manual close before 10 seconds cancels the auto-open timer, so the
+     panel does not pop after a manual close. Exit intent (desktop: mouse
      to the top of the window; mobile touch only: one fast upward scroll of
      300px or more) re-opens it once per page view with a goodbye nudge.
      Fallback buttons stay visible at all times and navigate to their pages.
@@ -457,9 +459,9 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
     var panel=document.getElementById('ingrid-widget-panel');
     var close=document.getElementById('ingrid-widget-close');
     var greet=document.getElementById('ingrid-widget-greet');
-    btn.addEventListener('click',function(){panel.classList.toggle('open');});
-    close.addEventListener('click',function(){panel.classList.remove('open');});
-    setTimeout(function(){panel.classList.add('open');},1200);
+    var autoTimer=setTimeout(function(){panel.classList.add('open');},10000);
+    btn.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.toggle('open');});
+    close.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.remove('open');});
     var exitFired=false;
     function fireExitIntent(){
       if(exitFired){return;}
