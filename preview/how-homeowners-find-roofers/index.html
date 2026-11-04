@@ -495,17 +495,21 @@ document.querySelectorAll('a[href^="https://www.linkedin.com"],a[href^="https://
 <script src="/assets/js/blog-feedback.js"></script>
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
-<!-- INGRID WEBSITE WIDGET - LIVE v1 (2026-11-04, Phase 1 live)
-     LIVE. Separate live worker ingrid-chat-carrier + NEW live D1.
-     Send + 15-second checks, 10-second auto-open + open/close guards,
-     greeting/header/buttons/logo/colors unchanged from v3.
+<!-- INGRID WEBSITE WIDGET - LIVE v2 (2026-11-04, auto-close change)
+     LIVE. Phase 1 live block + Kemar's auto-close rule (10:32 ET):
+     auto-open after 10 seconds as before; if the visitor does
+     nothing in the auto-opened panel for 5 seconds, it closes
+     by itself. Any typing, button tap, or message cancels the
+     5-second timer. Manual open stays open (no timer). Manual
+     close stays closed (blocks auto-open + exit-intent after).
+     Automatic opens (10-second + exit-intent) carry the 5-second
+     idle timer; manual opens never do.
+     MERGE NOTE: every later merge must carry forward BOTH the
+     10,000 ms auto-open delay AND the 5-second auto-close rule.
+     Greeting/header/buttons/logo/colors unchanged from v1.
      Static lines verbatim, Claude PASS no fixes: waiting line +
      business-hours line with plain hyphen in Monday-Friday.
-     No TEST prefix on live messages. No staging hook. Team replies
-     arrive through the store; system rows are never shown.
-     Brand: Poppins, Navy #10233F, Coral #FF705C accent only,
-     CTA Yellow #FACC15 for booking + Send only, white-forward,
-     light-only color scheme, copyright line.
+     No TEST prefix on live messages. No staging hook.
 -->
 <style>
   #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35)}
@@ -557,16 +561,29 @@ document.querySelectorAll('a[href^="https://www.linkedin.com"],a[href^="https://
     var panel=document.getElementById('ingrid-widget-panel');
     var close=document.getElementById('ingrid-widget-close');
     var greet=document.getElementById('ingrid-widget-greet');
-    var autoTimer=setTimeout(function(){panel.classList.add('open');onOpen();},10000);
-    btn.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.toggle('open');if(panel.classList.contains('open')){onOpen();}else{stopPoll();}});
-    close.addEventListener('click',function(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}panel.classList.remove('open');stopPoll();});
+    var autoTimer=setTimeout(function(){openAuto();},10000);
+    var closeTimer=null;
+    var closedByHand=false;
+    function cancelAutoTimer(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}}
+    function cancelCloseTimer(){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}}
+    function openAuto(){
+      if(closedByHand){return;}
+      panel.classList.add('open');
+      onOpen();
+      closeTimer=setTimeout(function(){panel.classList.remove('open');stopPoll();closeTimer=null;},5000);
+    }
+    btn.addEventListener('click',function(){cancelAutoTimer();cancelCloseTimer();panel.classList.toggle('open');if(panel.classList.contains('open')){closedByHand=false;onOpen();}else{closedByHand=true;stopPoll();}});
+    close.addEventListener('click',function(){cancelAutoTimer();cancelCloseTimer();closedByHand=true;panel.classList.remove('open');stopPoll();});
+    panel.addEventListener('input',cancelCloseTimer);
+    panel.addEventListener('click',cancelCloseTimer);
     var exitFired=false;
     function fireExitIntent(){
       if(exitFired){return;}
       exitFired=true;
+      if(closedByHand){return;}
+      if(panel.classList.contains('open')){return;}
       if(greet){greet.textContent='Before you go: need anything before you leave?';}
-      panel.classList.add('open');
-      onOpen();
+      openAuto();
     }
     document.addEventListener('mouseout',function(e){
       if(!e.relatedTarget && e.clientY<=0){fireExitIntent();}
@@ -683,6 +700,7 @@ document.querySelectorAll('a[href^="https://www.linkedin.com"],a[href^="https://
   })();
 </script>
 <!-- END INGRID WEBSITE WIDGET -->
+
 
 </body>
 </html>
