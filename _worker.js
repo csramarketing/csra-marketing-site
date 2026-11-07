@@ -528,6 +528,15 @@ async function handleRoofingWebsiteScore(request, env) {
 
 async function handle(request, env) {
   const url = new URL(request.url);
+
+  // Merge http into https: every http request gets a permanent redirect
+  // to the same URL on https (same host, path and query). This keeps
+  // Google from splitting one page into two versions (http vs https).
+  if (url.protocol === "http:") {
+    url.protocol = "https:";
+    return Response.redirect(url.toString(), 301);
+  }
+
   const path = url.pathname;
   if (path === "/api/roofing-website-score") {
     return handleRoofingWebsiteScore(request, env);
