@@ -152,6 +152,27 @@ body{-webkit-text-size-adjust:100%;}
 @media(max-width:640px){.math-cell .v{font-size:18px;}}
 </style>
 <style>*{text-decoration-color:#FF705C !important}</style>
+<style>
+/* Facebook group sidebar */
+/* Page-level dependency, not component-scoped: the 100vw hero breakout below generates horizontal overflow that this rule contains. Do not remove without understanding the hero will overflow. */
+html{overflow-x:hidden;}
+.post-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;column-gap:40px;max-width:1180px;margin:0 auto;padding:0 24px;align-items:start;}
+.post-layout>.post-hero{grid-column:1 / -1;grid-row:1;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);}
+.post-col{grid-column:1;grid-row:2;min-width:0;}
+.post-sidebar{grid-column:2;grid-row:2;width:320px;position:sticky;top:88px;}
+.group-box{background:#10233F;border-radius:14px;padding:26px 24px;color:#ffffff;}
+.group-box .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:#FF705C;text-transform:uppercase;margin-bottom:10px;}
+.group-box h2{font-size:24px;font-weight:800;line-height:1.25;margin-bottom:12px;color:#ffffff;}
+.group-box p{font-size:15px;line-height:1.6;color:rgba(255,255,255,.92);margin-bottom:18px;}
+.group-box .btn{display:block;text-align:center;background:#FACC15;color:#10233F;font-weight:700;font-size:16px;text-decoration:none;border-radius:8px;padding:14px 16px;margin-bottom:12px;}
+.group-box .micro{font-size:12px;color:rgba(255,255,255,.7);text-align:center;}
+@media (max-width:860px){
+  .post-layout{grid-template-columns:minmax(0,1fr);padding:0;}
+  .post-layout>.post-hero{grid-column:1;grid-row:2;}
+  .post-col{grid-column:1;grid-row:3;}
+  .post-sidebar{grid-column:1;grid-row:1;width:100%;position:static;padding:20px 20px 0;}
+}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="site-header-in">
@@ -160,6 +181,7 @@ body{-webkit-text-size-adjust:100%;}
 <a class="btn btn-yellow" href="https://cal.com/csramarketing/15min">Book a Call</a>
 </div></header>
 <main>
+<div class="post-layout">
 <section class="post-hero">
 <h1>How Many Roofing Leads Should Your Website Be Generating Each Month?</h1>
 <div class="byline">
@@ -171,6 +193,7 @@ body{-webkit-text-size-adjust:100%;}
 </div>
 </section>
 
+<div class="post-col">
 <div class="featured-card">
 <img src="/assets/blog/how-many-roofing-leads-website-2027.png" alt="A lead generation gauge: how many roofing leads your website should produce each month" fetchpriority="high" style="width:100%;height:auto;display:block;">
 <div class="featured-cap">The 2 to 5 percent benchmark: what your site should turn into leads.</div>
@@ -432,6 +455,17 @@ body{-webkit-text-size-adjust:100%;}
 </div>
 
 </div>
+</div><!-- /post-col -->
+<aside class="post-sidebar">
+  <div class="group-box">
+    <div class="eyebrow">Join our Facebook group</div>
+    <h2>Booked Solid for Roofers</h2>
+    <p>Get more booked jobs and less guesswork, from roofers sharing what is actually working.</p>
+    <a class="btn" href="https://www.facebook.com/groups/bookedsolidforroofers">Join the group</a>
+    <div class="micro">Private group. Request to join.</div>
+  </div>
+</aside>
+</div><!-- /post-layout -->
 </main>
 
 <section class="cta-band">
