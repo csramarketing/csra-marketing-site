@@ -28,13 +28,6 @@ const SCHEMA_PATHS = new Set([
   "/about/",
 ]);
 
-// 301 redirects for renamed post slugs (keyword retargets, 2026-11-07).
-// Exact path match only (with or without trailing slash). Query strings carry over.
-// Add future slug renames here; the old URL must keep working via 301.
-const REDIRECTS = {
-  "/blog/angi-vs-own-website-roofing-leads/": "/blog/angi-leads-vs-own-website/",
-  "/blog/angi-vs-own-website-roofing-leads": "/blog/angi-leads-vs-own-website/",
-};
 
 const BOT_RE =
   /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex|sogou|exabot|facebot|facebookexternalhit|twitterbot|linkedinbot|semrushbot|ahrefsbot|mj12bot|dotbot|petalbot|bytespider|gptbot|claudebot|applebot|ia_archiver|crawler|spider|headless/i;
@@ -546,12 +539,6 @@ async function handle(request, env) {
   }
 
   const path = url.pathname;
-  const redirectTarget = REDIRECTS[path];
-  if (redirectTarget) {
-    const dest = new URL(redirectTarget, url);
-    dest.search = url.search;
-    return Response.redirect(dest.toString(), 301);
-  }
   if (path === "/api/roofing-website-score") {
     return handleRoofingWebsiteScore(request, env);
   }
