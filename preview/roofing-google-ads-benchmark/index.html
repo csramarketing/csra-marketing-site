@@ -219,6 +219,27 @@ img{max-width:100%;}
 @media(max-width:640px){.stat-grid-4{grid-template-columns:repeat(2,1fr);}.lb-grid{grid-template-columns:1fr;}.cite-callout p{font-size:17px;}.selfcheck{padding:28px 22px;}.leaderboard{padding:28px 22px;}}
 </style>
 <style>*{text-decoration-color:#FF705C !important}</style>
+<style>
+/* Facebook group sidebar */
+/* Page-level dependency, not component-scoped: the 100vw hero breakout below generates horizontal overflow that this rule contains. Do not remove without understanding the hero will overflow. */
+html{overflow-x:hidden;}
+.post-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;column-gap:40px;max-width:1180px;margin:0 auto;padding:0 24px;align-items:start;}
+.post-layout>.post-hero{grid-column:1 / -1;grid-row:1;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);}
+.post-col{grid-column:1;grid-row:2;min-width:0;}
+.post-sidebar{grid-column:2;grid-row:2;width:320px;position:sticky;top:88px;}
+.group-box{background:#10233F;border-radius:14px;padding:26px 24px;color:#ffffff;}
+.group-box .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:#FF705C;text-transform:uppercase;margin-bottom:10px;}
+.group-box h2{font-size:24px;font-weight:800;line-height:1.25;margin-bottom:12px;color:#ffffff;}
+.group-box p{font-size:15px;line-height:1.6;color:rgba(255,255,255,.92);margin-bottom:18px;}
+.group-box .btn{display:block;text-align:center;background:#FACC15;color:#10233F;font-weight:700;font-size:16px;text-decoration:none;border-radius:8px;padding:14px 16px;margin-bottom:12px;}
+.group-box .micro{font-size:12px;color:rgba(255,255,255,.7);text-align:center;}
+@media (max-width:860px){
+  .post-layout{grid-template-columns:minmax(0,1fr);padding:0;}
+  .post-layout>.post-hero{grid-column:1;grid-row:2;}
+  .post-col{grid-column:1;grid-row:3;}
+  .post-sidebar{grid-column:1;grid-row:1;width:100%;position:static;padding:20px 20px 0;}
+}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="site-header-in">
@@ -227,6 +248,7 @@ img{max-width:100%;}
 <a class="btn btn-yellow" href="https://cal.com/csramarketing/15min">Book a Call</a>
 </div></header>
 
+<div class="post-layout">
 <section class="post-hero">
 <h1>18% of Roofing Companies Run Google Ads Like a System. The Other 82% Dabble.</h1>
 <p class="deck">The Dabblers vs. The Operators: findings from CSRA Marketing's audit of 433 roofing firms across all 50 states.</p>
@@ -240,6 +262,7 @@ img{max-width:100%;}
 </div>
 </section>
 
+<div class="post-col">
 <div class="featured-card">
 <img src="/assets/blog/roofing-google-ads-benchmark.jpg" alt="The 2027 Roofer Operator Index: 18% of roofing companies run Google Ads like a system, the other 82% dabble" fetchpriority="high" style="width:100%;height:auto;display:block;">
 <div class="featured-cap">The Dabblers vs. The Operators: what the ads of 433 roofing firms actually look like.</div>
@@ -584,6 +607,18 @@ img{max-width:100%;}
 </div>
 </div>
 </div>
+
+</div><!-- /post-col -->
+<aside class="post-sidebar">
+  <div class="group-box">
+    <div class="eyebrow">Join our Facebook group</div>
+    <h2>Booked Solid for Roofers</h2>
+    <p>Get more booked jobs and less guesswork, from roofers sharing what is actually working.</p>
+    <a class="btn" href="https://www.facebook.com/groups/bookedsolidforroofers">Join the group</a>
+    <div class="micro">Private group. Request to join.</div>
+  </div>
+</aside>
+</div><!-- /post-layout -->
 
 <section class="cta-band">
 <div class="cta-inner">
