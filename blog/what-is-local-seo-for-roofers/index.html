@@ -471,24 +471,33 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
 </script>
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
-<!-- INGRID WEBSITE WIDGET - LIVE v2 (2026-11-04, auto-close change)
-     LIVE. Phase 1 live block + Kemar's auto-close rule (10:32 ET):
-     auto-open after 10 seconds as before; if the visitor does
-     nothing in the auto-opened panel for 5 seconds, it closes
-     by itself. Any typing, button tap, or message cancels the
-     5-second timer. Manual open stays open (no timer). Manual
-     close stays closed (blocks auto-open + exit-intent after).
-     Automatic opens (10-second + exit-intent) carry the 5-second
-     idle timer; manual opens never do.
-     MERGE NOTE: every later merge must carry forward BOTH the
-     10,000 ms auto-open delay AND the 5-second auto-close rule.
-     Greeting/header/buttons/logo/colors unchanged from v1.
-     Static lines verbatim, Claude PASS no fixes: waiting line +
-     business-hours line with plain hyphen in Monday-Friday.
-     No TEST prefix on live messages. No staging hook.
+<!-- INGRID WEBSITE WIDGET - LIVE v3 (2026-11-09, Kemar-named changes)
+     LIVE. Phase 1 live block + Kemar's changes (2026-11-09 ~02:44 ET):
+     (1) "Send us a message" button is now "Contact us" (it links
+     to /contact/#contact-form, so the label names the destination).
+     (2) Chat bubble is faint/translucent (opacity .65 at rest, full
+     on hover/focus) so it is less pronounced on the page.
+     (3) NO AUTO-OPEN AT ALL. The panel stays closed until the
+     visitor clicks the bubble. The 10-second auto-open timer and
+     the exit-intent auto-open are both REMOVED. Manual open stays
+     open (no timer). Manual close stays closed.
+     AUTO-OPEN RETIRED BY KEMAR 2026-11-09. This supersedes the
+     Nov 4 merge note (carry 10,000 ms + 5-second auto-close
+     forward): that note was a guard against ACCIDENTAL loss of
+     auto-open during merges. Kemar has now DELIBERATELY retired
+     auto-open. No later merge may restore auto-open (10-second
+     timer or exit-intent) without Kemar's explicit yes. The
+     5-second auto-close rule retires with auto-open (it only
+     ever applied to automatic opens, and there are none now).
+     Greeting/header/buttons/logo/colors unchanged from v2 except
+     the three changes above. Static lines verbatim, Claude PASS
+     no fixes: waiting line + business-hours line with plain
+     hyphen in Monday-Friday. No TEST prefix on live messages.
+     No staging hook.
 -->
 <style>
-  #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35)}
+  #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35);opacity:.65}
+  #ingrid-widget-btn:hover,#ingrid-widget-btn:focus{opacity:1}
   #ingrid-widget-panel{display:none;position:fixed;right:20px;bottom:96px;z-index:9999;width:320px;max-width:calc(100vw - 40px);background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 12px 32px rgba(16,35,63,.25);font-family:Poppins,sans-serif;color-scheme:light;overflow:hidden}
   #ingrid-widget-panel.open{display:block}
   #ingrid-widget-head{background:#10233F;color:#fff;padding:14px 16px;font-weight:700;font-size:15px}
@@ -520,7 +529,7 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
     <div id="ingrid-widget-messages"></div>
     <a id="ingrid-widget-book" href="/website-audit/">Book a 30-minute audit call</a>
     <a id="ingrid-widget-survey" href="/survey/">Take the 2027 Roofing Marketing Survey</a>
-    <a id="ingrid-widget-contact" href="/contact/#contact-form">Send us a message</a>
+    <a id="ingrid-widget-contact" href="/contact/#contact-form">Contact us</a>
     <form id="ingrid-widget-form">
       <input id="ingrid-widget-input" type="text" placeholder="Type your message" aria-label="Type your message" autocomplete="off">
       <button id="ingrid-widget-send" type="submit">Send</button>
@@ -537,52 +546,17 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
     var panel=document.getElementById('ingrid-widget-panel');
     var close=document.getElementById('ingrid-widget-close');
     var greet=document.getElementById('ingrid-widget-greet');
-    var autoTimer=setTimeout(function(){openAuto();},10000);
+    var autoTimer=null; // No auto-open (Kemar 2026-11-09): the panel stays closed until the visitor clicks the bubble. The 10-second auto-open timer is retired.
     var closeTimer=null;
     var closedByHand=false;
     function cancelAutoTimer(){if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}}
     function cancelCloseTimer(){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}}
-    function openAuto(){
-      if(closedByHand){return;}
-      panel.classList.add('open');
-      onOpen();
-      closeTimer=setTimeout(function(){panel.classList.remove('open');stopPoll();closeTimer=null;},5000);
-    }
     btn.addEventListener('click',function(){cancelAutoTimer();cancelCloseTimer();panel.classList.toggle('open');if(panel.classList.contains('open')){closedByHand=false;onOpen();}else{closedByHand=true;stopPoll();}});
     close.addEventListener('click',function(){cancelAutoTimer();cancelCloseTimer();closedByHand=true;panel.classList.remove('open');stopPoll();});
     panel.addEventListener('input',cancelCloseTimer);
     panel.addEventListener('click',cancelCloseTimer);
-    var exitFired=false;
-    function fireExitIntent(){
-      if(exitFired){return;}
-      exitFired=true;
-      if(closedByHand){return;}
-      if(panel.classList.contains('open')){return;}
-      if(greet){greet.textContent='Before you go: need anything before you leave?';}
-      openAuto();
-    }
-    document.addEventListener('mouseout',function(e){
-      if(!e.relatedTarget && e.clientY<=0){fireExitIntent();}
-    });
-    if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){
-      var lastY=window.scrollY||0;
-      var upRun=0;
-      var upStart=0;
-      window.addEventListener('scroll',function(){
-        var y=window.scrollY||0;
-        var now=Date.now();
-        var up=lastY-y;
-        if(up>0){
-          if(now-upStart>500){upRun=0;upStart=now;}
-          upRun+=up;
-          if(upRun>300){fireExitIntent();}
-        } else {
-          upRun=0;
-          upStart=now;
-        }
-        lastY=y;
-      },{passive:true});
-    }
+    // Exit-intent auto-open retired with auto-open (Kemar 2026-11-09).
+    // No mouseout/scroll trigger: the panel opens only on a bubble click.
     function isBusinessHours(d){
       try{
         var parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',hour12:false}).formatToParts(d);
