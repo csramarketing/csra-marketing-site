@@ -934,34 +934,24 @@ Cal.config.forwardQueryParams = true;
 </script>
 <script src="/assets/js/visitor-track.js"></script>
 <script src="/assets/js/form-helper.js"></script>
-<!-- INGRID WEBSITE WIDGET - LIVE v3 (2026-11-09, Kemar-named changes)
-     LIVE. Phase 1 live block + Kemar's changes (2026-11-09 ~02:44 ET):
-     (1) "Send us a message" button is now "Contact us" (it links
-     to /contact/#contact-form, so the label names the destination).
-     (2) Chat bubble is faint/translucent (opacity .65 at rest, full
-     on hover/focus) so it is less pronounced on the page.
-     (3) NO AUTO-OPEN AT ALL. The panel stays closed until the
-     visitor clicks the bubble. The 10-second auto-open timer and
-     the exit-intent auto-open are both REMOVED. Manual open stays
-     open (no timer). Manual close stays closed.
-     AUTO-OPEN RETIRED BY KEMAR 2026-11-09. This supersedes the
-     Nov 4 merge note (carry 10,000 ms + 5-second auto-close
-     forward): that note was a guard against ACCIDENTAL loss of
-     auto-open during merges. Kemar has now DELIBERATELY retired
-     auto-open. No later merge may restore auto-open (10-second
-     timer or exit-intent) without Kemar's explicit yes. The
-     5-second auto-close rule retires with auto-open (it only
-     ever applied to automatic opens, and there are none now).
-     Greeting/header/buttons/logo/colors unchanged from v2 except
-     the three changes above. Static lines verbatim, Claude PASS
-     no fixes: waiting line + business-hours line with plain
-     hyphen in Monday-Friday. No TEST prefix on live messages.
-     No staging hook.
+<!-- INGRID WEBSITE WIDGET - LIVE v4 (2026-11-09, Kemar-named change)
+     LIVE. v3 + one change (Kemar, 2026-11-09 ~03:02 ET): the panel
+     (popout) is rounder — border-radius 16px to 24px. The panel's
+     overflow:hidden clips the navy header and footer to the same
+     curve. Everything else is v3 unchanged: "Contact us" label,
+     faint bubble (opacity .65 at rest, full on hover/focus), NO
+     auto-open (panel stays closed until the visitor clicks the
+     bubble — auto-open retired by Kemar 2026-11-09, no later merge
+     may restore it without his explicit yes).
+     Greeting/header/buttons/logo/colors unchanged from v3 except
+     the panel radius. Static lines verbatim, Claude PASS no fixes:
+     waiting line + business-hours line with plain hyphen in
+     Monday-Friday. No TEST prefix on live messages. No staging hook.
 -->
 <style>
   #ingrid-widget-btn{position:fixed;right:20px;bottom:20px;z-index:9998;width:64px;height:64px;border-radius:50%;border:0;background:#10233F;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(16,35,63,.35);opacity:.65}
   #ingrid-widget-btn:hover,#ingrid-widget-btn:focus{opacity:1}
-  #ingrid-widget-panel{display:none;position:fixed;right:20px;bottom:96px;z-index:9999;width:320px;max-width:calc(100vw - 40px);background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 12px 32px rgba(16,35,63,.25);font-family:Poppins,sans-serif;color-scheme:light;overflow:hidden}
+  #ingrid-widget-panel{display:none;position:fixed;right:20px;bottom:96px;z-index:9999;width:320px;max-width:calc(100vw - 40px);background:#fff;border:1px solid #e5e7eb;border-radius:24px;box-shadow:0 12px 32px rgba(16,35,63,.25);font-family:Poppins,sans-serif;color-scheme:light;overflow:hidden}
   #ingrid-widget-panel.open{display:block}
   #ingrid-widget-head{background:#10233F;color:#fff;padding:14px 16px;font-weight:700;font-size:15px}
   #ingrid-widget-head span{display:block;font-weight:400;font-size:12px;opacity:.85;margin-top:2px}
