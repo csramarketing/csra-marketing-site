@@ -527,6 +527,149 @@ async function handleRoofingWebsiteScore(request, env) {
   return json(out);
 }
 
+// Meta Pixel — site-wide 24-month persistence (Kemar, 2026-11-10).
+// The pixel snippet is pasted into each HTML file individually and there
+// is no shared template, so a new page would silently ship without the
+// pixel — and without the 24-month persistence. This edge injection
+// closes that gap: it runs on every HTML page the Worker serves.
+// The original pixel snippet is never modified in the files.
+const PIXEL_ID = "1388103953307209";
+const PIXEL_END_MARKER = "<!-- End Meta Pixel Code -->";
+const PIXEL_PERSIST_MARKER = "csra_fbp_v1";
+
+const PIXEL_SNIPPET = `  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('dataProcessingOptions', ['LDU'], 0, 0);
+    fbq('init', '1388103953307209');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1388103953307209&ev=PageView&noscript=1" /></noscript>
+  <!-- End Meta Pixel Code -->`;
+
+const PIXEL_PERSISTENCE = `<!-- Meta Pixel 24-month persistence — aligns _fbp and _fbc to the full
+     24 months (730 days), site-wide — every page, including new pages. The original
+     pixel snippet above is untouched; this separate layer stores the
+     _fbp and _fbc values in localStorage with a 730-day expiry, rewrites
+     the cookies with Max-Age 63072000, restores them from storage if the
+     cookies are missing, and builds _fbc from fbclid when it is present.
+     Every visit slides the window: the stored expiry and the cookie
+     Max-Age are refreshed to the full 24 months. -->
+<script>
+(function(){
+  var PIXEL_TTL_DAYS = 730; /* 24 months */
+  var PIXEL_MAX_AGE = 63072000; /* 730 days in seconds */
+  var PIXEL_TTL_MS = PIXEL_TTL_DAYS * 24 * 60 * 60 * 1000;
+  var FBP_STORE_KEY = 'csra_fbp_v1';
+  var FBC_STORE_KEY = 'csra_fbc_v1';
+  var now = Date.now();
+  function readCookie(name){
+    try {
+      var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      return m ? String(decodeURIComponent(m[1])).slice(0, 500) : '';
+    } catch(e){ return ''; }
+  }
+  function writeCookie(name, value){
+    try {
+      var secure = window.location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = name + '=' + encodeURIComponent(value) + '; Max-Age=' + PIXEL_MAX_AGE + '; Path=/; SameSite=Lax' + secure;
+    } catch(e){}
+  }
+  function readStored(key){
+    try {
+      var raw = window.localStorage.getItem(key);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (parsed && parsed.v && parsed.exp && parsed.exp > Date.now()) {
+        return { v: String(parsed.v).slice(0, 500), exp: parsed.exp };
+      }
+      window.localStorage.removeItem(key);
+      return null;
+    } catch(e){ return null; }
+  }
+  function storeValue(key, value){
+    try {
+      window.localStorage.setItem(key, JSON.stringify({ v: value, exp: Date.now() + PIXEL_TTL_MS }));
+    } catch(e){}
+  }
+  function persist(name, key, value){
+    if (!value) return '';
+    writeCookie(name, value);
+    storeValue(key, value);
+    return value;
+  }
+  function restoreOrRefresh(name, key){
+    var cookieValue = readCookie(name);
+    if (cookieValue) return persist(name, key, cookieValue);
+    var stored = readStored(key);
+    if (stored) return persist(name, key, stored.v);
+    return '';
+  }
+  /* _fbc — built from fbclid when the visit carries one, in Meta's
+     format fb.1.<timestamp>.<fbclid>. A fresh fbclid wins; otherwise
+     the existing cookie or the stored copy is restored / refreshed. */
+  var params = new URLSearchParams(window.location.search);
+  var fbclid = params.get('fbclid') || '';
+  if (fbclid) fbclid = String(fbclid).slice(0, 350);
+  var fbc = '';
+  if (fbclid) {
+    fbc = persist('_fbc', FBC_STORE_KEY, 'fb.1.' + now + '.' + fbclid);
+  } else {
+    fbc = restoreOrRefresh('_fbc', FBC_STORE_KEY);
+  }
+  /* _fbp — restore from storage first if the cookie is missing, then
+     keep polling briefly: the pixel script loads async and may set
+     _fbp after this layer runs. Once _fbp exists, rewrite it with the
+     full 24-month Max-Age and store it for 730 days. */
+  var fbp = restoreOrRefresh('_fbp', FBP_STORE_KEY);
+  if (!fbp) {
+    var tries = 0;
+    var poll = setInterval(function(){
+      tries++;
+      fbp = restoreOrRefresh('_fbp', FBP_STORE_KEY);
+      if (fbp) {
+        window.__fbp = fbp;
+        clearInterval(poll);
+      } else if (tries >= 40) {
+        clearInterval(poll);
+      }
+    }, 250);
+  }
+  window.__fbp = fbp;
+  window.__fbc = fbc;
+})();
+</script>`;
+
+// Returns the HTML with the pixel persistence layer added, and the pixel
+// snippet added too if the page has none. Returns the input unchanged
+// when nothing is missing, or when there is no </head> to inject before.
+function injectPixel(html) {
+  const hasPixel = html.includes(PIXEL_ID);
+  const hasPersistence = html.includes(PIXEL_PERSIST_MARKER);
+  if (hasPixel && hasPersistence) return html;
+
+  if (!hasPixel) {
+    // No pixel at all (today: /roofing-website-score/; any future page
+    // created without the snippet): add the snippet and the persistence
+    // layer together, just before </head>. The charset meta stays first
+    // in <head> — this inserts at the end of head.
+    const headClose = html.toLowerCase().lastIndexOf("</head>");
+    if (headClose === -1) return html;
+    return html.slice(0, headClose) + PIXEL_SNIPPET + "\n" + PIXEL_PERSISTENCE + "\n" + html.slice(headClose);
+  }
+
+  // Pixel is present but the persistence layer is not: add it right
+  // after the pixel snippet, matching the proposal pages.
+  const markerAt = html.indexOf(PIXEL_END_MARKER);
+  if (markerAt !== -1) {
+    const insertAt = markerAt + PIXEL_END_MARKER.length;
+    return html.slice(0, insertAt) + "\n" + PIXEL_PERSISTENCE + html.slice(insertAt);
+  }
+  const headClose = html.toLowerCase().lastIndexOf("</head>");
+  if (headClose === -1) return html;
+  return html.slice(0, headClose) + PIXEL_PERSISTENCE + "\n" + html.slice(headClose);
+}
+
 async function handle(request, env) {
   const url = new URL(request.url);
 
@@ -543,11 +686,40 @@ async function handle(request, env) {
     return handleRoofingWebsiteScore(request, env);
   }
 
-  if (!SPAN_PATHS.has(path) && !SCHEMA_PATHS.has(path)) {
-    return env.ASSETS.fetch(request);
+  let response = await env.ASSETS.fetch(request);
+
+  // Site-wide Meta Pixel, 24 months, automatic (Kemar, 2026-11-10):
+  // every HTML page this Worker serves gets the 24-month persistence
+  // layer, and any page missing the pixel snippet gets the snippet too —
+  // so a new page, landing page or blog post is covered without any
+  // per-page edit. The original pixel snippet in the files is never
+  // modified; this only adds to the served HTML. Fail-open: any error
+  // serves the page untouched.
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("text/html")) {
+    try {
+      const text = await response.text();
+      const injected = injectPixel(text);
+      const headers = new Headers(response.headers);
+      headers.delete("content-length");
+      if (injected !== text) {
+        // Content changed: do not let the edge cache a pre-injection copy.
+        headers.set("Cache-Control", "private, no-store");
+      }
+      response = new Response(injected, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    } catch (err) {
+      response = await env.ASSETS.fetch(request);
+    }
   }
 
-  const response = await env.ASSETS.fetch(request);
+  if (!SPAN_PATHS.has(path) && !SCHEMA_PATHS.has(path)) {
+    return response;
+  }
+
   const cf = request.cf || {};
 
   try {
