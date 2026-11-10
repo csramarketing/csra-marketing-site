@@ -14,6 +14,7 @@
   var STORAGE_KEY = 'csra_visitor';
   var VISITOR_ID_KEY = 'csra_vid';
   var SESSION_TIMEOUT = 30 * 60 * 1000; // 30 min
+  var TOKEN_TTL_MS = 730 * 24 * 60 * 60 * 1000; // 24 months
 
   // --- Funnel stage mapping (URL path -> TOFU/MOFU/BOFU) ---
   // BOFU = ready to buy (audit, contact, quote, pricing)
@@ -87,7 +88,7 @@
     if (!id) {
       id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
       try { localStorage.setItem(VISITOR_ID_KEY, id); } catch (e) {}
-      setCookie(VISITOR_ID_KEY, id, 365);
+      setCookie(VISITOR_ID_KEY, id, 730);
     }
     return id;
   }
@@ -190,6 +191,14 @@
     }
     // Backfill sessions array for profiles created before this feature
     if (!profile.sessions) profile.sessions = [];
+    // 24-month token expiry: an email token (from a cid link click)
+    // attributes visits for 24 months from first click, then stops.
+    if (profile.emailRef && profile.emailRef.firstSeen) {
+      var firstSeenMs = new Date(profile.emailRef.firstSeen).getTime();
+      if (!isNaN(firstSeenMs) && (Date.now() - firstSeenMs) > TOKEN_TTL_MS) {
+        delete profile.emailRef;
+      }
+    }
     return profile;
   }
 
