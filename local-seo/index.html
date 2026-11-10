@@ -1020,6 +1020,58 @@
   .block .line { font-size: 16px; }
 }
 </style>
+<style>
+/* Lost Revenue Calculator: Navy card, Coral accents, CTA Yellow highlight. */
+.calc-section{ padding:92px 0; background:#fff; }
+.calc{
+  background:var(--navy); border-radius:14px;
+  padding:26px 26px 28px; color:#eaf1f6;
+}
+@media (max-width:640px){ .calc{ padding:20px 18px 22px; } .calc-section{ padding:64px 0; } }
+.calc h3{
+  color:#fff; font-size:clamp(26px,3.8vw,34px); font-weight:800; text-transform:uppercase;
+  letter-spacing:-.01em; margin:0;
+}
+.calc .calc-sub{ color:rgba(255,255,255,.78); margin:8px 0 0; font-size:16.5px; max-width:640px; }
+.calc-sliders{ display:flex; flex-direction:column; gap:8px; margin-top:20px; }
+.calc-row{ padding:10px 0 4px; border-top:1px solid rgba(255,255,255,.14); }
+.calc-row:first-child{ border-top:none; }
+.calc-lab{ display:flex; align-items:baseline; justify-content:space-between; gap:14px; }
+.calc-lab label{ font-weight:700; font-size:16.5px; color:#fff; }
+.calc-lab .calc-val{
+  font-size:30px; font-weight:800; color:var(--coral);
+  white-space:nowrap; line-height:1;
+}
+.calc-range{
+  width:100%; height:44px; margin:2px 0 0; cursor:pointer; accent-color:var(--coral);
+  -webkit-appearance:none; appearance:none; background:transparent;
+}
+.calc-range::-webkit-slider-runnable-track{ height:6px; border-radius:3px; background:rgba(255,255,255,.28); }
+.calc-range::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:30px; height:30px; margin-top:-12px;
+  border-radius:50%; background:#fff; border:3px solid var(--coral);
+  box-shadow:0 3px 10px rgba(0,0,0,.4);
+}
+.calc-range::-moz-range-track{ height:6px; border-radius:3px; background:rgba(255,255,255,.28); }
+.calc-range::-moz-range-thumb{ width:26px; height:26px; border-radius:50%; background:#fff; border:3px solid var(--coral); }
+.calc-range:focus-visible{ outline:3px solid var(--coral); outline-offset:2px; border-radius:8px; }
+.calc-out{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px;
+}
+@media (max-width:820px){ .calc-out{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:480px){ .calc-out{ grid-template-columns:1fr; } }
+.calc-cell{
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.18);
+  border-radius:10px; padding:14px 16px;
+}
+.calc-cell .n{
+  font-size:36px; font-weight:800; color:#fff; line-height:1;
+}
+.calc-cell .t{ font-size:13.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.65); margin-top:6px; }
+.calc-cell.hot{ background:#FACC15; border-color:#FACC15; }
+.calc-cell.hot .n{ color:#10233F; }
+.calc-cell.hot .t{ color:rgba(16,35,63,.72); }
+</style>
 </head>
 <body data-route="local-seo">
 <nav class="site-nav" aria-label="Primary navigation">
@@ -1244,6 +1296,45 @@
 <details><summary>Can I do roofing SEO myself?</summary><p>You can, and some owners do. The real cost is your time: your profile, your reviews, your pages, and your links all need attention every month, not once. Most owners start strong and stall by the second month, because the business needs them on roofs instead of on Google. If you do it yourself, judge it the same way you would judge us: by tracked calls, not by effort.</p></details>
 <details><summary>How do I know if my current SEO company is actually doing anything?</summary><p>Ask for three things. The calls their work produced, tracked to the keyword or page that drove them. The actual pages and links they built this month, which you can open and read. And your rankings for the searches your customers really type. Real work leaves evidence you can see. If the report is all traffic charts and impressions, with no calls and nothing new built, you have your answer.</p></details>
 <p class="faqb-close">Not sure where you stand? Start with an audit. We will map the searches, pages, and profile gaps costing you calls, then walk through all of it with you on a 30-minute call.</p></div></section>
+  <section class="calc-section" aria-label="Lost Revenue Calculator">
+    <div class="wrap">
+      <div class="calc" aria-label="Lost Revenue Calculator">
+        <h3>Lost Revenue Calculator</h3>
+        <p class="calc-sub">Drag the sliders to your own numbers and see what missed searches cost in jobs you never hear about.</p>
+        <div class="calc-sliders">
+          <div class="calc-row">
+            <div class="calc-lab">
+              <label for="calcVisitors">Website visitors per month</label>
+              <span class="calc-val" id="calcVisitorsVal">300</span>
+            </div>
+            <input class="calc-range" id="calcVisitors" type="range" min="0" max="5000" step="10" value="300" aria-label="Website visitors per month" />
+          </div>
+          <div class="calc-row">
+            <div class="calc-lab">
+              <label for="calcJobValue">Average job value</label>
+              <span class="calc-val" id="calcJobValueVal">$10,000</span>
+            </div>
+            <input class="calc-range" id="calcJobValue" type="range" min="500" max="25000" step="250" value="10000" aria-label="Average job value in dollars" />
+          </div>
+          <div class="calc-row">
+            <div class="calc-lab">
+              <label for="calcRate">Current conversion rate</label>
+              <span class="calc-val" id="calcRateVal">2.0%</span>
+            </div>
+            <input class="calc-range" id="calcRate" type="range" min="0" max="10" step="0.1" value="2" aria-label="Current conversion rate in percent" />
+          </div>
+        </div>
+        <div class="calc-out" aria-live="polite">
+          <div class="calc-cell"><div class="n" id="calcLeadsNow">6</div><div class="t">Leads now / month</div></div>
+          <div class="calc-cell"><div class="n" id="calcLeadsHealthy">15</div><div class="t">Leads at a healthy 5% / month</div></div>
+          <div class="calc-cell"><div class="n" id="calcJobsMonth">9</div><div class="t">Jobs lost / month</div></div>
+          <div class="calc-cell"><div class="n" id="calcJobsYear">108</div><div class="t">Jobs lost / year</div></div>
+          <div class="calc-cell"><div class="n" id="calcRevMonth">$90,000</div><div class="t">Revenue lost / month</div></div>
+          <div class="calc-cell hot"><div class="n" id="calcRevYear">$1,080,000</div><div class="t">Revenue lost / year</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="cta-band cta-navy"><div class="wrap"><div class="cta-panel cta-row"><div class="cta-copy"><h2>See which local SEO searches you're <span class="cta-hl">missing calls</span> from.</h2><p class="cta-support">Start with an <a class="context-link" href="https://csramarketing.com/website-audit/">audit</a> and we will map the searches, pages, and profile gaps costing you calls.</p><a class="btn btn-primary" href="https://cal.com/csramarketing/30min" target="_blank" rel="noopener noreferrer">Book a 30-minute review</a></div><div class="cta-visual" aria-hidden="true"><div class="call-stack"><span class="call-count">3 missed calls today</span><div class="call-card"><span class="call-icon"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span><div class="call-meta"><strong>Missed call</strong><span>“roof repair near me” · Augusta</span></div><span class="call-time">now</span></div><div class="call-card"><span class="call-icon"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span><div class="call-meta"><strong>Missed call</strong><span>“emergency roofer” · Evans</span></div><span class="call-time">18m</span></div><div class="call-card"><span class="call-icon"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span><div class="call-meta"><strong>Missed call</strong><span>“roof replacement cost” · Grovetown</span></div><span class="call-time">1h</span></div></div></div></div></div></section>
 </main>
 
@@ -1372,6 +1463,50 @@
       page_path: window.location.pathname
     });
   }, true);
+})();
+</script>
+<script>
+// Lost Revenue Calculator — sliders only
+(function(){
+  var vEl = document.getElementById('calcVisitors');
+  if (!vEl) return;
+  var jEl = document.getElementById('calcJobValue');
+  var rEl = document.getElementById('calcRate');
+  var vVal = document.getElementById('calcVisitorsVal');
+  var jVal = document.getElementById('calcJobValueVal');
+  var rVal = document.getElementById('calcRateVal');
+  var oNow = document.getElementById('calcLeadsNow');
+  var oHealthy = document.getElementById('calcLeadsHealthy');
+  var oJobsM = document.getElementById('calcJobsMonth');
+  var oJobsY = document.getElementById('calcJobsYear');
+  var oRevM = document.getElementById('calcRevMonth');
+  var oRevY = document.getElementById('calcRevYear');
+  function fmt(n){ return n.toLocaleString('en-US'); }
+  function money(n){ return '$' + fmt(n); }
+  function update(){
+    var visitors = parseFloat(vEl.value) || 0;
+    var jobValue = parseFloat(jEl.value) || 0;
+    var rate = parseFloat(rEl.value) || 0;
+    var leadsNow = Math.round(visitors * (rate / 100));
+    var leadsHealthy = Math.round(visitors * 0.05);
+    var jobsLostMonth = Math.max(0, leadsHealthy - leadsNow);
+    var jobsLostYear = jobsLostMonth * 12;
+    var revMonth = jobsLostMonth * jobValue;
+    var revYear = revMonth * 12;
+    vVal.textContent = fmt(visitors);
+    jVal.textContent = money(jobValue);
+    rVal.textContent = rate.toFixed(1) + '%';
+    oNow.textContent = fmt(leadsNow);
+    oHealthy.textContent = fmt(leadsHealthy);
+    oJobsM.textContent = fmt(jobsLostMonth);
+    oJobsY.textContent = fmt(jobsLostYear);
+    oRevM.textContent = money(revMonth);
+    oRevY.textContent = money(revYear);
+  }
+  vEl.addEventListener('input', update);
+  jEl.addEventListener('input', update);
+  rEl.addEventListener('input', update);
+  update();
 })();
 </script>
 <script src="/assets/js/visitor-track.js"></script>
