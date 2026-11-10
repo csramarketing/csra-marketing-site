@@ -640,6 +640,46 @@ const PIXEL_PERSISTENCE = `<!-- Meta Pixel 24-month persistence — aligns _fbp 
 })();
 </script>`;
 
+// Google Analytics — site-wide automatic (Kemar standing rule, 2026-11-10).
+// GA is pasted into each HTML file individually and there is no shared
+// template, so a new page would silently ship without it. This edge
+// injection closes that gap, the same way injectPixel does for the Meta
+// Pixel: every HTML page the Worker serves gets the GA snippet if it
+// does not already carry it. The snippet is byte-identical to the one on
+// the live homepage. Idempotent: a page that already has the GA ID is
+// returned unchanged (no duplicate tag).
+const GA_ID = "G-DWV0LCRRJS";
+const GA_SNIPPET = `  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DWV0LCRRJS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DWV0LCRRJS');
+  </script>`;
+
+function injectGA(html) {
+  if (html.includes(GA_ID)) return html;
+  const headClose = html.toLowerCase().lastIndexOf("</head>");
+  if (headClose === -1) return html;
+  return html.slice(0, headClose) + GA_SNIPPET + "\n" + html.slice(headClose);
+}
+
+// Custom tracking script — site-wide automatic (Kemar standing rule,
+// 2026-11-10). Same gap as GA: visitor-track.js is referenced per page
+// (end of body on the live homepage) and a new page would silently ship
+// without it. This injects the same script tag before </body> when the
+// page does not already load it. Idempotent: a page that already loads
+// visitor-track.js is returned unchanged.
+const VISITOR_TRACK_TAG = `<script src="/assets/js/visitor-track.js"></script>`;
+
+function injectVisitorTrack(html) {
+  if (html.includes("visitor-track.js")) return html;
+  const bodyClose = html.toLowerCase().lastIndexOf("</body>");
+  if (bodyClose === -1) return html;
+  return html.slice(0, bodyClose) + VISITOR_TRACK_TAG + "\n" + html.slice(bodyClose);
+}
+
 // Returns the HTML with the pixel persistence layer added, and the pixel
 // snippet added too if the page has none. Returns the input unchanged
 // when nothing is missing, or when there is no </head> to inject before.
@@ -688,18 +728,20 @@ async function handle(request, env) {
 
   let response = await env.ASSETS.fetch(request);
 
-  // Site-wide Meta Pixel, 24 months, automatic (Kemar, 2026-11-10):
-  // every HTML page this Worker serves gets the 24-month persistence
-  // layer, and any page missing the pixel snippet gets the snippet too —
-  // so a new page, landing page or blog post is covered without any
-  // per-page edit. The original pixel snippet in the files is never
-  // modified; this only adds to the served HTML. Fail-open: any error
-  // serves the page untouched.
+  // Site-wide three trackers, automatic (Kemar standing rule, 2026-11-10):
+  // every HTML page this Worker serves gets the Meta Pixel (24-month
+  // persistence), Google Analytics, and the custom visitor-track.js script
+  // — and any page missing one gets it added — so a new page, landing page
+  // or blog post is covered without any per-page edit. The original
+  // snippets in the files are never modified; this only adds to the served
+  // HTML. Fail-open: any error serves the page untouched.
   const contentType = response.headers.get("content-type") || "";
   if (contentType.includes("text/html")) {
     try {
       const text = await response.text();
-      const injected = injectPixel(text);
+      let injected = injectPixel(text);
+      injected = injectGA(injected);
+      injected = injectVisitorTrack(injected);
       const headers = new Headers(response.headers);
       headers.delete("content-length");
       if (injected !== text) {
