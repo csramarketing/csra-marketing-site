@@ -174,6 +174,7 @@ html{overflow-x:hidden;}
   .post-sidebar{grid-column:1;grid-row:1;width:100%;position:static;padding:20px 20px 0;}
 }
 </style>
+<link rel="stylesheet" href="/assets/css/audit-embed.css">
 </head>
 <body>
 <header class="hero">
@@ -204,6 +205,33 @@ html{overflow-x:hidden;}
       <li><span class="num" aria-hidden="true">07</span><a href="#ch7">My Honest Verdict, No Pitch Attached</a></li>
     </ol>
   </nav>
+<section class="audit-embed">
+<h2>Get your roofing website score</h2>
+<p class="audit-embed-lead">Put in your website. Get your roofing website score in plain words. It checks mobile speed, lead generation, local SEO, trust signals, and accessibility. Measured by Google, not guessed.</p>
+<form id="blogAuditForm">
+<div class="form-grid">
+<div class="field">
+<label for="blog-name">Name</label>
+<input id="blog-name" name="name" type="text" required placeholder="Your name" autocomplete="name">
+</div>
+<div class="field">
+<label for="blog-website">Website</label>
+<input id="blog-website" name="website" type="text" inputmode="url" required placeholder="www.yourcompany.com" autocomplete="url">
+</div>
+<div class="field">
+<label for="blog-phone">Phone number</label>
+<input id="blog-phone" name="phone" type="tel" inputmode="tel" required placeholder="(706) 555-0123" autocomplete="tel">
+</div>
+<div class="field">
+<label for="blog-email">Email</label>
+<input id="blog-email" name="email" type="email" required placeholder="you@yourcompany.com" autocomplete="email">
+</div>
+</div>
+<button class="cta" type="submit">Run my audit</button>
+<p class="under-cta">Four fields, all required: name, website, phone number, and email. Your report lands in your inbox within 30 minutes.</p>
+</form>
+<div class="audit-embed-result" hidden></div>
+</section>
 
   <p class="intro-lede">You are about to spend money on a website, and the platform you pick will follow you for years. Here is the honest breakdown of Wix vs. WordPress vs. custom for roofing companies.</p>
   <p>By the end of this post, you will know exactly what each option costs, where each one quietly costs you leads, and which one fits a roofing company at your stage.</p>
@@ -450,6 +478,7 @@ html{overflow-x:hidden;}
 <script src="/assets/js/blog-feedback.js"></script>
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
+<script src="/assets/js/audit-embed.js" defer></script>
 
 
 </body>
