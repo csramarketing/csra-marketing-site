@@ -1,16 +1,29 @@
 // CSRA Marketing — location-dynamic copy + schema (Worker, advanced mode).
 // NOTE: this site deploys as a Worker with static assets, NOT Pages —
 // Pages Functions (functions/) never execute here; _worker.js does.
-// Two jobs, both driven by the visitor's location at the edge (request.cf):
+// Three jobs, all driven by the visitor's location at the edge (request.cf):
 //  1. Body copy: swaps the visitor's city into marked spans (data-geo-slot)
 //     on /services/ and /tools/lost-revenue-calculator/.
 //  2. Schema: rewrites the JSON-LD "areaServed" city cluster on /services/,
 //     /contact/ and /about/ to the visitor's metro cluster (starter map
 //     below; unmapped cities fall back to the city + its state).
+//  3. Audit hero city: on /roofing-website-score/ only, injects the
+//     visitor's city as a same-origin signal (a meta tag + a
+//     data-visitor-city attribute) for the page's own H1 script. It never
+//     rewrites H1 text server-side; the page inserts " in [City]" itself
+//     when a signal is present, and keeps its original headline otherwise.
 // Pages ship with the home-base (CSRA metro) wording as the default, so:
 //   - bots/crawlers, no city known, or any error -> the default page is
 //     served untouched (fail-open by design; this must never break the site)
 //   - titles, meta descriptions and H1 text are never modified here.
+
+// Roofing Lead Leak Audit 2.0 (Phase 3): the scoring engine lives in
+// audit-scoring.js (pure functions, shared with the Node unit tests).
+// The site Worker does NOT inject GA4 / Pixel / visitor-track site-wide:
+// other pages carry those snippets inline. The audit page carries them
+// inline too (see roofing-website-score/index.html), so nothing is
+// double-added here.
+import { parsePageSpeed, pageChecks, scoreReport, isBotChallengePage } from "./audit-scoring.js";
 
 const SPAN_PATHS = new Set([
   "/services",
@@ -28,9 +41,31 @@ const SCHEMA_PATHS = new Set([
   "/about/",
 ]);
 
+// Audit 2.0 hero city: the live /roofing-website-score/ page reads the
+// visitor's city from same-origin signals only (meta tag + data attribute).
+const CITY_PATHS = new Set([
+  "/roofing-website-score",
+  "/roofing-website-score/",
+]);
 
 const BOT_RE =
   /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex|sogou|exabot|facebot|facebookexternalhit|twitterbot|linkedinbot|semrushbot|ahrefsbot|mj12bot|dotbot|petalbot|bytespider|gptbot|claudebot|applebot|ia_archiver|crawler|spider|headless/i;
+
+// Audit 2.0 hero city: sanitize + per-word title-case a Cloudflare city
+// name before it is injected as a same-origin signal. City level only,
+// never precise, never stored. Returns "" when the value is not a
+// plausible city name; the page then keeps its original headline.
+function sanitizeAuditCity(raw) {
+  if (typeof raw !== "string") return "";
+  const city = raw.trim().replace(/\s+/g, " ");
+  if (city.length < 2 || city.length > 60) return "";
+  if (/unknown|undefined|null/i.test(city)) return "";
+  if (!/^[A-Za-z\u00C0-\u024F][A-Za-z\u00C0-\u024F'’.\- ]*$/.test(city)) return "";
+  return city
+    .split(" ")
+    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
 
 // Metro clusters: key "city|statecode" (lowercase) -> [[city, state], ...]
 const CLUSTERS = {
@@ -253,23 +288,10 @@ export default {
 const FETCH_TIMEOUT_MS = 15000;
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
 
-// Closed-list slow-down mapping: measured PageSpeed findings ONLY, in
-// plain words. Nothing outside this list may appear as a slow-down line.
-const SLOWDOWN_MAP = [
-  ["render-blocking-resources", "Some files hold up the first paint of the page."],
-  ["unused-css-rules", "The page loads styling it does not use."],
-  ["unminified-css", "Some styling files are larger than they need to be."],
-  ["unminified-javascript", "Some scripts are larger than they need to be."],
-  ["uses-optimized-images", "Some images are larger than they need to be."],
-  ["uses-responsive-images", "Some images are bigger than the phone screen needs."],
-  ["server-response-time", "The server is slow to answer."],
-];
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-  });
+function json(data, status = 200, extraHeaders) {
+  const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
+  if (extraHeaders) Object.assign(headers, extraHeaders);
+  return new Response(JSON.stringify(data), { status, headers });
 }
 
 function normalizeUrl(raw) {
@@ -283,6 +305,105 @@ function normalizeUrl(raw) {
   } catch {
     return null;
   }
+}
+
+// --- Audit 2.0 security (Phase 3) ---
+// SSRF blocklist: the Worker never fetches a private or internal address,
+// even when a redirect points there. Checked on the submitted URL and
+// again on every redirect hop inside fetchCapped.
+const BLOCKED_HOSTS = new Set([
+  "localhost",
+  "metadata",
+  "metadata.google.internal",
+]);
+const BLOCKED_HOST_SUFFIXES = [".localhost", ".local", ".internal", ".lan", ".metadata.google.internal"];
+
+function isPrivateIp(hostname) {
+  const v4 = hostname.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+  if (v4) {
+    const a = +v4[1], b = +v4[2];
+    if (a === 10) return true;                        // 10.0.0.0/8
+    if (a === 172 && b >= 16 && b <= 31) return true;  // 172.16.0.0/12
+    if (a === 192 && b === 168) return true;           // 192.168.0.0/16
+    if (a === 127) return true;                        // 127.0.0.0/8
+    if (a === 169 && b === 254) return true;           // 169.254.0.0/16 (cloud metadata)
+    if (a === 0) return true;                          // 0.0.0.0/8
+    return false;
+  }
+  // IPv6 literals only (a DNS name never contains ":").
+  if (hostname.includes(":")) {
+    const h = hostname.toLowerCase();
+    if (h === "::1" || h === "::") return true;
+    if (h.startsWith("fe80:") || h.startsWith("fc") || h.startsWith("fd")) return true; // link-local / ULA
+  }
+  return false;
+}
+
+function isBlockedHost(hostname) {
+  const h = hostname.toLowerCase();
+  if (BLOCKED_HOSTS.has(h)) return true;
+  if (BLOCKED_HOST_SUFFIXES.some((s) => h.endsWith(s))) return true;
+  if (isPrivateIp(h)) return true;
+  return false;
+}
+
+// Returns a normalized public http(s) URL, or null when the URL is
+// malformed, the wrong scheme, or a blocked host.
+function validateTargetUrl(raw) {
+  const u = normalizeUrl(raw);
+  if (!u) return null;
+  let host;
+  try { host = new URL(u).hostname; } catch { return null; }
+  if (isBlockedHost(host)) return null;
+  return u;
+}
+
+// Per-IP daily cap on audit executions (soft cap: held in memory per
+// isolate, so a recycled isolate resets the count; the 24-hour result
+// cache keeps the real abuse surface small). Env override
+// AUDIT_RATE_LIMIT_PER_DAY (default 20) exists so the cap can be
+// exercised in local tests. Cache hits never count against the cap.
+const AUDIT_RATE_LIMIT = new Map();
+function auditRateLimitOk(request, env) {
+  const capRaw = env && env.AUDIT_RATE_LIMIT_PER_DAY;
+  const cap = Number.isInteger(Number(capRaw)) && Number(capRaw) > 0 ? Number(capRaw) : 20;
+  const ip = request.headers.get("CF-Connecting-IP") || "local";
+  const day = new Date().toISOString().slice(0, 10);
+  const key = ip + "|" + day;
+  const used = AUDIT_RATE_LIMIT.get(key) || 0;
+  if (used >= cap) return false;
+  AUDIT_RATE_LIMIT.set(key, used + 1);
+  return true;
+}
+
+// 24-hour result cache, keyed by stage + URL (or by a hash of the stage
+// observations for the "score" stage). A cache hit skips the rate limit
+// and every upstream call.
+function auditCacheRequest(stage, key) {
+  return new Request("https://audit-cache.internal/v1/" + stage + "?k=" + encodeURIComponent(key));
+}
+
+async function auditCacheGet(cacheReq) {
+  try {
+    const cached = await caches.default.match(cacheReq);
+    if (!cached) return null;
+    return await cached.json();
+  } catch { return null; }
+}
+
+async function auditCachePut(cacheReq, payload) {
+  try {
+    await caches.default.put(cacheReq, new Response(JSON.stringify(payload), {
+      status: 200,
+      headers: { "Content-Type": "application/json", "Cache-Control": "max-age=86400" },
+    }));
+  } catch { /* cache failure never fails the audit */ }
+}
+
+function djb2(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
+  return h.toString(16);
 }
 
 const OWN_HOSTS = new Set(["csramarketing.com", "www.csramarketing.com"]);
@@ -307,11 +428,29 @@ async function fetchCapped(url, env) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    const res = await fetch(url, {
-      signal: controller.signal,
-      redirect: "follow",
-      headers: { "User-Agent": "CSRA-Marketing-Website-Check" },
-    });
+    // Redirects are followed by hand (max 5 hops) so every hop is
+    // re-checked against the SSRF blocklist before it is fetched.
+    let current = url;
+    let res = null;
+    for (let hops = 0; hops < 5; hops++) {
+      const r = await fetch(current, {
+        signal: controller.signal,
+        redirect: "manual",
+        headers: { "User-Agent": "CSRA-Marketing-Website-Check" },
+      });
+      if (r.status >= 300 && r.status < 400) {
+        const loc = r.headers.get("location");
+        if (!loc) return null;
+        let next;
+        try { next = new URL(loc, current).toString(); } catch { return null; }
+        if (!validateTargetUrl(next)) return null;
+        current = next;
+        continue;
+      }
+      res = r;
+      break;
+    }
+    if (!res) return null;
     if (!res.ok) return null;
     const reader = res.body.getReader();
     const chunks = [];
@@ -329,7 +468,11 @@ async function fetchCapped(url, env) {
     const merged = new Uint8Array(total);
     let off = 0;
     for (const c of chunks) { merged.set(c, off); off += c.byteLength; }
-    return new TextDecoder().decode(merged);
+    const text = new TextDecoder().decode(merged);
+    // A bot-challenge page (200, but not the site) is a failed check,
+    // never scored as if it were the site.
+    if (isBotChallengePage(text)) return null;
+    return text;
   } catch {
     return null;
   } finally {
@@ -337,15 +480,22 @@ async function fetchCapped(url, env) {
   }
 }
 
-async function pageSpeedSeconds(url, strategy, key) {
+// PageSpeed Insights, one strategy. Returns the parsed result from
+// audit-scoring.js (lab metrics, CrUX field data, screenshot pass-through,
+// tap-targets, font size), or null when the check fails. A null never
+// becomes a zero: the Mobile Speed category reads "Could not check".
+// PageSpeed timeout is 60s (raised from 30s, 2026-11-13): a mobile run
+// takes ~23s on a good day, so 30s cut it off whenever Google ran slow.
+async function fetchPageSpeed(url, strategy, key) {
   try {
     const api = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
       + "?url=" + encodeURIComponent(url)
       + "&strategy=" + strategy
       + "&category=performance"
+      + "&category=accessibility"
       + "&key=" + encodeURIComponent(key);
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 30000);
+    const timer = setTimeout(() => controller.abort(), 60000);
     let res;
     try {
       res = await fetch(api, { signal: controller.signal });
@@ -354,28 +504,8 @@ async function pageSpeedSeconds(url, strategy, key) {
     }
     if (!res.ok) return null;
     const data = await res.json();
-    const interactive = data?.lighthouseResult?.audits?.interactive;
-    const ms = interactive?.numericValue;
-    if (typeof ms !== "number") return null;
-    const audits = data.lighthouseResult.audits || {};
-    const slowdowns = [];
-    for (const [id, line] of SLOWDOWN_MAP) {
-      const a = audits[id];
-      if (a && typeof a.score === "number" && a.score < 0.9) slowdowns.push(line);
-    }
-    const out = { seconds: Math.round((ms / 1000) * 10) / 10, slowdowns };
-    // Phone screenshot: the mobile test's own screenshot of the top of
-    // the page. Pass-through only, never stored. Dropped when absent,
-    // not a JPEG data string, or oversized, so no empty frame can ship.
-    const shot = audits["final-screenshot"]?.details?.data;
-    if (typeof shot === "string" && shot.startsWith("data:image/jpeg;base64,") && shot.length <= 1500000) {
-      out.screenshot = shot;
-    }
-    const tap = audits["tap-targets"];
-    if (tap && typeof tap.score === "number") out.tapTargetsPass = tap.score === 1;
-    const font = audits["font-size"];
-    if (font && typeof font.score === "number") out.fontSizePass = font.score === 1;
-    return out;
+    const parsed = parsePageSpeed(data);
+    return parsed.ok ? parsed : null;
   } catch {
     return null;
   }
@@ -404,36 +534,68 @@ async function knowledgeGraphSearch(name, key) {
   }
 }
 
-function pageFields(html) {
-  const out = {};
-  // Phone view: viewport meta tag present (quoted or unquoted value).
-  out.phoneReady = /<meta[^>]+name=["']?viewport["'\s>\/=]/i.test(html);
-  if (!out.phoneReady) out.phoneIssues = ["the page is not set up to fit a phone screen"];
+// HTML checks live in audit-scoring.js as pageChecks(html, url): the v1
+// fields (phoneReady, contactSteps, pageTitle, pageDescription,
+// pageHeading) plus every Phase 3 sub-check, each with its evidence.
 
-  // Contact path: tap-to-call, email link, or a contact form/link.
-  const hasTel = /href=["']?tel:/i.test(html);
-  const hasMailto = /href=["']?mailto:/i.test(html);
-  const hasForm = /<form/i.test(html);
-  const hasContactLink = /href=["']?[^"'\s>]*contact/i.test(html);
-  out.contactFound = hasTel || hasMailto || hasForm || hasContactLink;
-  if (!out.contactFound) out.contactMissing = "a tap-to-call button, an email link, or a contact form";
-  out.contactSteps = { call: hasTel, email: hasMailto, form: hasForm || hasContactLink };
-
-  // Search basics: title, description, main heading, from the same page.
-  const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  out.pageTitle = !!(titleMatch && titleMatch[1].trim());
-  let descriptionFound = false;
-  const metaTags = html.match(/<meta[^>]*>/gi) || [];
-  for (const tag of metaTags) {
-    if (/name=["']?description["'\s>\/=]/i.test(tag)) {
-      const content = tag.match(/content\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
-      const value = content ? (content[1] ?? content[2] ?? content[3] ?? "") : "";
-      if (value.trim()) descriptionFound = true;
+// Audit lead capture (Kemar, 2026-11-13): every completed audit — the blog
+// embed and the dedicated audit page — drops into the CRM as a New Lead with
+// the tag "Ran Audit", plus an email notification. The Worker cannot call
+// the CRM directly, so it saves each completion to KV; a Muse cron reads new
+// entries and upserts them into the CRM + sends the email. A KV failure must
+// never break the audit response.
+async function recordAuditLead(env, request, body, report) {
+  try {
+    if (!env.AUDIT_LEADS) return;
+    if (!report || typeof report.overall !== "number") return;
+    const email = String(body.email || "").trim().toLowerCase();
+    const name = String(body.business || "").trim();
+    if (!email || !name) return;
+    const categories = {};
+    if (Array.isArray(report.categories)) {
+      for (const c of report.categories) {
+        if (c && typeof c.id === "string" && typeof c.score === "number") categories[c.id] = c.score;
+      }
     }
+    const mobileLab = report.mobileLab && typeof report.mobileLab === "object"
+      ? (({ screenshot, ...rest }) => rest)(report.mobileLab)
+      : null;
+    const lead = {
+      name,
+      website: String(body.website || "").trim(),
+      email,
+      phone: String(body.phone || "").trim(),
+      overall: report.overall,
+      checkedOfFive: typeof report.checkedOfFive === "number" ? report.checkedOfFive : null,
+      categories,
+      // Full engine report for the emailed-PDF flow (Kemar, 2026-11-13).
+      // mobileLab.screenshot is stripped: base64 image, not needed for the PDF.
+      report: {
+        overall: report.overall,
+        overallBand: report.overallBand || null,
+        checkedOfFive: typeof report.checkedOfFive === "number" ? report.checkedOfFive : null,
+        categories: Array.isArray(report.categories) ? report.categories : [],
+        findings: Array.isArray(report.findings) ? report.findings : [],
+        plan: Array.isArray(report.plan) ? report.plan : [],
+        mobileLab,
+        fieldData: report.fieldData || null,
+      },
+      crmDone: false,
+      notified: false,
+      pdfAgencySent: false,
+      pdfLeadSent: false,
+      pdfSentAt: null,
+      source: request.headers.get("referer") || "",
+      submittedAt: new Date().toISOString(),
+      visitor_id: String(body.visitor_id || ""),
+      email_token: String(body.email_token || ""),
+      meta_fbp: String(body.meta_fbp || ""),
+    };
+    const key = "lead:" + Date.now() + ":" + Math.random().toString(36).slice(2, 8);
+    await env.AUDIT_LEADS.put(key, JSON.stringify(lead));
+  } catch (e) {
+    // Lead capture must never break the audit.
   }
-  out.pageDescription = descriptionFound;
-  out.pageHeading = /<h1[\s>]/i.test(html);
-  return out;
 }
 
 async function handleRoofingWebsiteScore(request, env) {
@@ -444,36 +606,70 @@ async function handleRoofingWebsiteScore(request, env) {
   } catch {
     return json({ error: "bad-body" }, 400);
   }
-  const url = normalizeUrl(body.website);
+  // Honeypot (form-helper.js): a filled website_confirm means a bot.
+  // Reject before the cache and rate limit are touched.
+  if (typeof body.website_confirm === "string" && body.website_confirm.trim() !== "") {
+    return json({ error: "spam" }, 400);
+  }
+  const url = validateTargetUrl(body.website);
   const business = String(body.business || "").trim();
   if (!url || !business) return json({ error: "missing" }, 400);
   const stage = typeof body.stage === "string" ? body.stage : "";
+
+  // Cache first: a hit skips the rate limit and every upstream call.
+  // The "score" stage is keyed by a hash of its inputs (the three stage
+  // observations); the other stages are keyed by URL.
+  const cacheKey = stage === "score"
+    ? djb2(JSON.stringify([body.page, body.speed, body.google]))
+    : url;
+  const cacheReq = auditCacheRequest(stage || "full", cacheKey);
+  const cached = await auditCacheGet(cacheReq);
+  if (cached) {
+    await recordAuditLead(env, request, body, cached);
+    return json(cached, 200, { "X-Audit-Cache": "HIT" });
+  }
+  if (!auditRateLimitOk(request, env)) return json({ error: "rate-limited" }, 429);
+
+  const finish = async (payload) => {
+    await auditCachePut(cacheReq, payload);
+    return json(payload, 200, { "X-Audit-Cache": "MISS" });
+  };
 
   // Staged runs: each stage fails independently to could-not-check, so
   // one slow or failed stage never blocks the others.
   if (stage === "page") {
     const html = await fetchCapped(url, env);
-    if (html === null) return json({});
-    return json(pageFields(html));
+    if (html === null) return finish({});
+    const fields = pageChecks(html, url);
+    fields.fetched = true;
+    return finish(fields);
   }
 
   if (stage === "speed") {
     const out = {};
     if (env.PAGESPEED_API_KEY) {
       const [mobile, desktop] = await Promise.all([
-        pageSpeedSeconds(url, "mobile", env.PAGESPEED_API_KEY),
-        pageSpeedSeconds(url, "desktop", env.PAGESPEED_API_KEY),
+        fetchPageSpeed(url, "mobile", env.PAGESPEED_API_KEY),
+        fetchPageSpeed(url, "desktop", env.PAGESPEED_API_KEY),
       ]);
       if (mobile) {
-        out.speedPhones = mobile.seconds;
+        out.mobile = mobile;
+        out.speedPhones = mobile.interactiveSec;
         out.slowdowns = mobile.slowdowns.slice(0, 3);
         if (mobile.screenshot) out.phoneScreenshot = mobile.screenshot;
         if (typeof mobile.tapTargetsPass === "boolean") out.tapTargetsPass = mobile.tapTargetsPass;
         if (typeof mobile.fontSizePass === "boolean") out.fontSizePass = mobile.fontSizePass;
+      } else {
+        out.mobile = { ok: false };
       }
-      if (desktop) out.speedComputers = desktop.seconds;
+      if (desktop && typeof desktop.interactiveSec === "number") {
+        out.speedComputers = desktop.interactiveSec;
+        out.desktopSec = desktop.interactiveSec;
+      }
+    } else {
+      out.mobile = { ok: false };
     }
-    return json(out);
+    return finish(out);
   }
 
   if (stage === "google") {
@@ -486,47 +682,64 @@ async function handleRoofingWebsiteScore(request, env) {
         if (kg.type) out.kgType = kg.type;
       }
     }
-    return json(out);
+    return finish(out);
   }
 
-  // No stage: the original all-in-one run, kept for safety.
-  const out = {};
-  const html = await fetchCapped(url, env);
-  if (html === null) {
-    // Homepage unreachable: every section honestly reports could-not-check.
-    return json(out);
+  // "score" runs no upstream checks: it scores the three stage
+  // observations the client already collected.
+  if (stage === "score") {
+    const report = scoreReport({
+      page: body.page || null,
+      speed: body.speed || null,
+      google: body.google || null,
+    });
+    await recordAuditLead(env, request, body, report);
+    return finish(report);
   }
-  Object.assign(out, pageFields(html));
+
+  // No stage: the original all-in-one run, now returning the full scored
+  // report (plus the raw stage observations for debugging).
+  let page = null;
+  let speed = null;
+  let google = null;
+  const html = await fetchCapped(url, env);
+  if (html !== null) {
+    page = pageChecks(html, url);
+    page.fetched = true;
+  }
 
   // Speed: only when the PageSpeed secret exists.
   if (env.PAGESPEED_API_KEY) {
     const [mobile, desktop] = await Promise.all([
-      pageSpeedSeconds(url, "mobile", env.PAGESPEED_API_KEY),
-      pageSpeedSeconds(url, "desktop", env.PAGESPEED_API_KEY),
+      fetchPageSpeed(url, "mobile", env.PAGESPEED_API_KEY),
+      fetchPageSpeed(url, "desktop", env.PAGESPEED_API_KEY),
     ]);
-    if (mobile) {
-      out.speedPhones = mobile.seconds;
-      out.slowdowns = mobile.slowdowns.slice(0, 3);
-      if (mobile.screenshot) out.phoneScreenshot = mobile.screenshot;
-      if (typeof mobile.tapTargetsPass === "boolean") out.tapTargetsPass = mobile.tapTargetsPass;
-      if (typeof mobile.fontSizePass === "boolean") out.fontSizePass = mobile.fontSizePass;
-    }
-    if (desktop) out.speedComputers = desktop.seconds;
+    speed = {
+      mobile: mobile || { ok: false },
+      desktopSec: desktop && typeof desktop.interactiveSec === "number" ? desktop.interactiveSec : null,
+    };
+  } else {
+    speed = { mobile: { ok: false }, desktopSec: null };
   }
 
   // Google listing: only when the Knowledge Graph secret exists.
   if (env.KG_API_KEY) {
     const kg = await knowledgeGraphSearch(business, env.KG_API_KEY);
     if (kg !== null) {
-      out.googleFound = kg.found;
-      if (kg.name) out.kgName = kg.name;
-      if (kg.type) out.kgType = kg.type;
+      google = { googleFound: kg.found };
+      if (kg.name) google.kgName = kg.name;
+      if (kg.type) google.kgType = kg.type;
     }
   }
 
-  return json(out);
+  const report = scoreReport({ page, speed, google });
+  await recordAuditLead(env, request, body, report);
+  return finish({ ...report, raw: { page, speed, google } });
 }
 
+// ---- Tracker safety net (restored from the pre-2.0 Worker, 2026-11-13) ----
+// GA, Meta Pixel (+ 24-month _fbp/_fbc persistence) and visitor-track.js
+// are injected into any HTML page missing them. Idempotent.
 // Meta Pixel — site-wide 24-month persistence (Kemar, 2026-11-10).
 // The pixel snippet is pasted into each HTML file individually and there
 // is no shared template, so a new page would silently ship without the
@@ -712,53 +925,40 @@ function injectPixel(html) {
 
 async function handle(request, env) {
   const url = new URL(request.url);
+  const path = url.pathname;
 
-  // Merge http into https: every http request gets a permanent redirect
-  // to the same URL on https (same host, path and query). This keeps
-  // Google from splitting one page into two versions (http vs https).
-  if (url.protocol === "http:") {
-    url.protocol = "https:";
-    return Response.redirect(url.toString(), 301);
+  // http -> https on the live domains (restored from the pre-2.0 Worker).
+  if (url.protocol === "http:" && (url.hostname === "csramarketing.com" || url.hostname === "www.csramarketing.com")) {
+    const httpsUrl = new URL(request.url);
+    httpsUrl.protocol = "https:";
+    return Response.redirect(httpsUrl.toString(), 301);
   }
 
-  const path = url.pathname;
   if (path === "/api/roofing-website-score") {
     return handleRoofingWebsiteScore(request, env);
   }
 
   let response = await env.ASSETS.fetch(request);
 
-  // Site-wide three trackers, automatic (Kemar standing rule, 2026-11-10):
-  // every HTML page this Worker serves gets the Meta Pixel (24-month
-  // persistence), Google Analytics, and the custom visitor-track.js script
-  // — and any page missing one gets it added — so a new page, landing page
-  // or blog post is covered without any per-page edit. The original
-  // snippets in the files are never modified; this only adds to the served
-  // HTML. Fail-open: any error serves the page untouched.
-  const contentType = response.headers.get("content-type") || "";
-  if (contentType.includes("text/html")) {
-    try {
-      const text = await response.text();
-      let injected = injectPixel(text);
-      injected = injectGA(injected);
-      injected = injectVisitorTrack(injected);
-      const headers = new Headers(response.headers);
-      headers.delete("content-length");
-      if (injected !== text) {
-        // Content changed: do not let the edge cache a pre-injection copy.
-        headers.set("Cache-Control", "private, no-store");
+  // Tracker safety net: inject GA, Meta Pixel (+ 24-month persistence) and
+  // visitor-track.js into any HTML page missing them. Idempotent — pages
+  // that already carry them are returned unchanged. Non-HTML is untouched.
+  try {
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("text/html")) {
+      const html = await response.text();
+      const injected = injectPixel(injectVisitorTrack(injectGA(html)));
+      if (injected !== html) {
+        const headers = new Headers(response.headers);
+        headers.delete("content-length");
+        response = new Response(injected, { status: response.status, headers });
       }
-      response = new Response(injected, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
-    } catch (err) {
-      response = await env.ASSETS.fetch(request);
     }
+  } catch (err) {
+    // Injection must never break a page: fall through with the original response.
   }
 
-  if (!SPAN_PATHS.has(path) && !SCHEMA_PATHS.has(path)) {
+  if (!SPAN_PATHS.has(path) && !SCHEMA_PATHS.has(path) && !CITY_PATHS.has(path)) {
     return response;
   }
 
@@ -805,6 +1005,33 @@ async function handle(request, env) {
         rewriter.on("head", {
           element(el) {
             el.append(`<script>window.__CSRA_GEO__=${payload};</script>`, {
+              html: true,
+            });
+          },
+        });
+      }
+    }
+
+    // Audit 2.0 hero city: inject the visitor's city as same-origin
+    // signals only (meta tag + data-visitor-city on <html>). The page's
+    // own H1 script reads them and inserts " in [City]"; with no signal
+    // (unknown city, rejected value, or any error) the page is served
+    // untouched and keeps its original headline. Nothing is stored.
+    if (CITY_PATHS.has(path)) {
+      const auditCity = sanitizeAuditCity(city);
+      if (auditCity) {
+        const safeCity = auditCity
+          .replace(/&/g, "&amp;")
+          .replace(/"/g, "&quot;")
+          .replace(/</g, "&lt;");
+        rewriter.on("html", {
+          element(el) {
+            el.setAttribute("data-visitor-city", safeCity);
+          },
+        });
+        rewriter.on("head", {
+          element(el) {
+            el.append(`<meta name="visitor-city" content="${safeCity}">`, {
               html: true,
             });
           },

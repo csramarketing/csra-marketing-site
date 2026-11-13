@@ -135,6 +135,21 @@ body{-webkit-text-size-adjust:100%;}
 .toc{padding:26px 24px;}
 }
 @media(max-width:400px){.toc{padding:22px 18px;}.toc .num{font-size:12px;min-width:28px;}}
+/* keep-reading block (staging) */
+.block { border-top: 2px solid #FF705C; margin-top: 28px; padding-top: 6px; }
+.block h2 { border-bottom: none; margin-top: 18px; padding-bottom: 0; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 16px 0 8px; }
+@media (min-width: 700px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+a.card { display: block; border: 1px solid #D9DEE7; border-radius: 12px; overflow: hidden; text-decoration: none !important; background: #ffffff; }
+/* NOTE: text-decoration:none needs !important here. The live template's rule
+   "main a:not(.btn):not(.card-preview):not(.card-view)" (specificity 0,3,2) underlines
+   every link inside <main>, and it beats a plain "a.card" (0,1,1). Without !important
+   the card blurbs render underlined; the approved preview has blurbs plain. The card
+   titles stay underlined via "a.card .ct h3 { text-decoration: underline }" below. */
+a.card img { width: 100%; display: block; }
+a.card .ct { padding: 14px 16px 16px; }
+a.card .ct h3 { margin: 0 0 6px; font-size: 17px; line-height: 1.35; text-decoration: underline; }
+a.card .ct p { margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400; }
 </style>
 <style>*{text-decoration-color:#FF705C !important}</style>
 <style>
@@ -158,6 +173,7 @@ html{overflow-x:hidden;}
   .post-sidebar{grid-column:1;grid-row:1;width:100%;position:static;padding:20px 20px 0;}
 }
 </style>
+<link rel="stylesheet" href="/assets/css/audit-embed.css">
 </head>
 <body>
 <header class="site-header"><div class="site-header-in">
@@ -199,6 +215,34 @@ html{overflow-x:hidden;}
 <li><a href="#ch5"><span class="num" aria-hidden="true">05</span>Your empty copy</a></li>
 </ol>
 </nav>
+<section class="audit-embed">
+<h2>Get your roofing website score</h2>
+<p class="audit-embed-lead">Put in your website. Get your roofing website score in plain words. It checks mobile speed, lead generation, local SEO, trust signals, and accessibility. Measured by Google, not guessed.</p>
+<form id="blogAuditForm">
+<div class="form-grid">
+<div class="field">
+<label for="blog-name">Name</label>
+<input id="blog-name" name="name" type="text" required placeholder="Your name" autocomplete="name">
+</div>
+<div class="field">
+<label for="blog-website">Website</label>
+<input id="blog-website" name="website" type="text" inputmode="url" required placeholder="www.yourcompany.com" autocomplete="url">
+</div>
+<div class="field">
+<label for="blog-phone">Phone number</label>
+<input id="blog-phone" name="phone" type="tel" inputmode="tel" required placeholder="(706) 555-0123" autocomplete="tel">
+</div>
+<div class="field">
+<label for="blog-email">Email</label>
+<input id="blog-email" name="email" type="email" required placeholder="you@yourcompany.com" autocomplete="email">
+</div>
+</div>
+<button class="cta" type="submit">Run my audit</button>
+<p class="under-cta">Four fields, all required: name, website, phone number, and email. Your report lands in your inbox within 30 minutes.</p>
+</form>
+<div class="audit-embed-result" hidden></div>
+</section>
+
 <section class="chapter" id="ch1">
 <h2>#1 Your calls to action are invisible (or missing entirely)</h2>
 <p>Here is the most common problem I see. <strong>A homeowner lands on your page, likes what they read, and has no idea what to do next.</strong></p>
@@ -275,6 +319,26 @@ html{overflow-x:hidden;}
 <script>window.CSRA_NEWSLETTER_ENDPOINT="https://script.google.com/macros/s/AKfycbxsjD0FBuAOV2sKvgU1_L7RYkvhvJkaNCll5hsvtw5yJK4YcIgq8gYkSHe4VDhRjKvk/exec";</script>
 <!-- CSRA Newsletter Signup - Drop-in component for blog posts -->
 <!-- Requires: visitor-track.js and form-helper.js (auto-attaches visitor data) -->
+<div class="block">
+<h2>More on this topic</h2>
+<div class="cards">
+<a class="card" href="https://csramarketing.com/blog/how-many-roofing-leads-website/">
+<img src="https://csramarketing.com/assets/blog/how-many-roofing-leads-website-2027.png" alt="How Many Roofing Leads Should Your Website Be Generating Each Month?">
+<div class="ct"><h3>How Many Roofing Leads Should Your Website Be Generating Each Month?</h3>
+<p>In my experience, a healthy roofing site turns 2 to 5 out of every 100 visitors into leads. Here is the simple math to benchmark your own site, plus what to fix if the numbers are low.</p></div>
+</a>
+<a class="card" href="https://csramarketing.com/blog/how-to-get-roofing-leads/">
+<img src="https://csramarketing.com/assets/blog/how-to-get-roofing-leads.jpg" alt="19 Ways to Get More Roofing Leads in 2027 (Beyond Word of Mouth)">
+<div class="ct"><h3>19 Ways to Get More Roofing Leads in 2027 (Beyond Word of Mouth)</h3>
+<p>Wondering how to get roofing leads beyond word of mouth? Here are 19 proven ways roofers fill their pipeline in 2027, ranked by what actually works, with the research to prove it.</p></div>
+</a>
+<a class="card" href="https://csramarketing.com/blog/roofing-website-must-haves/">
+<img src="https://csramarketing.com/assets/blog/roofing-website-must-haves-2027.png" alt="Roofing Website Must-Haves: 7 Things That Book Jobs">
+<div class="ct"><h3>Roofing Website Must-Haves: 7 Things That Book Jobs</h3>
+<p>Roofing website must-haves: the 7 things the sites that book jobs all have, and the 3 things to rip out. 2027 checklist.</p></div>
+</a>
+</div>
+</div>
 <div class="csra-newsletter-box" style="margin:40px 0;padding:32px 28px;background:#10233f;border-radius:16px;text-align:center;">
   <h3 style="color:#fff;font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;margin:0 0 8px;">Get the Roofing Revenue Brief</h3>
   <p style="color:#c8d0de;font-family:'Poppins',sans-serif;font-size:15px;margin:0 0 20px;line-height:1.6;">One practical marketing tip for roofers, every month. No fluff, no spam.</p>
@@ -390,6 +454,7 @@ if(window.gtag){document.querySelectorAll('.post-body a.btn, .cta-band a.btn').f
 </script>
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
+<script src="/assets/js/audit-embed.js" defer></script>
 
 
 </body>

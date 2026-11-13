@@ -2,6 +2,12 @@
   "name": "csra-marketing-site",
   "main": "_worker.js",
   "compatibility_date": "2026-10-01",
+  "kv_namespaces": [
+    {
+      "binding": "AUDIT_LEADS",
+      "id": "c86a419e4bf342618e692b719ea35df8"
+    }
+  ],
   "assets": {
     "directory": ".",
     "binding": "ASSETS",

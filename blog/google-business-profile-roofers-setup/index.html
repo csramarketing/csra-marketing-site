@@ -242,6 +242,7 @@ html{overflow-x:hidden;}
 .calc-cell.hot .t{ color:rgba(16,35,63,.72); }
 
 </style>
+<link rel="stylesheet" href="/assets/css/audit-embed.css">
 </head>
 <body>
 
@@ -287,6 +288,34 @@ html{overflow-x:hidden;}
     <li><span class="num" aria-hidden="true">07</span><a href="#ch7">Keep it fresh or Google assumes you closed</a></li>
   </ol>
 </nav>
+<section class="audit-embed">
+<h2>Get your roofing website score</h2>
+<p class="audit-embed-lead">Put in your website. Get your roofing website score in plain words. It checks mobile speed, lead generation, local SEO, trust signals, and accessibility. Measured by Google, not guessed.</p>
+<form id="blogAuditForm">
+<div class="form-grid">
+<div class="field">
+<label for="blog-name">Name</label>
+<input id="blog-name" name="name" type="text" required placeholder="Your name" autocomplete="name">
+</div>
+<div class="field">
+<label for="blog-website">Website</label>
+<input id="blog-website" name="website" type="text" inputmode="url" required placeholder="www.yourcompany.com" autocomplete="url">
+</div>
+<div class="field">
+<label for="blog-phone">Phone number</label>
+<input id="blog-phone" name="phone" type="tel" inputmode="tel" required placeholder="(706) 555-0123" autocomplete="tel">
+</div>
+<div class="field">
+<label for="blog-email">Email</label>
+<input id="blog-email" name="email" type="email" required placeholder="you@yourcompany.com" autocomplete="email">
+</div>
+</div>
+<button class="cta" type="submit">Run my audit</button>
+<p class="under-cta">Four fields, all required: name, website, phone number, and email. Your report lands in your inbox within 30 minutes.</p>
+</form>
+<div class="audit-embed-result" hidden></div>
+</section>
+
 
 <p class="eyebrow">Chapter 01</p>
 <h2 id="ch1">Your Google Business Profile Is Your Second Homepage</h2>
@@ -556,6 +585,26 @@ html{overflow-x:hidden;}
 <script>window.CSRA_NEWSLETTER_ENDPOINT="https://script.google.com/macros/s/AKfycbxsjD0FBuAOV2sKvgU1_L7RYkvhvJkaNCll5hsvtw5yJK4YcIgq8gYkSHe4VDhRjKvk/exec";</script>
 <!-- CSRA Newsletter Signup - Drop-in component for blog posts -->
 <!-- Requires: visitor-track.js and form-helper.js (auto-attaches visitor data) -->
+<div class="block">
+<h2>More on this topic</h2>
+<div class="cards">
+<a class="card" href="https://csramarketing.com/blog/how-google-ranks-roofers-map-pack/">
+<img src="https://csramarketing.com/assets/blog/how-google-ranks-roofers-map-pack-2027.png" alt="How Google Ranks Roofers in the Map Pack">
+<div class="ct"><h3>How Google Ranks Roofers in the Map Pack</h3>
+<p>How Google ranks roofers in the Map Pack: the 3 factors Google uses to pick them, and what you can do about each.</p></div>
+</a>
+<a class="card" href="https://csramarketing.com/blog/google-review-statistics-roofers/">
+<img src="https://csramarketing.com/assets/blog/google-review-statistics-roofers.jpg" alt="15 Google Review Statistics Roofers Can't Afford to Ignore in 2027">
+<div class="ct"><h3>15 Google Review Statistics Roofers Can't Afford to Ignore in 2027</h3>
+<p>15 Google review statistics every roofer should know in 2027, from the star rating that filters you out to what one extra star is worth in revenue.</p></div>
+</a>
+<a class="card" href="https://csramarketing.com/blog/what-is-local-seo-for-roofers/">
+<img src="https://csramarketing.com/assets/blog/what-is-local-seo-for-roofers-2027.png" alt="What Is Local SEO for Roofers (And Why It's Different From Regular SEO)">
+<div class="ct"><h3>What Is Local SEO for Roofers (And Why It's Different From Regular SEO)</h3>
+<p>Local SEO for roofing companies isn't regular SEO with a different label. Here's what it actually is, the 3 things Google looks at, and why generic SEO advice is quietly costing you booked jobs.</p></div>
+</a>
+</div>
+</div>
 <div class="csra-newsletter-box" style="margin:40px 0;padding:32px 28px;background:#10233f;border-radius:16px;text-align:center;">
   <h3 style="color:#fff;font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;margin:0 0 8px;">Get the Roofing Revenue Brief</h3>
   <p style="color:#c8d0de;font-family:'Poppins',sans-serif;font-size:15px;margin:0 0 20px;line-height:1.6;">One practical marketing tip for roofers, every month. No fluff, no spam.</p>
@@ -663,6 +712,7 @@ html{overflow-x:hidden;}
 
 <script src="/assets/js/visitor-track.js" defer></script>
 <script src="/assets/js/form-helper.js" defer></script>
+<script src="/assets/js/audit-embed.js" defer></script>
 
 
 </body>
