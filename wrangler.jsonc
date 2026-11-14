@@ -6,6 +6,10 @@
     {
       "binding": "AUDIT_LEADS",
       "id": "c86a419e4bf342618e692b719ea35df8"
+    },
+    {
+      "binding": "SIGNED_AGREEMENTS",
+      "id": "8e738e23dfd04e428cd854beacf25a31"
     }
   ],
   "assets": {

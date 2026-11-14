@@ -524,6 +524,36 @@
           alert("Please fill in all fields and check the agreement box.");
           return;
         }
+// Signed agreement pipeline (Kemar, 2026-11-14): post the same signing to
+// /api/sign as a second path. The Google Form submit below stays. This
+// call is fire-and-forget: a failure here never blocks the Google Form
+// submit or the success view.
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  function field(id) {
+    return (document.getElementById(id) || document.querySelector('[name="' + id + '"]') || {}).value || "";
+  }
+  var payload = {
+    product: "website",
+    business: field("business").trim(),
+    signer: field("signer").trim(),
+    title: field("title").trim(),
+    date: field("date"),
+    email: field("email").trim(),
+    signature: field("signature").trim(),
+    price: Number(params.get("price")) || 2500,
+    pages: Number(params.get("pages")) || 9,
+    revisions: Number(params.get("revisions")) || 2,
+    billing: params.get("billing") || "onetime",
+    extras: params.get("extras") || "",
+    source: window.location.href
+  };
+  fetch("/api/sign", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(function () {});
+})();
         btn.disabled = true;
         btn.textContent = "Signing...";
         var payload = new URLSearchParams();

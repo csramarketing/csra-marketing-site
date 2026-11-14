@@ -24,6 +24,7 @@
 // inline too (see roofing-website-score/index.html), so nothing is
 // double-added here.
 import { parsePageSpeed, pageChecks, scoreReport, isBotChallengePage } from "./audit-scoring.js";
+import { fetchPlaces } from "./places-helpers.js";
 
 const SPAN_PATHS = new Set([
   "/services",
@@ -590,12 +591,76 @@ async function recordAuditLead(env, request, body, report) {
       visitor_id: String(body.visitor_id || ""),
       email_token: String(body.email_token || ""),
       meta_fbp: String(body.meta_fbp || ""),
+      // Places API draft (rating, review count, map-pack rank + top 3
+      // competitors) for Sam to verify in his hand check before the PDF.
+      // Rides on googleListing, which requires the Knowledge Graph stage
+      // to have run (it always does live: KG_API_KEY is set).
+      places: (report.googleListing && report.googleListing.places) || null,
     };
     const key = "lead:" + Date.now() + ":" + Math.random().toString(36).slice(2, 8);
     await env.AUDIT_LEADS.put(key, JSON.stringify(lead));
   } catch (e) {
     // Lead capture must never break the audit.
   }
+}
+
+// Signed agreements (Kemar, 2026-11-14): the merged proposal pages POST
+// each signing here as a second path (the Google Form submit stays).
+// The signing is stored in KV; the signed-agreement-sync cron picks it up,
+// builds the signed PDF, emails it to the signer + the agency, syncs the
+// CRM, and moves the stage to Won. Signing capture must never break the
+// sign flow: any failure here returns ok:false and the page carries on.
+async function handleSign(request, env) {
+  if (request.method !== "POST") return json({ error: "method" }, 405);
+  if (!env.SIGNED_AGREEMENTS) return json({ ok: false, error: "signing_unavailable" }, 503);
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: "bad_json" }, 400);
+  }
+  const product = String(body.product || "").trim().toLowerCase();
+  const business = String(body.business || "").trim();
+  const signer = String(body.signer || "").trim();
+  const title = String(body.title || "").trim();
+  const date = String(body.date || "").trim();
+  const email = String(body.email || "").trim().toLowerCase();
+  const signature = String(body.signature || "").trim();
+  if (product !== "website" && product !== "seo") return json({ ok: false, error: "bad_product" }, 400);
+  if (!business || !signer || !title || !date || !email || !signature) return json({ ok: false, error: "missing_field" }, 400);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ ok: false, error: "bad_email" }, 400);
+  const num = (v, dflt) => {
+    const n = Number(v);
+    return Number.isFinite(n) && n > 0 ? n : dflt;
+  };
+  const signing = {
+    product,
+    business,
+    signer,
+    title,
+    date,
+    email,
+    signature,
+    price: num(body.price, product === "website" ? 2500 : 1500),
+    pages: product === "website" ? num(body.pages, 9) : null,
+    term: product === "seo" ? num(body.term, 6) : null,
+    revisions: product === "website" ? num(body.revisions, 2) : null,
+    billing: String(body.billing || (product === "website" ? "onetime" : "recurring")).trim().toLowerCase(),
+    extras: String(body.extras || "").trim(),
+    source: String(body.source || request.headers.get("referer") || "").trim(),
+    submittedAt: new Date().toISOString(),
+    crmDone: false,
+    pdfCustomerSent: false,
+    pdfAgencySent: false,
+    pdfSentAt: null,
+  };
+  const key = "sign:" + Date.now() + ":" + Math.random().toString(36).slice(2, 8);
+  try {
+    await env.SIGNED_AGREEMENTS.put(key, JSON.stringify(signing));
+  } catch {
+    return json({ ok: false, error: "store_failed" }, 500);
+  }
+  return json({ ok: true, key });
 }
 
 async function handleRoofingWebsiteScore(request, env) {
@@ -682,6 +747,24 @@ async function handleRoofingWebsiteScore(request, env) {
         if (kg.type) out.kgType = kg.type;
       }
     }
+    // Google Places API (New): star rating, review count, map-pack rank
+    // + top 3 competitors, drafted for Sam to verify (Kemar, 2026-11-13).
+    // The form's Name field holds the person's name, so the firm name
+    // comes from the site's own HTML; the 8s race keeps this stage
+    // inside the client's 30s timeout. Uses env.PAGESPEED_API_KEY:
+    // the same key/project as PageSpeed, once Kemar enables Places
+    // API (New) + billing on it. Fails closed: null means unverified.
+    if (env.PAGESPEED_API_KEY) {
+      let pageHtml = null;
+      try {
+        pageHtml = await Promise.race([
+          fetchCapped(url, env),
+          new Promise((resolve) => setTimeout(() => resolve(null), 8000)),
+        ]);
+      } catch { /* name extraction falls back to the typed business */ }
+      const places = await fetchPlaces(business, url, pageHtml, env.PAGESPEED_API_KEY, env);
+      if (places) out.places = places;
+    }
     return finish(out);
   }
 
@@ -729,6 +812,16 @@ async function handleRoofingWebsiteScore(request, env) {
       google = { googleFound: kg.found };
       if (kg.name) google.kgName = kg.name;
       if (kg.type) google.kgType = kg.type;
+    }
+  }
+
+  // Google Places API (New): same draft as the google stage, using the
+  // homepage HTML already fetched above. Sam verifies before the PDF.
+  if (env.PAGESPEED_API_KEY) {
+    const places = await fetchPlaces(business, url, html, env.PAGESPEED_API_KEY, env);
+    if (places) {
+      google = google || {};
+      google.places = places;
     }
   }
 
@@ -936,6 +1029,10 @@ async function handle(request, env) {
 
   if (path === "/api/roofing-website-score") {
     return handleRoofingWebsiteScore(request, env);
+  }
+
+  if (path === "/api/sign") {
+    return handleSign(request, env);
   }
 
   let response = await env.ASSETS.fetch(request);
