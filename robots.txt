@@ -9,5 +9,6 @@ Disallow: /r/
 Disallow: /roofer/
 Disallow: /seo-agreement/
 Disallow: /website-agreement/
+Disallow: /proposals/
 
 Sitemap: https://csramarketing.com/sitemap.xml
