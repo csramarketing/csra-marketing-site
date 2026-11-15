@@ -1,7 +1,7 @@
 /* CSRA Marketing - Audit 2.0 exit-intent / welcome overlay (Kemar, 2026-11-15).
  *
  * The Audit 2.0 hero as a centered modal. Two triggers, same overlay:
- *   Welcome: homepage only, 12 seconds after landing.
+ *   Welcome: homepage only, 5 seconds after landing.
  *   Exit intent: any page except the audit page, booking pages and
  *     thank-you pages. Desktop: mouse heads for the top of the page.
  *     Mobile: fast scroll-up, or the back button (one intercepted press
@@ -30,7 +30,7 @@
   var LS_AUDIT_LEAD = 'csra_audit_lead';
   var SS_SHOWN = 'csra_overlay_shown';
   var SS_CLOSED = 'csra_overlay_closed';
-  var WELCOME_DELAY_MS = 12000;
+  var WELCOME_DELAY_MS = 5000;
   var BOT_RE = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex|sogou|exabot|facebot|facebookexternalhit|twitterbot|linkedinbot|semrushbot|ahrefsbot|mj12bot|dotbot|petalbot|bytespider|gptbot|claudebot|applebot|ia_archiver|crawler|spider|headless|phantomjs/i;
 
   function storeGet(key, store) {
@@ -456,7 +456,7 @@
 
   /* ---------- triggers ---------- */
 
-  /* Welcome: homepage only, 12 seconds after landing. If the tab is
+  /* Welcome: homepage only, 5 seconds after landing. If the tab is
    * hidden when the timer fires, wait until it is visible again. */
   function armWelcome() {
     if (!isHomepage()) return;
