@@ -587,6 +587,12 @@ async function recordAuditLead(env, request, body, report) {
       pdfLeadSent: false,
       pdfSentAt: null,
       source: request.headers.get("referer") || "",
+      // Overlay trigger (Kemar, 2026-11-15): "welcome-mat" when the
+      // welcome overlay showed the form, "exit-intent" when exit intent
+      // did. Whitelisted; anything else stores as "". The audit-lead-sync
+      // maps it to the CRM source (Welcome Mat / Exit Intent). Audit-page
+      // and blog-embed runs send no surface.
+      surface: (body.surface === "welcome-mat" || body.surface === "exit-intent") ? body.surface : "",
       submittedAt: new Date().toISOString(),
       visitor_id: String(body.visitor_id || ""),
       email_token: String(body.email_token || ""),

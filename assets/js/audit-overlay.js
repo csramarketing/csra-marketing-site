@@ -18,6 +18,8 @@
  * form: the same four stage POSTs to /api/roofing-website-score, the
  * same visitor summary fields, the same honeypot, the same tracking
  * (GA4 audit_completed, Meta Pixel Lead, 24 month token record).
+ * The trigger that showed the overlay rides along as `surface` on the
+ * audit POST (welcome-mat / exit-intent), so the CRM source names it.
  * No em dashes or en dashes in any client-facing copy in this file. */
 
 (function () {
@@ -122,6 +124,10 @@
   var submitBtn = null;
   var lastFocused = null;
   var shown = false;
+  /* Which trigger showed this overlay: 'welcome-mat' or 'exit-intent'.
+   * Set in showOverlay; sent as `surface` on the audit POST so the CRM
+   * source names the trigger. Empty until the overlay has shown. */
+  var shownSurface = '';
 
   function el(tag, cls, text) {
     var node = document.createElement(tag);
@@ -226,6 +232,10 @@
   function showOverlay(trigger) {
     if (shown) return;
     if (!canShow()) return;
+    /* Remember which trigger showed this overlay, so the audit run
+     * POSTs it as `surface` and the CRM source names the trigger. */
+    if (trigger === 'welcome') shownSurface = 'welcome-mat';
+    else if (trigger === 'exit-intent' || trigger === 'exit-intent-back') shownSurface = 'exit-intent';
     if (!backdrop) buildOverlay();
     /* Refresh the headline at show time, in case the city signal
      * arrived after the page loaded. */
@@ -270,7 +280,7 @@
   function postStage(stage, payload, timeoutMs, extra) {
     var controller = new AbortController();
     var timer = setTimeout(function () { controller.abort(); }, timeoutMs);
-    var body = { website: payload.website, email: payload.email, business: payload.business, roofer: payload.roofer, stage: stage };
+    var body = { website: payload.website, email: payload.email, business: payload.business, roofer: payload.roofer, stage: stage, surface: shownSurface };
     if (extra) {
       Object.keys(extra).forEach(function (k) { body[k] = extra[k]; });
     }
@@ -360,6 +370,7 @@
         website: formData.website,
         phone: formData.phone,
         email: formData.email,
+        surface: shownSurface,
         overall: rep.overall,
         checkedOfFive: rep.checkedOfFive,
         auditedAt: new Date().toISOString(),
