@@ -747,6 +747,10 @@ export function scoreReport(obs) {
         found: google.googleFound,
         name: google.kgName || null,
         type: google.kgType || null,
+        // Google Places API draft (Kemar, 2026-11-13): rating, review
+        // count, map-pack rank + top 3 competitors. Sam verifies it
+        // before the PDF; the score never moves on it (unscored).
+        places: (google.places && typeof google.places === "object") ? google.places : null,
       }
     : null;
   const speed = obs.speed || null;
