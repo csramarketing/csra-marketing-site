@@ -669,6 +669,320 @@ async function handleSign(request, env) {
   return json({ ok: true, key });
 }
 
+// --- Azure AI Speech proxy (Call Practice tab, Appointment Closer Tool) ---
+// The tool's prospect voice speaks through this route so the Azure key never
+// leaves the Worker. Contract (coded into the artifact):
+//   POST { text, voice, rate, pitch, volume, style } as JSON  ->  audio/mpeg bytes back
+//   rate/pitch are "+N%" strings, volume is "+NdB" (mapped server-side to a
+//   named SSML volume, because the endpoint rejects dB values) or a named
+//   volume, style is an mstts:express-as style the requested voice supports;
+//   an unsupported style is ignored, never an error.
+//   GET  ?health=1  ->  { configured: true, voice } once the key is added,
+//                       { configured: false } until then (never hangs, never
+//                       errors loudly — the page probes once with a 3s timeout
+//                       and falls back to the phone voice on any failure).
+// The key lives ONLY as the Worker secret AZURE_TTS_KEY (wrangler secret put).
+// It is never in this file, the repo, or any page. Optional second secret
+// AZURE_TTS_REGION (default "eastus") — create the Speech resource in East US
+// or set the region to match. No billing risk on the F0 free tier: it is a
+// hard-capped 500K neural characters/month, never an auto-charge.
+const AZURE_TTS_DEFAULT_VOICE = "en-US-GuyNeural";
+const AZURE_TTS_DEFAULT_REGION = "eastus";
+const AZURE_TTS_TIMEOUT_MS = 20000;
+const AZURE_TTS_MAX_TEXT_CHARS = 2000;
+
+function azureTtsCorsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
+
+function azureTtsConfigured(env) {
+  return !!(env && typeof env.AZURE_TTS_KEY === "string" && env.AZURE_TTS_KEY.trim());
+}
+
+// rate/pitch arrive as "+5%", "-12%", "0%" (from the artifact's azureProsody).
+// Accept only that shape, clamp to +/-50, so nothing can inject SSML.
+function azureTtsProsody(raw, fallback) {
+  const m = /^\s*([+-]?)(\d+)\s*%\s*$/.exec(String(raw || ""));
+  if (!m) return fallback;
+  const n = Math.min(50, parseInt(m[2], 10));
+  return (m[1] === "-" ? "-" : "+") + n + "%";
+}
+
+// volume arrives as "+6dB", "-6dB", "0dB" (from the artifact's volume slider)
+// or a named SSML volume ("soft", "loud", ...). Verified live 2026-11-14:
+// this Azure endpoint REJECTS dB values with HTTP 400, so dB is mapped to
+// the nearest named volume; named values pass through unchanged. Clamp dB
+// to +/-20 first, so nothing can inject SSML.
+function azureTtsVolume(raw, fallback) {
+  const named = ["silent", "x-soft", "soft", "medium", "loud", "x-loud"];
+  const s = String(raw || "").trim().toLowerCase();
+  if (named.indexOf(s) !== -1) return s;
+  const m = /^\s*([+-]?)(\d+)\s*db\s*$/.exec(s);
+  if (!m) return fallback;
+  let n = Math.min(20, parseInt(m[2], 10));
+  if (m[1] === "-") n = -n;
+  if (n <= -10) return "x-soft";
+  if (n <= -4) return "soft";
+  if (n < 4) return "medium";
+  if (n < 10) return "loud";
+  return "x-loud";
+}
+
+// Styles the artifact may request, per voice, verified live 2026-11-14 from
+// Azure's voices list. Every other voice has no styles: a style for one is
+// ignored, never an error, so the call still returns audio.
+const AZURE_TTS_VOICE_STYLES = {
+  "en-US-GuyNeural": ["newscast", "angry", "cheerful", "sad", "excited", "friendly", "terrified", "shouting", "unfriendly", "whispering", "hopeful"],
+  "en-US-DavisNeural": ["chat", "angry", "cheerful", "excited", "friendly", "hopeful", "sad", "shouting", "terrified", "unfriendly", "whispering"],
+  "en-US-JasonNeural": ["angry", "cheerful", "excited", "friendly", "hopeful", "sad", "shouting", "terrified", "unfriendly", "whispering"],
+  "en-US-TonyNeural": ["angry", "cheerful", "excited", "friendly", "hopeful", "sad", "shouting", "terrified", "unfriendly", "whispering"],
+  "en-US-KaiNeural": ["conversation"],
+};
+
+function azureTtsStyle(voice, raw) {
+  const s = String(raw || "").trim().toLowerCase();
+  if (!/^[a-z-]+$/.test(s)) return null;
+  const allowed = AZURE_TTS_VOICE_STYLES[voice];
+  if (!allowed || allowed.indexOf(s) === -1) return null;
+  return s;
+}
+
+async function handleAzureTTS(request, env) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: azureTtsCorsHeaders() });
+  }
+
+  if (request.method === "GET") {
+    const url = new URL(request.url);
+    if (url.searchParams.get("health") === "1") {
+      if (!azureTtsConfigured(env)) return json({ configured: false }, 200, azureTtsCorsHeaders());
+      return json({ configured: true, voice: AZURE_TTS_DEFAULT_VOICE }, 200, azureTtsCorsHeaders());
+    }
+    return json({ error: "not_found" }, 404, azureTtsCorsHeaders());
+  }
+
+  if (request.method !== "POST") {
+    return json({ error: "method" }, 405, azureTtsCorsHeaders());
+  }
+
+  // No key yet: clean 503 so the page falls back to the phone voice.
+  if (!azureTtsConfigured(env)) {
+    return json({ error: "not_configured" }, 503, azureTtsCorsHeaders());
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "bad_json" }, 400, azureTtsCorsHeaders());
+  }
+
+  const text = String(body.text || "").trim();
+  if (!text) return json({ error: "missing_text" }, 400, azureTtsCorsHeaders());
+  if (text.length > AZURE_TTS_MAX_TEXT_CHARS) return json({ error: "text_too_long" }, 400, azureTtsCorsHeaders());
+
+  const voice = /^[a-z]{2}-[A-Z]{2}-[A-Za-z]+$/.test(String(body.voice || ""))
+    ? String(body.voice)
+    : AZURE_TTS_DEFAULT_VOICE;
+  const rate = azureTtsProsody(body.rate, "+0%");
+  const pitch = azureTtsProsody(body.pitch, "+0%");
+  const volume = azureTtsVolume(body.volume, "medium");
+  const style = azureTtsStyle(voice, body.style);
+
+  let region = String(env.AZURE_TTS_REGION || AZURE_TTS_DEFAULT_REGION).trim().toLowerCase();
+  if (!/^[a-z0-9-]+$/.test(region)) region = AZURE_TTS_DEFAULT_REGION;
+
+  const esc = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const prosody =
+    '<prosody rate="' + rate + '" pitch="' + pitch + '" volume="' + volume + '">' + esc + "</prosody>";
+  let ssml;
+  if (style) {
+    ssml =
+      '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US">' +
+      '<voice name="' + voice + '"><mstts:express-as style="' + style + '">' + prosody + "</mstts:express-as></voice></speak>";
+  } else {
+    ssml =
+      '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">' +
+      '<voice name="' + voice + '">' + prosody + "</voice></speak>";
+  }
+
+  const ctrl = new AbortController();
+  const to = setTimeout(() => { try { ctrl.abort(); } catch (e) {} }, AZURE_TTS_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch("https://" + region + ".tts.speech.microsoft.com/cognitiveservices/v1", {
+      method: "POST",
+      headers: {
+        "Ocp-Apim-Subscription-Key": env.AZURE_TTS_KEY,
+        "Content-Type": "application/ssml+xml",
+        "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3",
+        "User-Agent": "csra-marketing-azure-tts",
+      },
+      body: ssml,
+      signal: ctrl.signal,
+    });
+  } catch {
+    clearTimeout(to);
+    return json({ error: "azure_unreachable" }, 502, azureTtsCorsHeaders());
+  }
+  clearTimeout(to);
+
+  if (!res.ok) return json({ error: "azure_error" }, 502, azureTtsCorsHeaders());
+  const audio = await res.arrayBuffer();
+  if (!audio || !audio.byteLength) return json({ error: "empty_audio" }, 502, azureTtsCorsHeaders());
+
+  const headers = azureTtsCorsHeaders();
+  headers["Content-Type"] = "audio/mpeg";
+  headers["Cache-Control"] = "no-store";
+  return new Response(audio, { status: 200, headers });
+}
+
+// --- Azure AI Speech-to-Text proxy (Call Practice tab mic, Appointment Closer Tool) ---
+// The mic records on the phone and POSTs raw audio here; the Worker forwards
+// it to Azure Speech-to-Text and returns the transcript as JSON, so the key
+// never leaves the Worker. Contract (coded into the artifact):
+//   POST raw audio bytes  ->  { "text": "..." } on success
+//   GET  ?health=1        ->  { configured: true } once the key is added,
+//                             { configured: false } until then.
+// FORMAT RULE — verified live 2026-11-14 against Azure's recognize-once REST
+// endpoint with a known test sentence ("The roof needs new shingles before
+// winter."): WAV PCM (16/44.1/48 kHz) and OGG Opus transcribe correctly.
+// MP3, MP4/AAC, WebM Opus and FLAC all return HTTP 200 "Success" with an
+// EMPTY transcript — a silent failure, so this route REJECTS them with a
+// clear 400 instead of returning an empty text that would score as silence.
+// The artifact must therefore record WAV (Web Audio API capture + WAV header,
+// any sample rate) or OGG Opus — NOT MediaRecorder's default MP4 on iPhone.
+// Same secret as TTS: AZURE_TTS_KEY only, same region default eastus, same
+// CORS headers, same 20s timeout. No key anywhere in code or logs.
+const AZURE_STT_TIMEOUT_MS = 20000;
+const AZURE_STT_MAX_AUDIO_BYTES = 10 * 1024 * 1024;
+
+// Map the client's audio Content-Type to what Azure's recognize-once endpoint
+// genuinely transcribes. Returns the Azure Content-Type, or null to reject.
+function azureSttForwardContentType(incoming) {
+  const raw = String(incoming || "").trim().toLowerCase();
+  const base = raw.split(";")[0].trim();
+  if (base === "audio/wav" || base === "audio/x-wav" || base === "audio/wave") return "wav";
+  if (base === "audio/ogg" || base === "audio/opus" || base === "application/ogg") return "ogg";
+  return null;
+}
+
+// Read the sample rate out of a WAV (RIFF) header so the Azure Content-Type
+// names the true rate. Falls back to 16000 on any parse failure.
+function azureSttWavSampleRate(bytes) {
+  try {
+    if (bytes.length < 44) return 16000;
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (view.getUint32(0) !== 0x52494646) return 16000; // "RIFF"
+    const rate = view.getUint32(24, true);
+    if (rate >= 8000 && rate <= 48000) return rate;
+  } catch { /* fall through */ }
+  return 16000;
+}
+
+async function handleAzureSTT(request, env) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: azureTtsCorsHeaders() });
+  }
+
+  if (request.method === "GET") {
+    const url = new URL(request.url);
+    if (url.searchParams.get("health") === "1") {
+      if (!azureTtsConfigured(env)) return json({ configured: false }, 200, azureTtsCorsHeaders());
+      return json({ configured: true }, 200, azureTtsCorsHeaders());
+    }
+    return json({ error: "not_found" }, 404, azureTtsCorsHeaders());
+  }
+
+  if (request.method !== "POST") {
+    return json({ error: "method" }, 405, azureTtsCorsHeaders());
+  }
+
+  // No key yet: clean 503 so the page falls back to typing.
+  if (!azureTtsConfigured(env)) {
+    return json({ error: "not_configured" }, 503, azureTtsCorsHeaders());
+  }
+
+  const kind = azureSttForwardContentType(request.headers.get("content-type"));
+  if (!kind) {
+    return json(
+      {
+        error: "unsupported_audio_format",
+        accepted: ["audio/wav (PCM)", "audio/ogg (Opus)"],
+        detail: "Send WAV PCM or OGG Opus. MP3, MP4/AAC, WebM and FLAC do not transcribe on Azure's recognize-once endpoint.",
+      },
+      400,
+      azureTtsCorsHeaders()
+    );
+  }
+
+  let audio;
+  try {
+    audio = new Uint8Array(await request.arrayBuffer());
+  } catch {
+    return json({ error: "bad_audio" }, 400, azureTtsCorsHeaders());
+  }
+  if (!audio.length) return json({ error: "empty_audio" }, 400, azureTtsCorsHeaders());
+  if (audio.length > AZURE_STT_MAX_AUDIO_BYTES) {
+    return json({ error: "audio_too_large" }, 400, azureTtsCorsHeaders());
+  }
+
+  const azureContentType =
+    kind === "wav"
+      ? "audio/wav; codecs=audio/pcm; samplerate=" + azureSttWavSampleRate(audio)
+      : "audio/ogg; codecs=opus";
+
+  let region = String(env.AZURE_TTS_REGION || AZURE_TTS_DEFAULT_REGION).trim().toLowerCase();
+  if (!/^[a-z0-9-]+$/.test(region)) region = AZURE_TTS_DEFAULT_REGION;
+
+  const ctrl = new AbortController();
+  const to = setTimeout(() => { try { ctrl.abort(); } catch (e) {} }, AZURE_STT_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(
+      "https://" + region + ".stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US",
+      {
+        method: "POST",
+        headers: {
+          "Ocp-Apim-Subscription-Key": env.AZURE_TTS_KEY,
+          "Content-Type": azureContentType,
+          Accept: "application/json",
+          "User-Agent": "csra-marketing-azure-stt",
+        },
+        body: audio,
+        signal: ctrl.signal,
+      }
+    );
+  } catch {
+    clearTimeout(to);
+    return json({ error: "azure_unreachable" }, 502, azureTtsCorsHeaders());
+  }
+  clearTimeout(to);
+
+  if (!res.ok) return json({ error: "azure_error" }, 502, azureTtsCorsHeaders());
+
+  let result;
+  try {
+    result = await res.json();
+  } catch {
+    return json({ error: "azure_error" }, 502, azureTtsCorsHeaders());
+  }
+
+  // Success: DisplayText carries the transcript. NoMatch means nothing was
+  // heard — return empty text, not an error, so the page can say so.
+  if (result.RecognitionStatus === "Success") {
+    return json({ text: String(result.DisplayText || "") }, 200, azureTtsCorsHeaders());
+  }
+  if (result.RecognitionStatus === "NoMatch") {
+    return json({ text: "" }, 200, azureTtsCorsHeaders());
+  }
+  return json({ error: "azure_error" }, 502, azureTtsCorsHeaders());
+}
+
 async function handleRoofingWebsiteScore(request, env) {
   if (request.method !== "POST") return json({ error: "method" }, 405);
   let body;
@@ -1101,6 +1415,14 @@ async function handle(request, env) {
 
   if (path === "/api/sign") {
     return handleSign(request, env);
+  }
+
+  if (path === "/api/azure-tts") {
+    return handleAzureTTS(request, env);
+  }
+
+  if (path === "/api/azure-stt") {
+    return handleAzureSTT(request, env);
   }
 
   let response = await env.ASSETS.fetch(request);
