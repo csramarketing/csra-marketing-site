@@ -1,7 +1,9 @@
 /* CSRA Marketing - Audit 2.0 exit-intent / welcome overlay (Kemar, 2026-11-15).
  * The Audit 2.0 hero as a centered modal. Same brand as the audit page:
  * Poppins, Navy #10233F, Coral #FF705C accent only, CTA Yellow #FACC15
- * for the button only, white-forward, light mode locked.
+ * for the button only. Card is NAVY #10233F, locked (Kemar, 2026-11-15):
+ * navy in every mode, never flips with the phone's dark/light setting.
+ * White logo variant on the navy card. Form fields stay white.
  * No em dashes or en dashes in any client-facing copy in this file. */
 
 .csra-overlay-backdrop {
@@ -26,10 +28,10 @@
   max-height: 92vh;
   max-height: 92dvh;
   overflow-y: auto;
-  background: #ffffff;
-  color: #10233f;
+  background: #10233f;
+  color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 24px 64px rgba(16, 35, 63, 0.35);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
   padding: 28px 28px 20px;
   text-align: left;
   box-sizing: border-box;
@@ -56,7 +58,7 @@
 .csra-overlay-close:hover,
 .csra-overlay-close:focus-visible {
   background: #f2604a;
-  outline: 2px solid #10233f;
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 
@@ -81,7 +83,7 @@
 .csra-overlay-card h2.csra-overlay-h1 {
   margin: 0 0 10px;
   text-align: center;
-  color: #10233f;
+  color: #ffffff;
   font-size: 26px;
   font-weight: 800;
   line-height: 1.25;
@@ -89,20 +91,12 @@
 }
 
 .csra-overlay-blurb {
-  margin: 0 0 8px;
+  margin: 0 0 18px;
   text-align: center;
-  color: #10233f;
+  color: #ffffff;
   font-size: 17px;
   font-weight: 600;
   line-height: 1.45;
-}
-
-.csra-overlay-lead {
-  margin: 0 0 18px;
-  text-align: center;
-  color: #44546e;
-  font-size: 15px;
-  line-height: 1.55;
 }
 
 .csra-overlay-form .csra-overlay-grid {
@@ -115,7 +109,7 @@
 .csra-overlay-field label {
   display: block;
   margin-bottom: 5px;
-  color: #10233f;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 600;
 }
@@ -157,7 +151,7 @@
 .csra-overlay-submit:hover,
 .csra-overlay-submit:focus-visible {
   background: #f5c211;
-  outline: 2px solid #10233f;
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 
@@ -169,7 +163,7 @@
 .csra-overlay-under {
   margin: 10px 0 0;
   text-align: center;
-  color: #5b6b82;
+  color: #c9d4e2;
   font-size: 13px;
   line-height: 1.5;
 }
@@ -177,7 +171,7 @@
 .csra-overlay-status {
   margin: 12px 0 0;
   text-align: center;
-  color: #44546e;
+  color: #ffffff;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -193,7 +187,7 @@
 
 .csra-overlay-score {
   margin: 4px 0 2px;
-  color: #10233f;
+  color: #ffffff;
   font-size: 56px;
   font-weight: 800;
   line-height: 1;
@@ -208,7 +202,7 @@
 
 .csra-overlay-result p {
   margin: 0 0 14px;
-  color: #44546e;
+  color: #c9d4e2;
   font-size: 15px;
   line-height: 1.55;
 }
@@ -216,7 +210,7 @@
 .csra-overlay-secondary {
   display: inline-block;
   padding: 11px 22px;
-  border: 1.5px solid #10233f;
+  border: 1.5px solid #ffffff;
   border-radius: 999px;
   background: #ffffff;
   color: #10233f;
@@ -236,9 +230,9 @@
 .csra-overlay-footer {
   margin: 16px 0 0;
   padding-top: 12px;
-  border-top: 1px solid #eef2f7;
+  border-top: 1px solid #1e3a5f;
   text-align: center;
-  color: #5b6b82;
+  color: #8fa3bd;
   font-size: 12px;
 }
 

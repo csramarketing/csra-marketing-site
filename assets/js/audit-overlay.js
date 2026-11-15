@@ -1,6 +1,8 @@
 /* CSRA Marketing - Audit 2.0 exit-intent / welcome overlay (Kemar, 2026-11-15).
  *
- * The Audit 2.0 hero as a centered modal. Two triggers, same overlay:
+ * The Audit 2.0 hero as a centered modal. Navy card, locked (Kemar,
+ * 2026-11-15): navy #10233F in every mode, white logo variant.
+ * Two triggers, same overlay:
  *   Welcome: homepage only, 5 seconds after landing.
  *   Exit intent: any page except the audit page, booking pages and
  *     thank-you pages. Desktop: mouse heads for the top of the page.
@@ -158,14 +160,13 @@
 
     var logo = document.createElement('img');
     logo.className = 'csra-overlay-logo';
-    logo.src = '/assets/csra-logo.png';
+    logo.src = '/assets/csra-logo-light.png';
     logo.alt = 'CSRA Marketing logo';
     card.appendChild(logo);
 
     card.appendChild(el('p', 'csra-overlay-eyebrow', 'Free audit for roofing companies'));
     card.appendChild(el('h2', 'csra-overlay-h1', headlineText()));
     card.appendChild(el('p', 'csra-overlay-blurb', 'Get the audit that turns website visitors into booked roofing jobs.'));
-    card.appendChild(el('p', 'csra-overlay-lead', 'Put in your website. Get your roofing website score in plain words. It checks mobile speed, lead generation, local SEO, trust signals, and accessibility. Measured by Google, not guessed.'));
 
     formEl = el('form', 'csra-overlay-form');
     formEl.setAttribute('novalidate', 'novalidate');
