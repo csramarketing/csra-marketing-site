@@ -986,6 +986,68 @@ function injectVisitorTrack(html) {
   return html.slice(0, bodyClose) + VISITOR_TRACK_TAG + "\n" + html.slice(bodyClose);
 }
 
+// Audit 2.0 overlay city signal (Kemar, 2026-11-15): the overlay headline
+// swaps in the visitor city, exactly like the audit page. The audit page
+// gets its signal from the geo HTMLRewriter below (CITY_PATHS), so this
+// string injection skips it and covers every other HTML page instead.
+// Same sanitize + escaping as the geo path; with no confident city the
+// page is untouched and the overlay shows its plain headline. Returns
+// the input unchanged when there is no city or no <html> / </head> tag.
+function injectCitySignal(html, request) {
+  if (html.includes("data-visitor-city") || html.includes('name="visitor-city"')) return html;
+  let city = "";
+  try {
+    const cf = (request && request.cf) || {};
+    city = sanitizeAuditCity(typeof cf.city === "string" ? cf.city : "");
+  } catch { return html; }
+  if (!city) return html;
+  const safeCity = city
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+  const htmlOpen = html.search(/<html[\s>]/i);
+  if (htmlOpen === -1) return html;
+  const tagClose = html.indexOf(">", htmlOpen);
+  if (tagClose === -1) return html;
+  let out = html.slice(0, tagClose) + ` data-visitor-city="${safeCity}"` + html.slice(tagClose);
+  const headClose = out.toLowerCase().lastIndexOf("</head>");
+  if (headClose === -1) return out;
+  out = out.slice(0, headClose) + `<meta name="visitor-city" content="${safeCity}">\n` + out.slice(headClose);
+  return out;
+}
+
+// Audit 2.0 exit-intent / welcome overlay (Kemar, 2026-11-15): the audit
+// hero as a centered modal, loaded on every HTML page except the audit
+// page itself (it already has the hero), booking pages and thank-you
+// pages. The overlay script itself enforces the same exclusions plus
+// the trigger rules (welcome: homepage only, 12s; exit intent: any
+// other eligible page), so this is the load gate, not the show gate.
+// Idempotent: a page that already carries the overlay is untouched.
+// The script tag goes in after visitor-track.js, so CSRAVisitor exists
+// when the overlay submits through the audit API.
+const OVERLAY_CSS_TAG = `<link rel="stylesheet" href="/assets/css/audit-overlay.css">`;
+const OVERLAY_JS_TAG = `<script src="/assets/js/audit-overlay.js" defer></script>`;
+function overlayExcludedPath(path) {
+  const p = String(path || "").toLowerCase();
+  if (p === "/roofing-website-score" || p === "/roofing-website-score/") return true;
+  if (p.indexOf("thank") !== -1) return true;
+  if (p.indexOf("booking") !== -1) return true;
+  if (p.indexOf("book-a-call") !== -1) return true;
+  if (p.indexOf("/schedule") !== -1) return true;
+  return false;
+}
+function injectOverlay(html, path) {
+  if (html.includes("audit-overlay.js")) return html;
+  if (overlayExcludedPath(path)) return html;
+  const headClose = html.toLowerCase().lastIndexOf("</head>");
+  if (headClose !== -1) {
+    html = html.slice(0, headClose) + OVERLAY_CSS_TAG + "\n" + html.slice(headClose);
+  }
+  const bodyClose = html.toLowerCase().lastIndexOf("</body>");
+  if (bodyClose === -1) return html;
+  return html.slice(0, bodyClose) + OVERLAY_JS_TAG + "\n" + html.slice(bodyClose);
+}
+
 // Returns the HTML with the pixel persistence layer added, and the pixel
 // snippet added too if the page has none. Returns the input unchanged
 // when nothing is missing, or when there is no </head> to inject before.
@@ -1040,14 +1102,19 @@ async function handle(request, env) {
   // Tracker safety net: inject GA, Meta Pixel (+ 24-month persistence) and
   // visitor-track.js into any HTML page missing them. Idempotent — pages
   // that already carry them are returned unchanged. Non-HTML is untouched.
+  // The overlay injection below runs in the same pass: the city signal
+  // for the overlay headline, then the overlay assets (except the audit
+  // page, booking and thank-you pages). A page that gains a city signal
+  // is personalized, so it is served no-store like the geo pages below.
   try {
     const contentType = response.headers.get("content-type") || "";
     if (contentType.includes("text/html")) {
       const html = await response.text();
-      const injected = injectPixel(injectVisitorTrack(injectGA(html)));
+      const injected = injectOverlay(injectCitySignal(injectPixel(injectVisitorTrack(injectGA(html))), request), path);
       if (injected !== html) {
         const headers = new Headers(response.headers);
         headers.delete("content-length");
+        if (injected.includes("data-visitor-city")) headers.set("Cache-Control", "private, no-store");
         response = new Response(injected, { status: response.status, headers });
       }
     }
