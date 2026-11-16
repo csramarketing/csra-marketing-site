@@ -247,6 +247,23 @@ html{overflow-x:hidden;}
 }
 </style>
 <link rel="stylesheet" href="/assets/css/audit-embed.css">
+<style>
+/* keep-reading block (staging) */
+.block { border-top: 2px solid #FF705C; margin-top: 28px; padding-top: 6px; }
+.block h2 { border-bottom: none; margin-top: 18px; padding-bottom: 0; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 16px 0 8px; }
+@media (min-width: 700px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+a.card { display: block; border: 1px solid #D9DEE7; border-radius: 12px; overflow: hidden; text-decoration: none !important; background: #ffffff; }
+/* NOTE: text-decoration:none needs !important here. The live template's rule
+   "main a:not(.btn):not(.card-preview):not(.card-view)" (specificity 0,3,2) underlines
+   every link inside <main>, and it beats a plain "a.card" (0,1,1). Without !important
+   the card blurbs render underlined; the approved preview has blurbs plain. The card
+   titles stay underlined via "a.card .ct h3 { text-decoration: underline }" below. */
+a.card img { width: 100%; display: block; }
+a.card .ct { padding: 14px 16px 16px; }
+a.card .ct h3 { margin: 0 0 6px; font-size: 17px; line-height: 1.35; text-decoration: underline; }
+a.card .ct p { margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400; }
+</style>
 </head>
 <body>
 <header class="site-header"><div class="site-header-in">
