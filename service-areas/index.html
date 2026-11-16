@@ -1,3 +1,4 @@
+<!-- DRAFT ONLY - updated national hub with all 50 states plus the District of Columbia. Built 2026-11-15 from the live national hub draft. For review only. Do NOT deploy without Kemar's yes. -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,33 +27,57 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "about": [
+    {"@type": "State", "name": "Alabama"},
+    {"@type": "State", "name": "Alaska"},
     {"@type": "State", "name": "Arizona"},
+    {"@type": "State", "name": "Arkansas"},
     {"@type": "State", "name": "California"},
     {"@type": "State", "name": "Colorado"},
+    {"@type": "State", "name": "Connecticut"},
+    {"@type": "State", "name": "Delaware"},
+    {"@type": "AdministrativeArea", "name": "District of Columbia"},
     {"@type": "State", "name": "Florida"},
     {"@type": "State", "name": "Georgia"},
+    {"@type": "State", "name": "Hawaii"},
+    {"@type": "State", "name": "Idaho"},
     {"@type": "State", "name": "Illinois"},
     {"@type": "State", "name": "Indiana"},
+    {"@type": "State", "name": "Iowa"},
     {"@type": "State", "name": "Kansas"},
+    {"@type": "State", "name": "Kentucky"},
+    {"@type": "State", "name": "Louisiana"},
+    {"@type": "State", "name": "Maine"},
     {"@type": "State", "name": "Maryland"},
     {"@type": "State", "name": "Massachusetts"},
     {"@type": "State", "name": "Michigan"},
     {"@type": "State", "name": "Minnesota"},
+    {"@type": "State", "name": "Mississippi"},
     {"@type": "State", "name": "Missouri"},
+    {"@type": "State", "name": "Montana"},
+    {"@type": "State", "name": "Nebraska"},
+    {"@type": "State", "name": "Nevada"},
+    {"@type": "State", "name": "New Hampshire"},
     {"@type": "State", "name": "New Jersey"},
+    {"@type": "State", "name": "New Mexico"},
     {"@type": "State", "name": "New York"},
     {"@type": "State", "name": "North Carolina"},
+    {"@type": "State", "name": "North Dakota"},
     {"@type": "State", "name": "Ohio"},
     {"@type": "State", "name": "Oklahoma"},
     {"@type": "State", "name": "Oregon"},
     {"@type": "State", "name": "Pennsylvania"},
+    {"@type": "State", "name": "Rhode Island"},
     {"@type": "State", "name": "South Carolina"},
+    {"@type": "State", "name": "South Dakota"},
     {"@type": "State", "name": "Tennessee"},
     {"@type": "State", "name": "Texas"},
     {"@type": "State", "name": "Utah"},
+    {"@type": "State", "name": "Vermont"},
     {"@type": "State", "name": "Virginia"},
     {"@type": "State", "name": "Washington"},
-    {"@type": "State", "name": "Wisconsin"}
+    {"@type": "State", "name": "West Virginia"},
+    {"@type": "State", "name": "Wisconsin"},
+    {"@type": "State", "name": "Wyoming"}
   ],
   "author": {
     "@type": "Organization",
@@ -357,7 +382,9 @@
 #usmap path.sel{fill:#FACC15;stroke:#8a6d00;stroke-width:1.6;}
 #usmap path:focus-visible{outline:none;stroke:#FF705C;stroke-width:2.4;}
 #usmap circle.dc-dot{fill:#C9D2DD;stroke:#A9B6C6;stroke-width:1.2;cursor:pointer;}
+#usmap circle.dc-dot.on{fill:#10233F;stroke:#10233F;}
 #usmap circle.dc-dot:hover{fill:#7C8DA1;}
+#usmap circle.dc-dot.on:hover{fill:#1B3A63;}
 #usmap circle.dc-dot.sel{fill:#FACC15;stroke:#8a6d00;stroke-width:1.6;}
 #usmap circle.dc-dot:focus-visible{outline:none;stroke:#FF705C;stroke-width:2.4;}
 #usmap line.dc-leader{stroke:#7C8DA1;stroke-width:1;stroke-dasharray:3 2;pointer-events:none;}
@@ -440,10 +467,10 @@
       <div>
         <p class="hero-eyebrow"><span class="dot" aria-hidden="true"></span> Web design and local SEO for roofing contractors</p>
         <h1><span class="mark">Roofing marketing across the United States</span>, built for roofers who want more calls<span class="accent">.</span></h1>
-        <p class="hero-sub">Roofing marketing across the United States is a state by state fight for the same storm and replacement jobs, and the roofer homeowners find first gets the call. We build websites and run local SEO for roofers in 27 states, focused on one thing: <strong>more estimate calls you can track back to revenue.</strong></p>
+        <p class="hero-sub">Roofing marketing across the United States is a state by state fight for the same storm and replacement jobs, and the roofer homeowners find first gets the call. We build websites and run local SEO for roofers in 50 states and the District of Columbia, focused on one thing: <strong>more estimate calls you can track back to revenue.</strong></p>
         <p class="hero-proof">We are based in the Augusta area, and we are a roofing marketing agency for contractors who want a partner that knows their state, not a national template with the city name swapped in. We serve roofers across the country, all of it remote, and this page is the front door to every state we cover.</p>
         <div class="hero-ctas">
-          <a class="btn btn-yellow" href="https://cal.com/csramarketing/30min">Book a 30-minute call</a>
+          <a class="btn btn-yellow" href="https://cal.com/csramarketing/30min">Book a 30 minute call</a>
           <a class="btn btn-outline" href="#audit">Run my audit</a>
         </div>
         <p class="hero-note">Start with a <a href="https://csramarketing.com/website-audit/">website audit</a> and see exactly what a homeowner finds when they search for a roofer in your state.</p>
@@ -453,16 +480,16 @@
           <h2>Across the country at a glance</h2>
           <p class="lead">Storms, heat, hail, and snow hand out roofing work in bursts. The roofers who show up first in search win it, in every state.</p>
           <div class="town-grid">
-            <a class="town-chip" href="#map"><strong>27 states</strong><span>Live roofing marketing pages, from Arizona to Wisconsin.</span></a>
-            <a class="town-chip" href="#states"><strong>150 cities</strong><span>City pages across those 27 states, each with its own market.</span></a>
+            <a class="town-chip" href="#map"><strong>50 states</strong><span>Live roofing marketing pages, from Alabama to Wyoming.</span></a>
+            <a class="town-chip" href="#states"><strong>253 cities</strong><span>City pages across all 50 states and DC, each with its own market.</span></a>
             <a class="town-chip" href="#map"><strong>50 states</strong><span>Every state on the map below, plus the District of Columbia.</span></a>
             <a class="town-chip" href="#audit"><strong>1 score</strong><span>Your roofing website score, measured by Google.</span></a>
           </div>
           <p class="panel-foot"><strong>Our rule is simple:</strong> if a homeowner in your state cannot find you in the first few results, the job goes to a competitor who showed up.</p>
         </div>
         <div class="stat-row" aria-label="What local visibility does">
-          <div class="stat"><strong>27 states</strong><span>Live pages, from Arizona to Wisconsin</span></div>
-          <div class="stat"><strong>150 cities</strong><span>City pages with real local detail</span></div>
+          <div class="stat"><strong>50 states</strong><span>Live pages, from Alabama to Wyoming</span></div>
+          <div class="stat"><strong>253 cities</strong><span>City pages with real local detail</span></div>
           <div class="stat"><strong>1 goal</strong><span>Estimate calls you can tie to real jobs</span></div>
         </div>
       </div>
@@ -505,7 +532,6 @@
           <p class="fine">The score tool works for roofers in any state.</p>
         </div>
       </div>
-      <p class="hubmap-note"><strong>Coming soon:</strong> Alabama, Alaska, Arkansas, Connecticut, Delaware, Hawaii, Idaho, Iowa, Kentucky, Louisiana, Maine, Mississippi, Montana, Nebraska, Nevada, New Hampshire, New Mexico, North Dakota, Rhode Island, South Dakota, Vermont, West Virginia, Wyoming, and the District of Columbia.</p>
     </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -515,33 +541,57 @@
     var AUDIT_URL = "https://csramarketing.com/roofing-website-score/";
     var TOPO_URL = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json";
     var HUB = {
+      "AK": {slug:"alaska", name:"Alaska", cities:[["Anchorage","anchorage"],["Fairbanks","fairbanks"],["Juneau","juneau"],["Palmer","palmer"]]},
+      "AL": {slug:"alabama", name:"Alabama", cities:[["Birmingham","birmingham"],["Huntsville","huntsville"],["Mobile","mobile"],["Montgomery","montgomery"]]},
+      "AR": {slug:"arkansas", name:"Arkansas", cities:[["Fayetteville","fayetteville"],["Little Rock","little-rock"],["North Little Rock","north-little-rock"],["Springdale","springdale"]]},
       "AZ": {slug:"arizona", name:"Arizona", cities:[["Chandler","chandler"],["Mesa","mesa"],["Phoenix","phoenix"],["Scottsdale","scottsdale"],["Tucson","tucson"]]},
       "CA": {slug:"california", name:"California", cities:[["Anaheim","anaheim"],["Bakersfield","bakersfield"],["Fresno","fresno"],["Long Beach","long-beach"],["Los Angeles","los-angeles"],["Oakland","oakland"],["Sacramento","sacramento"],["San Diego","san-diego"],["San Francisco","san-francisco"],["San Jose","san-jose"]]},
       "CO": {slug:"colorado", name:"Colorado", cities:[["Aurora","aurora"],["Colorado Springs","colorado-springs"],["Denver","denver"],["Fort Collins","fort-collins"],["Lakewood","lakewood"]]},
+      "CT": {slug:"connecticut", name:"Connecticut", cities:[["Bridgeport","bridgeport"],["Hartford","hartford"],["New Haven","new-haven"],["Stamford","stamford"]]},
+      "DC": {slug:"district-of-columbia", name:"District of Columbia", cities:[]},
+      "DE": {slug:"delaware", name:"Delaware", cities:[["Dover","dover"],["Middletown","middletown"],["Newark","newark"],["Wilmington","wilmington"]]},
       "FL": {slug:"florida", name:"Florida", cities:[["Fort Lauderdale","fort-lauderdale"],["Jacksonville","jacksonville"],["Miami","miami"],["Orlando","orlando"],["Tampa","tampa"]]},
       "GA": {slug:"georgia", name:"Georgia", cities:[["Athens","athens"],["Atlanta","atlanta"],["Augusta","augusta"],["Columbus","columbus"],["Macon","macon"],["Savannah","savannah"],["Warner Robins","warner-robins"]]},
+      "HI": {slug:"hawaii", name:"Hawaii", cities:[["Hilo","hilo"],["Honolulu","honolulu"],["Kahului","kahului"],["Kailua","kailua"]]},
+      "IA": {slug:"iowa", name:"Iowa", cities:[["Cedar Rapids","cedar-rapids"],["Davenport","davenport"],["Des Moines","des-moines"],["Sioux City","sioux-city"],["Waterloo","waterloo"]]},
+      "ID": {slug:"idaho", name:"Idaho", cities:[["Boise","boise"],["Idaho Falls","idaho-falls"],["Meridian","meridian"],["Nampa","nampa"],["Twin Falls","twin-falls"]]},
       "IL": {slug:"illinois", name:"Illinois", cities:[["Aurora","aurora"],["Chicago","chicago"],["Joliet","joliet"],["Naperville","naperville"],["Rockford","rockford"]]},
       "IN": {slug:"indiana", name:"Indiana", cities:[["Carmel","carmel"],["Evansville","evansville"],["Fort Wayne","fort-wayne"],["Indianapolis","indianapolis"],["South Bend","south-bend"]]},
       "KS": {slug:"kansas", name:"Kansas", cities:[["Kansas City","kansas-city"],["Olathe","olathe"],["Overland Park","overland-park"],["Topeka","topeka"],["Wichita","wichita"]]},
+      "KY": {slug:"kentucky", name:"Kentucky", cities:[["Bowling Green","bowling-green"],["Covington","covington"],["Lexington","lexington"],["Louisville","louisville"],["Owensboro","owensboro"]]},
+      "LA": {slug:"louisiana", name:"Louisiana", cities:[["Baton Rouge","baton-rouge"],["Lafayette","lafayette"],["New Orleans","new-orleans"],["Shreveport","shreveport"]]},
       "MD": {slug:"maryland", name:"Maryland", cities:[["Baltimore","baltimore"],["Columbia","columbia"],["Frederick","frederick"],["Germantown","germantown"],["Silver Spring","silver-spring"]]},
       "MA": {slug:"massachusetts", name:"Massachusetts", cities:[["Boston","boston"],["Cambridge","cambridge"],["Lowell","lowell"],["Springfield","springfield"],["Worcester","worcester"]]},
+      "ME": {slug:"maine", name:"Maine", cities:[["Bangor","bangor"],["Lewiston","lewiston"],["Portland","portland"],["South Portland","south-portland"]]},
       "MI": {slug:"michigan", name:"Michigan", cities:[["Ann Arbor","ann-arbor"],["Detroit","detroit"],["Grand Rapids","grand-rapids"],["Sterling Heights","sterling-heights"],["Warren","warren"]]},
       "MN": {slug:"minnesota", name:"Minnesota", cities:[["Bloomington","bloomington"],["Duluth","duluth"],["Minneapolis","minneapolis"],["Rochester","rochester"],["St. Paul","st-paul"]]},
       "MO": {slug:"missouri", name:"Missouri", cities:[["Columbia","columbia"],["Independence","independence"],["Kansas City","kansas-city"],["Springfield","springfield"],["St. Louis","st-louis"]]},
+      "MS": {slug:"mississippi", name:"Mississippi", cities:[["Biloxi","biloxi"],["Gulfport","gulfport"],["Hattiesburg","hattiesburg"],["Jackson","jackson"]]},
+      "MT": {slug:"montana", name:"Montana", cities:[["Billings","billings"],["Bozeman","bozeman"],["Helena","helena"],["Kalispell","kalispell"],["Missoula","missoula"]]},
+      "ND": {slug:"north-dakota", name:"North Dakota", cities:[["Bismarck","bismarck"],["Dickinson","dickinson"],["Fargo","fargo"],["Grand Forks","grand-forks"],["Minot","minot"]]},
+      "NE": {slug:"nebraska", name:"Nebraska", cities:[["Bellevue","bellevue"],["Grand Island","grand-island"],["Kearney","kearney"],["Lincoln","lincoln"],["Omaha","omaha"]]},
+      "NH": {slug:"new-hampshire", name:"New Hampshire", cities:[["Concord","concord"],["Manchester","manchester"],["Nashua","nashua"],["Portsmouth","portsmouth"]]},
       "NJ": {slug:"new-jersey", name:"New Jersey", cities:[["Edison","edison"],["Elizabeth","elizabeth"],["Jersey City","jersey-city"],["Newark","newark"],["Paterson","paterson"]]},
+      "NM": {slug:"new-mexico", name:"New Mexico", cities:[["Albuquerque","albuquerque"],["Las Cruces","las-cruces"],["Rio Rancho","rio-rancho"],["Roswell","roswell"],["Santa Fe","santa-fe"]]},
+      "NV": {slug:"nevada", name:"Nevada", cities:[["Henderson","henderson"],["Las Vegas","las-vegas"],["North Las Vegas","north-las-vegas"],["Reno","reno"],["Sparks","sparks"]]},
       "NY": {slug:"new-york", name:"New York", cities:[["Albany","albany"],["Buffalo","buffalo"],["New York City","new-york-city"],["Rochester","rochester"],["Syracuse","syracuse"]]},
       "NC": {slug:"north-carolina", name:"North Carolina", cities:[["Charlotte","charlotte"],["Durham","durham"],["Greensboro","greensboro"],["Raleigh","raleigh"],["Winston-Salem","winston-salem"]]},
       "OH": {slug:"ohio", name:"Ohio", cities:[["Akron","akron"],["Cincinnati","cincinnati"],["Cleveland","cleveland"],["Columbus","columbus"],["Toledo","toledo"]]},
       "OK": {slug:"oklahoma", name:"Oklahoma", cities:[["Broken Arrow","broken-arrow"],["Edmond","edmond"],["Norman","norman"],["Oklahoma City","oklahoma-city"],["Tulsa","tulsa"]]},
       "OR": {slug:"oregon", name:"Oregon", cities:[["Eugene","eugene"],["Gresham","gresham"],["Hillsboro","hillsboro"],["Portland","portland"],["Salem","salem"]]},
       "PA": {slug:"pennsylvania", name:"Pennsylvania", cities:[["Allentown","allentown"],["Erie","erie"],["Harrisburg","harrisburg"],["Philadelphia","philadelphia"],["Pittsburgh","pittsburgh"]]},
+      "RI": {slug:"rhode-island", name:"Rhode Island", cities:[["Cranston","cranston"],["Pawtucket","pawtucket"],["Providence","providence"],["Warwick","warwick"]]},
       "SC": {slug:"south-carolina", name:"South Carolina", cities:[["Charleston","charleston"],["Columbia","columbia"],["Greenville","greenville"],["Mount Pleasant","mount-pleasant"],["North Charleston","north-charleston"]]},
+      "SD": {slug:"south-dakota", name:"South Dakota", cities:[["Aberdeen","aberdeen"],["Brookings","brookings"],["Rapid City","rapid-city"],["Sioux Falls","sioux-falls"],["Watertown","watertown"]]},
       "TN": {slug:"tennessee", name:"Tennessee", cities:[["Chattanooga","chattanooga"],["Clarksville","clarksville"],["Knoxville","knoxville"],["Memphis","memphis"],["Nashville","nashville"]]},
       "TX": {slug:"texas", name:"Texas", cities:[["Arlington","arlington"],["Austin","austin"],["Corpus Christi","corpus-christi"],["Dallas","dallas"],["El Paso","el-paso"],["Fort Worth","fort-worth"],["Houston","houston"],["Lubbock","lubbock"],["Plano","plano"],["San Antonio","san-antonio"]]},
       "UT": {slug:"utah", name:"Utah", cities:[["Orem","orem"],["Provo","provo"],["Salt Lake City","salt-lake-city"],["West Jordan","west-jordan"],["West Valley City","west-valley-city"]]},
       "VA": {slug:"virginia", name:"Virginia", cities:[["Arlington","arlington"],["Chesapeake","chesapeake"],["Norfolk","norfolk"],["Richmond","richmond"],["Virginia Beach","virginia-beach"]]},
+      "VT": {slug:"vermont", name:"Vermont", cities:[["Burlington","burlington"],["Montpelier","montpelier"],["Rutland","rutland"],["South Burlington","south-burlington"]]},
       "WA": {slug:"washington", name:"Washington", cities:[["Bellevue","bellevue"],["Everett","everett"],["Kent","kent"],["Renton","renton"],["Seattle","seattle"],["Spokane","spokane"],["Tacoma","tacoma"],["Vancouver","vancouver"]]},
-      "WI": {slug:"wisconsin", name:"Wisconsin", cities:[["Green Bay","green-bay"],["Kenosha","kenosha"],["Madison","madison"],["Milwaukee","milwaukee"],["Racine","racine"]]}
+      "WI": {slug:"wisconsin", name:"Wisconsin", cities:[["Green Bay","green-bay"],["Kenosha","kenosha"],["Madison","madison"],["Milwaukee","milwaukee"],["Racine","racine"]]},
+      "WV": {slug:"west-virginia", name:"West Virginia", cities:[["Charleston","charleston"],["Huntington","huntington"],["Morgantown","morgantown"],["Parkersburg","parkersburg"],["Wheeling","wheeling"]]},
+      "WY": {slug:"wyoming", name:"Wyoming", cities:[["Casper","casper"],["Cheyenne","cheyenne"],["Evanston","evanston"],["Gillette","gillette"],["Laramie","laramie"]]}
     };
     var NAME_TO_ABBR = {"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","District of Columbia":"DC","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY"};
     var ABBR_TO_NAME = {};
@@ -562,15 +612,20 @@
       if(isCovered(abbr)){
         var hub = HUB[abbr];
         html += '<h3><a href="' + stateUrl(abbr) + '">' + name + '</a></h3>';
-        html += '<span class="pill">' + hub.cities.length + ' city pages</span>';
-        html += '<p>Roofing marketing in ' + name + ' starts here. Pick a city to see its market, weather, and opening.</p>';
-        html += '<div class="city-chips">';
-        hub.cities.forEach(function(c){
-          var cls = "city-chip";
-          if(flashCitySlug && c[1] === flashCitySlug){ cls += " flash"; }
-          html += '<a class="' + cls + '" href="' + cityUrl(abbr, c[1]) + '">' + c[0] + '</a>';
-        });
-        html += '</div>';
+        if(hub.cities.length === 0){
+          html += '<span class="pill">1 district page</span>';
+          html += '<p>Roofing marketing in ' + name + ' starts here. One district page with its market, weather, and opening.</p>';
+        } else {
+          html += '<span class="pill">' + hub.cities.length + ' city pages</span>';
+          html += '<p>Roofing marketing in ' + name + ' starts here. Pick a city to see its market, weather, and opening.</p>';
+          html += '<div class="city-chips">';
+          hub.cities.forEach(function(c){
+            var cls = "city-chip";
+            if(flashCitySlug && c[1] === flashCitySlug){ cls += " flash"; }
+            html += '<a class="' + cls + '" href="' + cityUrl(abbr, c[1]) + '">' + c[0] + '</a>';
+          });
+          html += '</div>';
+        }
         html += '<div class="panel-cta">';
         html += '<a class="btn btn-yellow" href="' + stateUrl(abbr) + '">See ' + name + ' roofing marketing</a>';
         html += '<a class="btn btn-white" href="' + AUDIT_URL + '">Get my website audit</a>';
@@ -658,12 +713,12 @@
         var dot = document.createElementNS(NS, "circle");
         dot.setAttribute("id", "dcDot");
         dot.setAttribute("cx", dotX); dot.setAttribute("cy", dotY); dot.setAttribute("r", 8);
-        dot.setAttribute("class", "dc-dot");
+        dot.setAttribute("class", isCovered("DC") ? "dc-dot on" : "dc-dot");
         dot.setAttribute("tabindex", "0");
         dot.setAttribute("role", "button");
-        dot.setAttribute("aria-label", "District of Columbia, not covered yet");
+        dot.setAttribute("aria-label", isCovered("DC") ? "District of Columbia, covered, 1 district page" : "District of Columbia, not covered yet");
         var dtitle = document.createElementNS(NS, "title");
-        dtitle.textContent = "District of Columbia (coming soon)";
+        dtitle.textContent = isCovered("DC") ? "District of Columbia (covered)" : "District of Columbia (coming soon)";
         dot.appendChild(dtitle);
         dot.addEventListener("click", function(){ select("DC", null, true); });
         dot.addEventListener("keydown", function(e){
@@ -735,13 +790,28 @@
     <div class="wrap">
       <div class="section-head">
         <h2 class="section-title" id="states-title">Roofing marketing by state</h2>
-        <p class="section-lede">Roofing marketing across the United States is one hub with 27 state pages and 150 city pages. Start with the state where your crews run.</p>
+        <p class="section-lede">Roofing marketing across the United States is one hub with 51 state and district pages and 253 city pages. Start with the state where your crews run.</p>
       </div>
       <div class="state-grid">
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/alabama/">Alabama</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/alabama/birmingham/">Birmingham</a>, <a href="https://csramarketing.com/service-areas/alabama/huntsville/">Huntsville</a>, <a href="https://csramarketing.com/service-areas/alabama/mobile/">Mobile</a>, <a href="https://csramarketing.com/service-areas/alabama/montgomery/">Montgomery</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/alaska/">Alaska</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/alaska/anchorage/">Anchorage</a>, <a href="https://csramarketing.com/service-areas/alaska/fairbanks/">Fairbanks</a>, <a href="https://csramarketing.com/service-areas/alaska/juneau/">Juneau</a>, <a href="https://csramarketing.com/service-areas/alaska/palmer/">Palmer</a></p>
+        </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/arizona/">Arizona</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/arizona/chandler/">Chandler</a>, <a href="https://csramarketing.com/service-areas/arizona/mesa/">Mesa</a>, <a href="https://csramarketing.com/service-areas/arizona/phoenix/">Phoenix</a>, <a href="https://csramarketing.com/service-areas/arizona/scottsdale/">Scottsdale</a>, <a href="https://csramarketing.com/service-areas/arizona/tucson/">Tucson</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/arkansas/">Arkansas</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/arkansas/fayetteville/">Fayetteville</a>, <a href="https://csramarketing.com/service-areas/arkansas/little-rock/">Little Rock</a>, <a href="https://csramarketing.com/service-areas/arkansas/north-little-rock/">North Little Rock</a>, <a href="https://csramarketing.com/service-areas/arkansas/springdale/">Springdale</a></p>
         </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/california/">California</a></h3>
@@ -754,6 +824,20 @@
           <p class="cities"><a href="https://csramarketing.com/service-areas/colorado/aurora/">Aurora</a>, <a href="https://csramarketing.com/service-areas/colorado/colorado-springs/">Colorado Springs</a>, <a href="https://csramarketing.com/service-areas/colorado/denver/">Denver</a>, <a href="https://csramarketing.com/service-areas/colorado/fort-collins/">Fort Collins</a>, <a href="https://csramarketing.com/service-areas/colorado/lakewood/">Lakewood</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/connecticut/">Connecticut</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/connecticut/bridgeport/">Bridgeport</a>, <a href="https://csramarketing.com/service-areas/connecticut/hartford/">Hartford</a>, <a href="https://csramarketing.com/service-areas/connecticut/new-haven/">New Haven</a>, <a href="https://csramarketing.com/service-areas/connecticut/stamford/">Stamford</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/delaware/">Delaware</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/delaware/dover/">Dover</a>, <a href="https://csramarketing.com/service-areas/delaware/middletown/">Middletown</a>, <a href="https://csramarketing.com/service-areas/delaware/newark/">Newark</a>, <a href="https://csramarketing.com/service-areas/delaware/wilmington/">Wilmington</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/district-of-columbia/">District of Columbia</a></h3>
+          <p class="count">1 district page</p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/florida/">Florida</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/florida/fort-lauderdale/">Fort Lauderdale</a>, <a href="https://csramarketing.com/service-areas/florida/jacksonville/">Jacksonville</a>, <a href="https://csramarketing.com/service-areas/florida/miami/">Miami</a>, <a href="https://csramarketing.com/service-areas/florida/orlando/">Orlando</a>, <a href="https://csramarketing.com/service-areas/florida/tampa/">Tampa</a></p>
@@ -762,6 +846,16 @@
           <h3><a href="https://csramarketing.com/service-areas/georgia/">Georgia</a></h3>
           <p class="count">7 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/georgia/athens/">Athens</a>, <a href="https://csramarketing.com/service-areas/georgia/atlanta/">Atlanta</a>, <a href="https://csramarketing.com/service-areas/georgia/augusta/">Augusta</a>, <a href="https://csramarketing.com/service-areas/georgia/columbus/">Columbus</a>, <a href="https://csramarketing.com/service-areas/georgia/macon/">Macon</a>, <a href="https://csramarketing.com/service-areas/georgia/savannah/">Savannah</a>, <a href="https://csramarketing.com/service-areas/georgia/warner-robins/">Warner Robins</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/hawaii/">Hawaii</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/hawaii/hilo/">Hilo</a>, <a href="https://csramarketing.com/service-areas/hawaii/honolulu/">Honolulu</a>, <a href="https://csramarketing.com/service-areas/hawaii/kahului/">Kahului</a>, <a href="https://csramarketing.com/service-areas/hawaii/kailua/">Kailua</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/idaho/">Idaho</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/idaho/boise/">Boise</a>, <a href="https://csramarketing.com/service-areas/idaho/idaho-falls/">Idaho Falls</a>, <a href="https://csramarketing.com/service-areas/idaho/meridian/">Meridian</a>, <a href="https://csramarketing.com/service-areas/idaho/nampa/">Nampa</a>, <a href="https://csramarketing.com/service-areas/idaho/twin-falls/">Twin Falls</a></p>
         </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/illinois/">Illinois</a></h3>
@@ -774,9 +868,29 @@
           <p class="cities"><a href="https://csramarketing.com/service-areas/indiana/carmel/">Carmel</a>, <a href="https://csramarketing.com/service-areas/indiana/evansville/">Evansville</a>, <a href="https://csramarketing.com/service-areas/indiana/fort-wayne/">Fort Wayne</a>, <a href="https://csramarketing.com/service-areas/indiana/indianapolis/">Indianapolis</a>, <a href="https://csramarketing.com/service-areas/indiana/south-bend/">South Bend</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/iowa/">Iowa</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/iowa/cedar-rapids/">Cedar Rapids</a>, <a href="https://csramarketing.com/service-areas/iowa/davenport/">Davenport</a>, <a href="https://csramarketing.com/service-areas/iowa/des-moines/">Des Moines</a>, <a href="https://csramarketing.com/service-areas/iowa/sioux-city/">Sioux City</a>, <a href="https://csramarketing.com/service-areas/iowa/waterloo/">Waterloo</a></p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/kansas/">Kansas</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/kansas/kansas-city/">Kansas City</a>, <a href="https://csramarketing.com/service-areas/kansas/olathe/">Olathe</a>, <a href="https://csramarketing.com/service-areas/kansas/overland-park/">Overland Park</a>, <a href="https://csramarketing.com/service-areas/kansas/topeka/">Topeka</a>, <a href="https://csramarketing.com/service-areas/kansas/wichita/">Wichita</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/kentucky/">Kentucky</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/kentucky/bowling-green/">Bowling Green</a>, <a href="https://csramarketing.com/service-areas/kentucky/covington/">Covington</a>, <a href="https://csramarketing.com/service-areas/kentucky/lexington/">Lexington</a>, <a href="https://csramarketing.com/service-areas/kentucky/louisville/">Louisville</a>, <a href="https://csramarketing.com/service-areas/kentucky/owensboro/">Owensboro</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/louisiana/">Louisiana</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/louisiana/baton-rouge/">Baton Rouge</a>, <a href="https://csramarketing.com/service-areas/louisiana/lafayette/">Lafayette</a>, <a href="https://csramarketing.com/service-areas/louisiana/new-orleans/">New Orleans</a>, <a href="https://csramarketing.com/service-areas/louisiana/shreveport/">Shreveport</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/maine/">Maine</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/maine/bangor/">Bangor</a>, <a href="https://csramarketing.com/service-areas/maine/lewiston/">Lewiston</a>, <a href="https://csramarketing.com/service-areas/maine/portland/">Portland</a>, <a href="https://csramarketing.com/service-areas/maine/south-portland/">South Portland</a></p>
         </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/maryland/">Maryland</a></h3>
@@ -799,14 +913,44 @@
           <p class="cities"><a href="https://csramarketing.com/service-areas/minnesota/bloomington/">Bloomington</a>, <a href="https://csramarketing.com/service-areas/minnesota/duluth/">Duluth</a>, <a href="https://csramarketing.com/service-areas/minnesota/minneapolis/">Minneapolis</a>, <a href="https://csramarketing.com/service-areas/minnesota/rochester/">Rochester</a>, <a href="https://csramarketing.com/service-areas/minnesota/st-paul/">St. Paul</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/mississippi/">Mississippi</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/mississippi/biloxi/">Biloxi</a>, <a href="https://csramarketing.com/service-areas/mississippi/gulfport/">Gulfport</a>, <a href="https://csramarketing.com/service-areas/mississippi/hattiesburg/">Hattiesburg</a>, <a href="https://csramarketing.com/service-areas/mississippi/jackson/">Jackson</a></p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/missouri/">Missouri</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/missouri/columbia/">Columbia</a>, <a href="https://csramarketing.com/service-areas/missouri/independence/">Independence</a>, <a href="https://csramarketing.com/service-areas/missouri/kansas-city/">Kansas City</a>, <a href="https://csramarketing.com/service-areas/missouri/springfield/">Springfield</a>, <a href="https://csramarketing.com/service-areas/missouri/st-louis/">St. Louis</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/montana/">Montana</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/montana/billings/">Billings</a>, <a href="https://csramarketing.com/service-areas/montana/bozeman/">Bozeman</a>, <a href="https://csramarketing.com/service-areas/montana/helena/">Helena</a>, <a href="https://csramarketing.com/service-areas/montana/kalispell/">Kalispell</a>, <a href="https://csramarketing.com/service-areas/montana/missoula/">Missoula</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/nebraska/">Nebraska</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/nebraska/bellevue/">Bellevue</a>, <a href="https://csramarketing.com/service-areas/nebraska/grand-island/">Grand Island</a>, <a href="https://csramarketing.com/service-areas/nebraska/kearney/">Kearney</a>, <a href="https://csramarketing.com/service-areas/nebraska/lincoln/">Lincoln</a>, <a href="https://csramarketing.com/service-areas/nebraska/omaha/">Omaha</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/nevada/">Nevada</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/nevada/henderson/">Henderson</a>, <a href="https://csramarketing.com/service-areas/nevada/las-vegas/">Las Vegas</a>, <a href="https://csramarketing.com/service-areas/nevada/north-las-vegas/">North Las Vegas</a>, <a href="https://csramarketing.com/service-areas/nevada/reno/">Reno</a>, <a href="https://csramarketing.com/service-areas/nevada/sparks/">Sparks</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/new-hampshire/">New Hampshire</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/new-hampshire/concord/">Concord</a>, <a href="https://csramarketing.com/service-areas/new-hampshire/manchester/">Manchester</a>, <a href="https://csramarketing.com/service-areas/new-hampshire/nashua/">Nashua</a>, <a href="https://csramarketing.com/service-areas/new-hampshire/portsmouth/">Portsmouth</a></p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/new-jersey/">New Jersey</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/new-jersey/edison/">Edison</a>, <a href="https://csramarketing.com/service-areas/new-jersey/elizabeth/">Elizabeth</a>, <a href="https://csramarketing.com/service-areas/new-jersey/jersey-city/">Jersey City</a>, <a href="https://csramarketing.com/service-areas/new-jersey/newark/">Newark</a>, <a href="https://csramarketing.com/service-areas/new-jersey/paterson/">Paterson</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/new-mexico/">New Mexico</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/new-mexico/albuquerque/">Albuquerque</a>, <a href="https://csramarketing.com/service-areas/new-mexico/las-cruces/">Las Cruces</a>, <a href="https://csramarketing.com/service-areas/new-mexico/rio-rancho/">Rio Rancho</a>, <a href="https://csramarketing.com/service-areas/new-mexico/roswell/">Roswell</a>, <a href="https://csramarketing.com/service-areas/new-mexico/santa-fe/">Santa Fe</a></p>
         </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/new-york/">New York</a></h3>
@@ -817,6 +961,11 @@
           <h3><a href="https://csramarketing.com/service-areas/north-carolina/">North Carolina</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/north-carolina/charlotte/">Charlotte</a>, <a href="https://csramarketing.com/service-areas/north-carolina/durham/">Durham</a>, <a href="https://csramarketing.com/service-areas/north-carolina/greensboro/">Greensboro</a>, <a href="https://csramarketing.com/service-areas/north-carolina/raleigh/">Raleigh</a>, <a href="https://csramarketing.com/service-areas/north-carolina/winston-salem/">Winston-Salem</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/north-dakota/">North Dakota</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/north-dakota/bismarck/">Bismarck</a>, <a href="https://csramarketing.com/service-areas/north-dakota/dickinson/">Dickinson</a>, <a href="https://csramarketing.com/service-areas/north-dakota/fargo/">Fargo</a>, <a href="https://csramarketing.com/service-areas/north-dakota/grand-forks/">Grand Forks</a>, <a href="https://csramarketing.com/service-areas/north-dakota/minot/">Minot</a></p>
         </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/ohio/">Ohio</a></h3>
@@ -839,9 +988,19 @@
           <p class="cities"><a href="https://csramarketing.com/service-areas/pennsylvania/allentown/">Allentown</a>, <a href="https://csramarketing.com/service-areas/pennsylvania/erie/">Erie</a>, <a href="https://csramarketing.com/service-areas/pennsylvania/harrisburg/">Harrisburg</a>, <a href="https://csramarketing.com/service-areas/pennsylvania/philadelphia/">Philadelphia</a>, <a href="https://csramarketing.com/service-areas/pennsylvania/pittsburgh/">Pittsburgh</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/rhode-island/">Rhode Island</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/rhode-island/cranston/">Cranston</a>, <a href="https://csramarketing.com/service-areas/rhode-island/pawtucket/">Pawtucket</a>, <a href="https://csramarketing.com/service-areas/rhode-island/providence/">Providence</a>, <a href="https://csramarketing.com/service-areas/rhode-island/warwick/">Warwick</a></p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/south-carolina/">South Carolina</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/south-carolina/charleston/">Charleston</a>, <a href="https://csramarketing.com/service-areas/south-carolina/columbia/">Columbia</a>, <a href="https://csramarketing.com/service-areas/south-carolina/greenville/">Greenville</a>, <a href="https://csramarketing.com/service-areas/south-carolina/mount-pleasant/">Mount Pleasant</a>, <a href="https://csramarketing.com/service-areas/south-carolina/north-charleston/">North Charleston</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/south-dakota/">South Dakota</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/south-dakota/aberdeen/">Aberdeen</a>, <a href="https://csramarketing.com/service-areas/south-dakota/brookings/">Brookings</a>, <a href="https://csramarketing.com/service-areas/south-dakota/rapid-city/">Rapid City</a>, <a href="https://csramarketing.com/service-areas/south-dakota/sioux-falls/">Sioux Falls</a>, <a href="https://csramarketing.com/service-areas/south-dakota/watertown/">Watertown</a></p>
         </article>
         <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/tennessee/">Tennessee</a></h3>
@@ -859,6 +1018,11 @@
           <p class="cities"><a href="https://csramarketing.com/service-areas/utah/orem/">Orem</a>, <a href="https://csramarketing.com/service-areas/utah/provo/">Provo</a>, <a href="https://csramarketing.com/service-areas/utah/salt-lake-city/">Salt Lake City</a>, <a href="https://csramarketing.com/service-areas/utah/west-jordan/">West Jordan</a>, <a href="https://csramarketing.com/service-areas/utah/west-valley-city/">West Valley City</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/vermont/">Vermont</a></h3>
+          <p class="count">4 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/vermont/burlington/">Burlington</a>, <a href="https://csramarketing.com/service-areas/vermont/montpelier/">Montpelier</a>, <a href="https://csramarketing.com/service-areas/vermont/rutland/">Rutland</a>, <a href="https://csramarketing.com/service-areas/vermont/south-burlington/">South Burlington</a></p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/virginia/">Virginia</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/virginia/arlington/">Arlington</a>, <a href="https://csramarketing.com/service-areas/virginia/chesapeake/">Chesapeake</a>, <a href="https://csramarketing.com/service-areas/virginia/norfolk/">Norfolk</a>, <a href="https://csramarketing.com/service-areas/virginia/richmond/">Richmond</a>, <a href="https://csramarketing.com/service-areas/virginia/virginia-beach/">Virginia Beach</a></p>
@@ -869,9 +1033,19 @@
           <p class="cities"><a href="https://csramarketing.com/service-areas/washington/bellevue/">Bellevue</a>, <a href="https://csramarketing.com/service-areas/washington/everett/">Everett</a>, <a href="https://csramarketing.com/service-areas/washington/kent/">Kent</a>, <a href="https://csramarketing.com/service-areas/washington/renton/">Renton</a>, <a href="https://csramarketing.com/service-areas/washington/seattle/">Seattle</a>, <a href="https://csramarketing.com/service-areas/washington/spokane/">Spokane</a>, <a href="https://csramarketing.com/service-areas/washington/tacoma/">Tacoma</a>, <a href="https://csramarketing.com/service-areas/washington/vancouver/">Vancouver</a></p>
         </article>
         <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/west-virginia/">West Virginia</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/west-virginia/charleston/">Charleston</a>, <a href="https://csramarketing.com/service-areas/west-virginia/huntington/">Huntington</a>, <a href="https://csramarketing.com/service-areas/west-virginia/morgantown/">Morgantown</a>, <a href="https://csramarketing.com/service-areas/west-virginia/parkersburg/">Parkersburg</a>, <a href="https://csramarketing.com/service-areas/west-virginia/wheeling/">Wheeling</a></p>
+        </article>
+        <article class="state-card">
           <h3><a href="https://csramarketing.com/service-areas/wisconsin/">Wisconsin</a></h3>
           <p class="count">5 city pages</p>
           <p class="cities"><a href="https://csramarketing.com/service-areas/wisconsin/green-bay/">Green Bay</a>, <a href="https://csramarketing.com/service-areas/wisconsin/kenosha/">Kenosha</a>, <a href="https://csramarketing.com/service-areas/wisconsin/madison/">Madison</a>, <a href="https://csramarketing.com/service-areas/wisconsin/milwaukee/">Milwaukee</a>, <a href="https://csramarketing.com/service-areas/wisconsin/racine/">Racine</a></p>
+        </article>
+        <article class="state-card">
+          <h3><a href="https://csramarketing.com/service-areas/wyoming/">Wyoming</a></h3>
+          <p class="count">5 city pages</p>
+          <p class="cities"><a href="https://csramarketing.com/service-areas/wyoming/casper/">Casper</a>, <a href="https://csramarketing.com/service-areas/wyoming/cheyenne/">Cheyenne</a>, <a href="https://csramarketing.com/service-areas/wyoming/evanston/">Evanston</a>, <a href="https://csramarketing.com/service-areas/wyoming/gillette/">Gillette</a>, <a href="https://csramarketing.com/service-areas/wyoming/laramie/">Laramie</a></p>
         </article>
       </div>
     </div>
@@ -884,8 +1058,8 @@
         <p class="town-tag">The national hub</p>
         <h2 class="section-title" id="national-intro">One country, 27 different roofer markets</h2>
       </div>
-      <p>The United States is one country, but a roofer in Miami and a roofer in Seattle are not fighting the same fight. The coast, the desert, and the snow belt each have their own weather, their own housing stock, and their own competitors. This page is the hub for all 27 states, and each state below has its own page with its own local detail.</p>
-      <p>The scale is real. Roofing work follows storms, heat, hail, and snow, and it spikes fast when weather hits. When a storm passes or a roof hits its age, the homeowner searches, and the roofer they find first gets the call. The 27 state pages below are built on that rule, each one naming the weather, the market, and the opening in that state.</p>
+      <p>The United States is one country, but a roofer in Miami and a roofer in Seattle are not fighting the same fight. The coast, the desert, and the snow belt each have their own weather, their own housing stock, and their own competitors. This page is the hub for all 50 states and the District of Columbia, and each state below has its own page with its own local detail.</p>
+      <p>The scale is real. Roofing work follows storms, heat, hail, and snow, and it spikes fast when weather hits. When a storm passes or a roof hits its age, the homeowner searches, and the roofer they find first gets the call. The 51 state and district pages below are built on that rule, each one naming the weather, the market, and the opening in that state.</p>
       <p>That is the whole job: roofing marketing roofers can measure in calls, not clicks, with reviews doing the selling and a website that turns visitors into estimates.</p>
     </div>
   </section>
@@ -901,7 +1075,7 @@
         <article class="why-card">
           <span class="num" aria-hidden="true">1</span>
           <h3>Weather runs the calendar</h3>
-          <p>Hail, hurricanes, snow, and heat are the roof-damage drivers, and they hit different states in different months. Storm work spikes fast, and the roofer who is visible when the weather hits gets the call.</p>
+          <p>Hail, hurricanes, snow, and heat are the roof damage drivers, and they hit different states in different months. Storm work spikes fast, and the roofer who is visible when the weather hits gets the call.</p>
         </article>
         <article class="why-card">
           <span class="num" aria-hidden="true">2</span>
@@ -910,8 +1084,8 @@
         </article>
         <article class="why-card">
           <span class="num" aria-hidden="true">3</span>
-          <h3>One country, 27 different markets</h3>
-          <p>A roofer in Phoenix fights heat and monsoon season. A roofer in Minneapolis fights snow load and freeze-thaw. A roofer in Miami fights hurricanes. One generic page cannot speak to all 27, so we built 27.</p>
+          <h3>One country, 51 different markets</h3>
+          <p>A roofer in Phoenix fights heat and monsoon season. A roofer in Minneapolis fights snow load and freeze thaw. A roofer in Miami fights hurricanes. One generic page cannot speak to all 51, so we built 51.</p>
         </article>
       </div>
     </div>
@@ -978,15 +1152,15 @@
         <p class="section-lede">Straight answers, no jargon. If your question is not here, book a call and ask it directly.</p>
       </div>
       <h3>How much does roofing marketing cost?</h3>
-      <p>It depends on scope: a website, local SEO, ads, or all three, and on how competitive your market is. A crowded market takes more than a quiet one. We price by what your market needs, so book a 30-minute call and we will give you a straight number for your market, not a guess.</p>
+      <p>It depends on scope: a website, local SEO, ads, or all three, and on how competitive your market is. A crowded market takes more than a quiet one. We price by what your market needs, so book a 30 minute call and we will give you a straight number for your market, not a guess.</p>
       <h3>What makes an agency the best roofing marketing agency for a roofer?</h3>
-      <p>Look for three things. First, roofer-only focus, not a generalist that also sells to plumbers and landscapers. Second, real local market proof, not a template with your city name swapped in. Third, tracking that ties calls to jobs, so you know what your money bought. If an agency cannot show you all three, keep looking. We built this hub to show you what real local proof looks like.</p>
+      <p>Look for three things. First, roofer only focus, not a generalist that also sells to plumbers and landscapers. Second, real local market proof, not a template with your city name swapped in. Third, tracking that ties calls to jobs, so you know what your money bought. If an agency cannot show you all three, keep looking. We built this hub to show you what real local proof looks like.</p>
       <h3>What does roofing marketing actually cover?</h3>
-      <p>A website that turns visitors into estimate calls, local SEO that puts you in the map pack for the searches that turn into jobs, review strategy that turns happy customers into proof, and lead generation that tracks back to real jobs. It covers all 27 states on this page, so the same formula works whether your crews run in Texas or Washington. The audit above shows where your calls are leaking right now, and the call walks through what fixing it looks like.</p>
+      <p>A website that turns visitors into estimate calls, local SEO that puts you in the map pack for the searches that turn into jobs, review strategy that turns happy customers into proof, and lead generation that tracks back to real jobs. It covers all 50 states and the District of Columbia on this page, so the same formula works whether your crews run in Texas or Washington. The audit above shows where your calls are leaking right now, and the call walks through what fixing it looks like.</p>
       <h3>How do I choose between roofing marketing agencies?</h3>
-      <p>Start with fit, not price. Ask each agency how many roofers it serves in your market, what its clients rank for, and how it tracks calls to jobs. Then check the proof yourself: search for a roofer in your town and see who shows up. Roofers find us because the work is roofer-only and the numbers are tracked.</p>
+      <p>Start with fit, not price. Ask each agency how many roofers it serves in your market, what its clients rank for, and how it tracks calls to jobs. Then check the proof yourself: search for a roofer in your town and see who shows up. Roofers find us because the work is roofer only and the numbers are tracked.</p>
       <h3>Where are you based, and do you work with roofers outside Georgia?</h3>
-      <p>We are based in the Augusta area and we serve roofers across the country, all of it remote. This hub covers 27 states and 150 cities, and every page carries real local detail for its market, not a template. Start with the audit above, or book a 30-minute call and we will walk through your market with your own numbers.</p>
+      <p>We are based in the Augusta area and we serve roofers across the country, all of it remote. This hub covers 50 states, the District of Columbia, and 253 cities, and every page carries real local detail for its market, not a template. Start with the audit above, or book a 30 minute call and we will walk through your market with your own numbers.</p>
     </div>
   </section>
 
@@ -997,7 +1171,7 @@
         <h2 id="cta-title">Find out what homeowners across the country see</h2>
         <p>Start with a website audit. We will show you how your company shows up in search today, where the calls are leaking, and what it would take to fix it. No pressure, no jargon, just a clear picture.</p>
         <div class="cta-actions">
-          <a class="btn btn-yellow" href="https://cal.com/csramarketing/30min">Book a 30-minute call</a>
+          <a class="btn btn-yellow" href="https://cal.com/csramarketing/30min">Book a 30 minute call</a>
           <a class="btn btn-white" href="https://csramarketing.com/roofing-website-score/">Get my website audit</a>
         </div>
         <p class="fine">Prefer to look first? Read what the <a href="https://csramarketing.com/website-audit/" style="color:#ffd968;">website audit</a> covers, then book when you are ready.</p>
@@ -1021,7 +1195,7 @@
       <a href="/tools/gbp-scorecard/">GBP Scorecard</a>
       <a href="/tools/lost-revenue-calculator/">Lost Revenue Calculator</a>
       <a href="/website-audit/">Review Request Scripts</a>
-      <a href="/tools/estimate-follow-up/">Estimate Follow-Up Email Generator</a>
+      <a href="/tools/estimate-follow-up/">Estimate Follow Up Email Generator</a>
       <a href="/tools/lead-cost-comparison/">Lead Cost Comparison Calculator</a>
     </nav>
     <nav class="site-footer-col" aria-label="Resources">
@@ -1117,7 +1291,7 @@
     <img id="ingrid-widget-logo" src="/assets/csra-logo.png" alt="CSRA Marketing">
     <p id="ingrid-widget-greet">Thanks for visiting CSRA Marketing. What brings you here today?</p>
     <div id="ingrid-widget-messages"></div>
-    <a id="ingrid-widget-book" href="/website-audit/">Book a 30-minute audit call</a>
+    <a id="ingrid-widget-book" href="/website-audit/">Book a 30 minute audit call</a>
     <a id="ingrid-widget-survey" href="/survey/">Take the 2027 Roofing Marketing Survey</a>
     <a id="ingrid-widget-contact" href="/contact/#contact-form">Contact us</a>
     <form id="ingrid-widget-form">
